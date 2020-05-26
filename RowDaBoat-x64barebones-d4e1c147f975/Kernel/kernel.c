@@ -85,17 +85,6 @@ int main()
 {	
 
 	printNullString( "mbeeeeh1", 0xFFFFFF );
-	newline();
-	printNullString( "el beto2", 0xFFFFFF );
-	newline();
-	printNullString( "el beto3", 0xFFFFFF );
-	newline();
-	printInt( 41287111, 0xFFFFFF );
-	newline();
-	printNullString( "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", 0xFFFFFF );
-	newline();
-	printNullString("dou", 0xFFFFFF );
-	refreshScreen();
 
 
 	return 0;
