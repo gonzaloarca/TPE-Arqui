@@ -83,7 +83,8 @@ void * initializeKernelBinary()
 
 int main()
 {	
-	Point2D pos = {0,0};
-	drawChar( 'A', pos, 0xFFFFFF );
+	for( int i = 0; i < 300; i++ ){
+		printChar('A', 0xFFFFFF);
+	}
 	return 0;
 }

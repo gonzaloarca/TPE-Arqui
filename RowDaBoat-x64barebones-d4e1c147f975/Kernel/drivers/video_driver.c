@@ -96,3 +96,19 @@ int drawChar( char c, Point2D pos, int rgb ){	//dibujar un caracter dado su esqu
 
 	return 0;
 }
+
+int printChar( char c, int rgb ){
+	Point2D pos = { x_last, y_last };
+
+	if( x_last + 8 >= WIDTH ){
+		x_last = 0;
+		y_last += LINE_WIDTH;
+		Point2D pos = { x_last, y_last };	//si no entra el caracter entero en la linea, debo printearlo directamente en la sig
+	} else {
+		x_last += 8;
+	}
+
+	drawChar( c, pos, rgb );
+	return 0;
+}
+

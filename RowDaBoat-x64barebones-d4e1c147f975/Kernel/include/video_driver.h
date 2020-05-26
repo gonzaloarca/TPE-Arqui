@@ -18,4 +18,6 @@ int writePixel(Pixel p);
 
 int drawChar(char c, Point2D pos, int rgb);
 
+int printChar( char c, int rgb );
+
 #endif
