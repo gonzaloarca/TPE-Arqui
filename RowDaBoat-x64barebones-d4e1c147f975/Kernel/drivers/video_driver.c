@@ -1,5 +1,6 @@
-#include <video_driver.h>
+#include "video_driver.h"
 #include <stdint.h>
+#include "font.h"
 
 struct vbe_mode_info_structure {
 	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
@@ -40,23 +41,55 @@ struct vbe_mode_info_structure {
 } __attribute__ ((packed));
 
 
-
 // Busco VBEModeInfoBlock que es donde se encuentra la estructura
-struct vbe_mode_info_structure * scree_info = 0x5C00;
+struct vbe_mode_info_structure * screen_info = (struct vbe_mode_info_structure *) 0x5C00;
 // Busco ahora dentro de la estructura la variable framebuffer que es donde se empieza a escribir
 // La resolucion de vesa es:
 int WIDTH = 1024;
 int HEIGHT = 768;
-char * getPixelDataByPosition(int x, int y) {
-	return scree_info->framebuffer + (x + y*WIDTH)*3;
+
+//Tamaño de la fuente
+int FONT_HEIGHT = 14;
+int FONT_WIDTH = 8;
+
+//Instancia de array 3D de pantalla (taria bueno ver como hacer pa tenerla afuera)
+// static uint32_t (*screen)[10][3] = (screen_info->framebuffer);
+
+// char * getPixelDataByPosition(int x, int y) {
+// 	return screen[x][y];
+// }
+
+int writePixel(Pixel p) {
+	// char rojo = 255, verde = 255, azul = 255;
+
+	// char * pos = getPixelDataByPosition(0,0);			// equivalente a &(screen_info).framebuffer
+	// pos[0] = azul;
+	// pos[1] = verde;
+	// pos[2] = rojo;			// 3 variables que indican el color por pixel
+	return 0;
 }
 
-int writePixel(int x, int y) {
-	char rojo = 255, verde = 255, azul = 255;
+int drawChar( char c, Point2D pos, int rgb ){
+	char (*screen)[screen_info->width][3] = (char (*)[(screen_info->width)][3]) ((uint64_t)screen_info->framebuffer);
+	const unsigned char * letra= getCharMap(c);
+	int x_init = pos.x;
+	int y_init = pos.y;
+	char r = (rgb >> 16) & 0xFF;
+	char g = (rgb >> 8) & 0xFF;
+	char b = rgb & 0xFF;
 
-	char * pos = getPixelDataByPosition(x,y);			// equivalente a &(screen_info).framebuffer
-	pos[0] = azul;
-	pos[1] = verde;
-	pos[2] = rojo;			// 3 variables que indican el color por pixel
+	for( int i = 0; i < FONT_HEIGHT; i++ ){
+		int row = letra[i];
+		for( int j = FONT_WIDTH; row != 0; j-- ){
+			int aux = row & 1;
+			if( aux == 1 ){
+				screen[y_init + i][x_init + j][0] = b;
+				screen[y_init + i][x_init + j][1] = g;
+				screen[y_init + i][x_init + j][2] = r;
+			}
+			row = row >> 1;
+		}
+	}	
+
 	return 0;
 }
