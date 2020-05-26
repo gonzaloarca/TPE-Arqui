@@ -6,7 +6,7 @@ int main(int argc, char const *argv[])
 {
 	char input[100];
 	scanf("%s", input);
-	int res = evaluate(input, strlen(input));
-	printf("%d\n", res);
+	double res = evaluate(input, strlen(input));
+	printf("%f\n", res);
 	return 0;
 }
