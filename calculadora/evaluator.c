@@ -4,12 +4,12 @@
 
 int evaluate(char *expression, int length)
 {
-	printf("Exp: ");
-	for (int i = 0; i<length; i++) putchar(expression[i]);
-
 	int operator = main_op(expression, length);
 
-	printf(" Op: %d\n", operator);
+	//	Codigo de Testeo, ignorar
+	//printf("Exp: ");
+	//for (int i = 0; i<length; i++) putchar(expression[i]);
+	//printf(" Op: %d\n", operator);
 
 	//	Si no hay operador
 	if (operator == -1)
@@ -45,7 +45,7 @@ int main_op(char *expression, int length)
 	int brackets = 0;
 	int last_op = -1;
 
-	for (int i = 0; i < length; i++)
+	for (int i = length-1; i >= 0; i--)
 	{
 		switch(expression[i])
 		{
@@ -82,8 +82,12 @@ int main_op(char *expression, int length)
 
 int strtonum(char *string, int length)
 {
+	/* Esto no hace falta en teoria
 	if (string[0] == '(' && string[length-1] == ')')
 		return evaluate(string+1, length-2);
+	*/
+	if (string[length-1] == ')')
+		return evaluate(string, length-1);
 
 	int number = 0;
 	char c;
