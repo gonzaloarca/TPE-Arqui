@@ -102,7 +102,7 @@ int printChar( char c, int rgb ){
 
 	if( x_last + 8 >= WIDTH ){
 		newline();
-		Point2D pos = { x_last, y_last };	//si no entra el caracter entero en la linea, debo printearlo directamente en la sig
+		pos = { x_last, y_last };	//si no entra el caracter entero en la linea, debo printearlo directamente en la sig
 	} else {
 		x_last += 8;
 	}
