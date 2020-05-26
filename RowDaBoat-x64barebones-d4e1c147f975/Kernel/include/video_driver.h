@@ -18,6 +18,8 @@ int writePixel(Pixel p);
 
 int drawChar(char c, Point2D pos, int rgb);
 
+int eraseChar( Point2D pos );
+
 int printChar( char c, int rgb );
 
 int printString( char * buffer, unsigned int count, int rgb );

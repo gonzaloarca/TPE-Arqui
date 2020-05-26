@@ -1,6 +1,7 @@
 #include "video_driver.h"
 #include <stdint.h>
 #include "font.h"
+#include "lib.h"
 
 //Resolución de la pantalla (WIDTH x HEIGHT)
 #define WIDTH 1024
@@ -11,10 +12,11 @@
 #define FONT_WIDTH  8
 
 //Ancho del renglon
-#define LINE_WIDTH (FONT_HEIGHT + 2)
+#define LINE_MARGIN  1
+#define LINE_WIDTH (FONT_HEIGHT + 2 * LINE_MARGIN)
 
 //Máxima cantidad de renglones que pueden aparecer en pantalla
-#define MAX_LINES (HEIGHT / LINE_WIDTH)
+#define MAX_LINES (HEIGHT/LINE_WIDTH)
 
 struct vbe_mode_info_structure {
 	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
@@ -56,23 +58,35 @@ struct vbe_mode_info_structure {
 
 
 // Busco VBEModeInfoBlock que es donde se encuentra la estructura
-struct vbe_mode_info_structure * screen_info = (struct vbe_mode_info_structure *) 0x5C00;
+struct vbe_mode_info_structure * screenInfo = (struct vbe_mode_info_structure *) 0x5C00;
 // Busco ahora dentro de la estructura la variable framebuffer que es donde se empieza a escribir
 // La resolucion de vesa es:
 
 //Ultimas posiciones de la pantalla
-int x_last = 0;
-int y_last = 0;
+int xLast = 0;
+int yLast = 0;
+
+//Buffer de la pantalla para permitir scrolling
+static char * screenBuffer[(MAX_LINES) - 1];
+
+//Buffer de la linea actual que se escribe en pantalla
+static char currentLine[WIDTH] = {0};
+
+//Cantidad de caracteres en la linea actual
+static int currentLineSize = 0;
+
+//Cantidad de lineas escritas actualmente
+static int lineCount = 0;
 
 //Instancia de array 3D de pantalla (taria bueno ver como hacer pa tenerla afuera)
-// static uint32_t (*screen)[10][3] = (screen_info->framebuffer);
+// static uint32_t (*screen)[10][3] = (screenInfo->framebuffer);
 
 // char * getPixelDataByPosition(int x, int y) {
 // 	return screen[x][y];
 // }
 
 int writePixel(Pixel p) {
-	char (*screen)[screen_info->width][3] = (char (*)[(screen_info->width)][3]) ((uint64_t)screen_info->framebuffer);
+	char (*screen)[screenInfo->width][3] = (char (*)[(screenInfo->width)][3]) ((uint64_t)screenInfo->framebuffer);
 	screen[p.pos.y][p.pos.x][0] = (p.rgb >> 16) & 0xFF;
 	screen[p.pos.y][p.pos.x][1] = (p.rgb >> 8) & 0xFF;
 	screen[p.pos.y][p.pos.x][2] = p.rgb & 0xFF;
@@ -80,16 +94,19 @@ int writePixel(Pixel p) {
 }
 
 int drawChar( char c, Point2D pos, int rgb ){	//dibujar un caracter dado su esquina izq superior y un color
-	const unsigned char * letra= getCharMap(c);
-	int x_init = pos.x;
-	int y_init = pos.y;
+	const unsigned char * letra = getCharMap(c);
+	int xInit = pos.x;
+	int yInit = pos.y;
 
+	if( letra == 0 ){
+		return 0;		//debe printear vacio
+	}
 	for( int i = 0; i < FONT_HEIGHT; i++ ){
 		int row = letra[i];
 		for( int j = FONT_WIDTH; row != 0; j-- ){
 			int aux = row & 1;
 			if( aux == 1 ){
-				Point2D curr = { x_init + j, y_init + i };
+				Point2D curr = { xInit + j, yInit + i };
 				Pixel pixel = { rgb, curr };
 				writePixel( pixel );
 			}
@@ -100,20 +117,85 @@ int drawChar( char c, Point2D pos, int rgb ){	//dibujar un caracter dado su esqu
 	return 0;
 }
 
-static char * screenbuffer[MAX_LINES];
+int eraseChar( Point2D pos ){
+	int xInit = pos.x;
+	int yInit = pos.y;
 
-int printChar( char c, int rgb ){
-	Point2D pos = { x_last, y_last };
-
-	if( x_last + 8 >= WIDTH ){
-		newline();
-		pos.x = x_last;
-		pos.y = y_last;	//si no entra el caracter entero en la linea, debo printearlo directamente en la sig
-	} else {
-		x_last += 8;
+	for( int i = 0; i < FONT_HEIGHT; i++ ){
+		for( int j = 0; j < FONT_WIDTH; j++ ){
+			Point2D curr = { xInit + j, yInit + i };
+			Pixel pixel = { 0, curr }; 	//en negro por ahora, hay que ver si vamos a permitir colores de ventana
+			writePixel( pixel );
+		}
 	}
 
-	drawChar( c, pos, rgb );
+	return 0;
+}
+
+
+
+// int printChar( char c, int rgb ){ old printChar
+// 	Point2D pos = { xLast, yLast };
+
+// 	if( xLast + 8 >= WIDTH ){
+// 		newline();
+// 		pos.x = xLast;
+// 		pos.y = yLast;	//si no entra el caracter entero en la linea, debo printearlo directamente en la sig
+// 	} else {
+// 		xLast += 8;
+// 	}
+
+// 	drawChar( c, pos, rgb );
+// 	return 0;
+// }
+
+
+
+static void updateBuffer(){
+
+	xLast = 0;
+	if( yLast != (MAX_LINES - 1) * LINE_WIDTH ){ //solo debo incrementar la posicion de yLast si no estoy parado en la ultima linea
+		yLast += LINE_WIDTH;
+	}
+	lineCount++;
+
+	if( lineCount == MAX_LINES ){ //debo mover todo el vector 1 lugar para la izquierda si se lleno el buffer
+		memcpy( (void *) screenBuffer, (void *) (screenBuffer + 1), MAX_LINES - 2 );
+	}
+	
+	char prevLine[WIDTH];
+	memcpy( (void *) prevLine, (void *) currentLine, WIDTH );
+	screenBuffer[ lineCount - 1 ] = prevLine;
+	memset( currentLine, 0, WIDTH );
+	currentLineSize = 0;
+}
+
+static void refreshLine( int lineNumber, char * s ){
+	for( int i = 0; i < WIDTH; i++ ){
+		Point2D pos = { i * FONT_WIDTH, lineNumber * ( LINE_WIDTH ) + LINE_MARGIN }; //le sumo el margen para que quede centrado 
+		eraseChar( pos );	//elimino lo que haya para no pisar lo que habia antes
+		drawChar( s[i], pos, 0xFFFFFF );		//probando con blanco para probar la logica primero
+	}
+}
+
+static void refreshScreen(){
+	for( int i = 0; i < lineCount; i++ ){
+		refreshLine( i, screenBuffer[i] );
+	}
+}
+
+int printChar( char c, int rgb ){
+	if( currentLineSize == WIDTH - 1 ){
+		updateBuffer();
+		refreshScreen();
+	}
+
+	*(currentLine + currentLineSize) = c;
+	currentLineSize++;
+	xLast += 8;
+	
+	refreshLine( lineCount, currentLine );
+
 	return 0;
 }
 
@@ -135,8 +217,8 @@ int printNullString( char * s, int rgb ){
 }
 
 void newline(){
-	x_last = 0;
-	y_last += LINE_WIDTH;
+	updateBuffer();
+	refreshScreen();
 }
 
 static void numToString( int num, char * str ){
