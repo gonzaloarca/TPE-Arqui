@@ -20,4 +20,12 @@ int drawChar(char c, Point2D pos, int rgb);
 
 int printChar( char c, int rgb );
 
+int printString( char * buffer, unsigned int count, int rgb );
+
+int printNullString( char * s, int rgb );
+
+void newline();
+
+int printInt( int num, int rgb);
+
 #endif

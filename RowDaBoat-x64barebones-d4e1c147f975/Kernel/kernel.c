@@ -83,8 +83,13 @@ void * initializeKernelBinary()
 
 int main()
 {	
-	for( int i = 0; i < 300; i++ ){
-		printChar('A', 0xFFFFFF);
-	}
+
+	printNullString( "el beto", 0xFFFFFF );
+	newline();
+	printNullString( "el beto", 0xFFFFFF );
+	newline();
+	printInt( 41287, 0xFFFFFF );
+	newline();
+	printInt( -69420, 0xFFFFFF );
 	return 0;
 }
