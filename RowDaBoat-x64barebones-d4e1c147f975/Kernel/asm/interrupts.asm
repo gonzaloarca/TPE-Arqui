@@ -13,15 +13,17 @@ GLOBAL _irq03Handler
 GLOBAL _irq04Handler
 GLOBAL _irq05Handler
 
+GLOBAL _sysCallHandler
+
 GLOBAL _exception0Handler
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
+EXTERN sysCallDispatcher
 
 SECTION .text
 
-%macro pushState 0
-	push rax
+%macro pushStateNoA 0
 	push rbx
 	push rcx
 	push rdx
@@ -38,7 +40,7 @@ SECTION .text
 	push r15
 %endmacro
 
-%macro popState 0
+%macro popStateNoA 0
 	pop r15
 	pop r14
 	pop r13
@@ -53,6 +55,15 @@ SECTION .text
 	pop rdx
 	pop rcx
 	pop rbx
+%endmacro
+
+%macro pushState 0
+	push rax
+	pushStateNoA
+%endmacro
+
+%macro popState 0
+	popStateNoA
 	pop rax
 %endmacro
 
@@ -142,6 +153,33 @@ _irq05Handler:
 ;Zero Division Exception
 _exception0Handler:
 	exceptionHandler 0
+
+;---------------------------------------------------
+;	SysCall Handler
+;---------------------------------------------------
+; El rax representa a cual SysCall se llama.
+; Los registros rbx, rcx, rdx, rsi y rdi contienen
+; 	a los distintos parametros de la SysCall.
+; Se llama a sysCallDispatcher con un puntero
+; 	a la estructura de los parametros
+;---------------------------------------------------
+_sysCallHandler:
+	pushStateNoA
+
+	sub rsp, 40		; Los otros parametros estan en una estructura
+	mov [rsp], rbx
+	mov [rsp+8], rcx
+	mov [rsp+16], rdx
+	mov [rsp+24], rsi
+	mov [rsp+32], rdi
+	mov rdi, rax	; Se pasa el eax como primer parametro
+	mov rsi, rsp	; El segundo argumento es el puntero a los parametros
+	call sysCallDispatcher
+	;	Lo que devuelve esta en RAX y permanece ahi para el usuario
+
+	add rsp, 40
+	popStateNoA
+	iretq
 
 haltcpu:
 	cli
