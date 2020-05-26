@@ -101,8 +101,7 @@ int printChar( char c, int rgb ){
 	Point2D pos = { x_last, y_last };
 
 	if( x_last + 8 >= WIDTH ){
-		x_last = 0;
-		y_last += LINE_WIDTH;
+		newline();
 		Point2D pos = { x_last, y_last };	//si no entra el caracter entero en la linea, debo printearlo directamente en la sig
 	} else {
 		x_last += 8;
@@ -118,5 +117,19 @@ int printString( char * buffer, unsigned int count, int rgb ){
 	}
 
 	return 0;
+}
+
+int printNullString( char * s, int rgb ){
+	while( *s != 0 ){
+		printChar( *s, rgb );
+		s++;
+	}
+
+	return 0;
+}
+
+void newline(){
+	x_last = 0;
+	y_last += LINE_WIDTH;
 }
 

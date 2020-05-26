@@ -22,4 +22,8 @@ int printChar( char c, int rgb );
 
 int printString( char * buffer, unsigned int count, int rgb );
 
+int printNullString( char * s, int rgb );
+
+void newline();
+
 #endif
