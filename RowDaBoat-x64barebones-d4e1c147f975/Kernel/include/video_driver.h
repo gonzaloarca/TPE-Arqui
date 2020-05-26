@@ -26,4 +26,6 @@ int printNullString( char * s, int rgb );
 
 void newline();
 
+int printInt( int num, int rgb);
+
 #endif
