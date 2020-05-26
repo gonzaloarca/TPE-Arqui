@@ -112,3 +112,11 @@ int printChar( char c, int rgb ){
 	return 0;
 }
 
+int printString( char * buffer, unsigned int count, int rgb ){
+	for( int i = 0; i < count; i++ ){
+		printChar( buffer[i], rgb );
+	}
+
+	return 0;
+}
+
