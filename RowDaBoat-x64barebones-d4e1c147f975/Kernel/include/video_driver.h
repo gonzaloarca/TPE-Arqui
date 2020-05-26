@@ -14,11 +14,9 @@ typedef struct{
 
 
 
-int writePixel(Pixel p);
+int writePixel(int x, int y, int rgb);
 
-int drawChar(char c, Point2D pos, int rgb);
-
-int eraseChar( Point2D pos );
+int drawChar(char c, int x, int y, int rgb);
 
 int printChar( char c, int rgb );
 

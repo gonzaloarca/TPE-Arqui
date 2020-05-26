@@ -85,30 +85,29 @@ static int lineCount = 0;
 // 	return screen[x][y];
 // }
 
-int writePixel(Pixel p) {
+int writePixel( int x, int y, int rgb ) {
 	char (*screen)[screenInfo->width][3] = (char (*)[(screenInfo->width)][3]) ((uint64_t)screenInfo->framebuffer);
-	screen[p.pos.y][p.pos.x][0] = (p.rgb >> 16) & 0xFF;
-	screen[p.pos.y][p.pos.x][1] = (p.rgb >> 8) & 0xFF;
-	screen[p.pos.y][p.pos.x][2] = p.rgb & 0xFF;
+	screen[y][x][0] = (rgb >> 16) & 0xFF;
+	screen[y][x][1] = (rgb >> 8) & 0xFF;
+	screen[y][x][2] = rgb & 0xFF;
 	return 0;
 }
 
-int drawChar( char c, Point2D pos, int rgb ){	//dibujar un caracter dado su esquina izq superior y un color
+int drawChar( char c, int x, int y, int rgb ){	//dibujar un caracter dado su esquina izq superior y un color
 	const unsigned char * letra = getCharMap(c);
-	int xInit = pos.x;
-	int yInit = pos.y;
 
 	if( letra == 0 ){
-		return 0;		//debe printear vacio
+		letra = getCharMap(' ');		//debe printear vacio
 	}
 	for( int i = 0; i < FONT_HEIGHT; i++ ){
 		int row = letra[i];
 		for( int j = FONT_WIDTH; row != 0; j-- ){
 			int aux = row & 1;
 			if( aux == 1 ){
-				Point2D curr = { xInit + j, yInit + i };
-				Pixel pixel = { rgb, curr };
-				writePixel( pixel );
+				writePixel( x + j, y + i, rgb);
+			}
+			else {
+				writePixel( x + j, y + i, 0 ); //negro por ahora
 			}
 			row = row >> 1;
 		}
@@ -117,20 +116,15 @@ int drawChar( char c, Point2D pos, int rgb ){	//dibujar un caracter dado su esqu
 	return 0;
 }
 
-int eraseChar( Point2D pos ){
-	int xInit = pos.x;
-	int yInit = pos.y;
+// int eraseChar( int x, int y ){
+// 	for( int i = 0; i < FONT_HEIGHT; i++ ){
+// 		for( int j = 0; j < FONT_WIDTH; j++ ){
+// 			writePixel( x, y, 0 ); //en negro por ahora, hay que ver si vamos a permitir colores de ventana
+// 		}
+// 	}
 
-	for( int i = 0; i < FONT_HEIGHT; i++ ){
-		for( int j = 0; j < FONT_WIDTH; j++ ){
-			Point2D curr = { xInit + j, yInit + i };
-			Pixel pixel = { 0, curr }; 	//en negro por ahora, hay que ver si vamos a permitir colores de ventana
-			writePixel( pixel );
-		}
-	}
-
-	return 0;
-}
+// 	return 0;
+// }
 
 
 
@@ -142,7 +136,7 @@ int eraseChar( Point2D pos ){
 // 		pos.x = xLast;
 // 		pos.y = yLast;	//si no entra el caracter entero en la linea, debo printearlo directamente en la sig
 // 	} else {
-// 		xLast += 8;
+// 		xLast += 8; //ta mal esto, no es siempre 8
 // 	}
 
 // 	drawChar( c, pos, rgb );
@@ -154,28 +148,35 @@ int eraseChar( Point2D pos ){
 static void updateBuffer(){
 
 	xLast = 0;
-	if( yLast != (MAX_LINES - 1) * LINE_WIDTH ){ //solo debo incrementar la posicion de yLast si no estoy parado en la ultima linea
-		yLast += LINE_WIDTH;
+	int screenBuffIdx = lineCount - 1; //defino aca el indice en donde debo agregar el string al buffer porque si esta lleno el buffer, se va a poner en lineCount - 2
+
+	if( lineCount != MAX_LINES ){ //solo debo incrementar la posicion de yLast y de las lineas si no estoy parado en la ultima linea
+		lineCount++;
+		yLast = lineCount * LINE_WIDTH; //lineCount podria reemplazarse con yLast / LINE_WIDTH, pero hay que ver que otros usos le vamos a dar a yLast
 	}
-	lineCount++;
 
 	if( lineCount == MAX_LINES ){ //debo mover todo el vector 1 lugar para la izquierda si se lleno el buffer
 		memcpy( (void *) screenBuffer, (void *) (screenBuffer + 1), MAX_LINES - 2 );
+		lineCount--;
+		yLast = lineCount * LINE_WIDTH;
 	}
 	
 	char prevLine[WIDTH];
 	memcpy( (void *) prevLine, (void *) currentLine, WIDTH );
-	screenBuffer[ lineCount - 1 ] = prevLine;
+	screenBuffer[ screenBuffIdx ] = prevLine;
 	memset( currentLine, 0, WIDTH );
 	currentLineSize = 0;
+		
 }
+
+static void refreshChar( int lineNumber, int charIndex ){
+	drawChar( currentLine[charIndex], charIndex * FONT_WIDTH, lineNumber * (LINE_WIDTH) + LINE_MARGIN, 0xFFFFFF ); //blanco pa testear
+}																			//le sumo el margen para que quede centrado 
 
 static void refreshLine( int lineNumber, char * s ){
 	for( int i = 0; i < WIDTH; i++ ){
-		Point2D pos = { i * FONT_WIDTH, lineNumber * ( LINE_WIDTH ) + LINE_MARGIN }; //le sumo el margen para que quede centrado 
-		eraseChar( pos );	//elimino lo que haya para no pisar lo que habia antes
-		drawChar( s[i], pos, 0xFFFFFF );		//probando con blanco para probar la logica primero
-	}
+		refreshChar( lineNumber, i );
+	}	
 }
 
 static void refreshScreen(){
@@ -192,9 +193,9 @@ int printChar( char c, int rgb ){
 
 	*(currentLine + currentLineSize) = c;
 	currentLineSize++;
-	xLast += 8;
+	xLast += FONT_WIDTH;
 	
-	refreshLine( lineCount, currentLine );
+	refreshChar( lineCount, (xLast - 1) / FONT_WIDTH );
 
 	return 0;
 }
