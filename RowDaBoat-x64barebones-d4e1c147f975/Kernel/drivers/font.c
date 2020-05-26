@@ -3453,9 +3453,9 @@ static const unsigned short __font_index__[] = {
 	255,
 };
 
-unsigned char * getCharMap( char c ){
-	int index = c - 32
-	return _font_bitmap_ + (index * 14);
+const unsigned char * getCharMap( char c ){
+	int index = c - 32;
+	return __font_bitmap__ + (index * 14);
 }
 
 	/// bitmap font structure
