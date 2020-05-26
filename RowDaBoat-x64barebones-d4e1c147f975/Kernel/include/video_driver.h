@@ -20,11 +20,13 @@ int drawChar(char c, int x, int y, int rgb);
 
 int printChar( char c, int rgb );
 
-int printString( char * buffer, unsigned int count, int rgb );
+int printString( char * str, unsigned int count, int rgb );
 
 int printNullString( char * s, int rgb );
 
 void newline();
+
+void refreshScreen();
 
 int printInt( int num, int rgb);
 
