@@ -83,9 +83,12 @@ void * initializeKernelBinary()
 
 int main()
 {	
-
-	printNullString( "mbeeeeh1", 0xFFFFFF );
-
+	for( int i = 0; i < 30; i++ ){
+		for( int j = 0; j < 7; j++ ){
+			printChar( 'A' + j, 0xFFFFFF );
+			newline();
+		}
+	}
 
 	return 0;
 }

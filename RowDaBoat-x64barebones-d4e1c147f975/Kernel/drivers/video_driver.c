@@ -16,8 +16,8 @@
 #define LINE_WIDTH (FONT_HEIGHT + 2 * LINE_MARGIN)
 
 //Máxima cantidad de renglones que pueden aparecer en pantalla
-#define MAX_LINES 5
-//(HEIGHT/LINE_WIDTH)
+#define MAX_LINES (HEIGHT/LINE_WIDTH)
+
 
 //Máxima cantidad de caracteres que puede entrar en un renglon
 #define MAX_LINE_CHARS (WIDTH/FONT_WIDTH)
@@ -71,10 +71,10 @@ int xLast = 0;
 int yLast = 0;
 
 //Buffer de la pantalla para permitir scrolling
-char screenBuffer[(MAX_LINES) - 1][MAX_LINE_CHARS] = {0}; //WIDTH + 1 para que los strings puedan ser null terminated
+char screenBuffer[MAX_LINES][MAX_LINE_CHARS] = {0}; //WIDTH + 1 para que los strings puedan ser null terminated
 
 //Buffer de la linea actual que se escribe en pantalla
-static char currentLine[MAX_LINE_CHARS] = {0};
+// static char currentLine[MAX_LINE_CHARS] = {0};
 
 //Cantidad de caracteres en la linea actual
 static int currentLineSize = 0;
@@ -100,7 +100,7 @@ int writePixel( int x, int y, int rgb ) {
 int drawChar( char c, int x, int y, int rgb ){	//dibujar un caracter dado su esquina izq superior y un color
 	const unsigned char * letra = getCharMap(c);
 	if( letra == 0 ){
-		letra = getCharMap(33);		//debe printear vacio
+		letra = getCharMap(32);		//debe printear vacio
 	}
 	for( int i = 0; i < FONT_HEIGHT; i++ ){
 		unsigned char row = letra[i];
@@ -110,7 +110,7 @@ int drawChar( char c, int x, int y, int rgb ){	//dibujar un caracter dado su esq
 				writePixel( x + j, y + i, rgb);
 			}
 			else {
-				writePixel( x + j, y + i, 0xFF0000 ); //negro por ahora
+				writePixel( x + j, y + i, 0 ); //negro por ahora
 			}
 			row = row >> 1;
 		}
@@ -151,21 +151,17 @@ int drawChar( char c, int x, int y, int rgb ){	//dibujar un caracter dado su esq
 static void updateBuffer(){
 
 	xLast = 0;
-	int screenBuffIdx = lineCount; //defino aca el indice en donde debo agregar el string al buffer porque si esta lleno el buffer, se va a poner en lineCount - 2
 
-	if( lineCount != MAX_LINES ){ //solo debo incrementar la posicion de yLast y de las lineas si no estoy parado en la ultima linea
-		lineCount++;
-		yLast = lineCount * LINE_WIDTH; //lineCount podria reemplazarse con yLast / LINE_WIDTH, pero hay que ver que otros usos le vamos a dar a yLast
-	}
-
+	lineCount++;
+	yLast = lineCount * LINE_WIDTH; //lineCount podria reemplazarse con yLast / LINE_WIDTH, pero hay que ver que otros usos le vamos a dar a yLast
+	
 	if( lineCount == MAX_LINES ){ //debo mover todo el vector 1 lugar para la izquierda si se lleno el buffer
-		memcpy( (void *) screenBuffer, (void *) screenBuffer[1], (MAX_LINES - 2)*(MAX_LINE_CHARS) );
+		memcpy( (void *) screenBuffer, (void *) screenBuffer[1], (MAX_LINES - 1)*(MAX_LINE_CHARS) );
 		lineCount--;
 		yLast = lineCount * LINE_WIDTH;
+		memset( screenBuffer[MAX_LINES - 1], 0, MAX_LINE_CHARS );
 	}
 	
-	memcpy( (void *) screenBuffer[screenBuffIdx], (void *) currentLine, MAX_LINE_CHARS );
-	memset( currentLine, 0, MAX_LINE_CHARS );
 	currentLineSize = 0;
 }
 
@@ -186,15 +182,16 @@ void refreshScreen(){
 }
 
 int printChar( char c, int rgb ){
-	if( currentLineSize == MAX_LINE_CHARS - 1 ){
+	if( currentLineSize == MAX_LINE_CHARS ){
 		newline();
 	}
 
-	*(currentLine + currentLineSize) = c;
+	*(screenBuffer[lineCount] + currentLineSize) = c;
 	currentLineSize++;
-	xLast += FONT_WIDTH;
 	
-	refreshChar( lineCount, (xLast - 1) / FONT_WIDTH );
+	refreshChar( lineCount, (xLast) / FONT_WIDTH );
+
+	xLast += FONT_WIDTH;
 
 	return 0;
 }
