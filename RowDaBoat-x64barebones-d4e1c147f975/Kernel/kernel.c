@@ -84,17 +84,8 @@ void * initializeKernelBinary()
 
 int main()
 {	
-<<<<<<< Updated upstream
 	load_idt();
 	while(1);
-=======
-	for( int i = 0; i < 1000 ; i++ ){
-		for( int j = 0; j < 6 ; j++ ){
-			printChar( 'A' + j, 0xFFFFFF );
-			newline();
-		}
-	}
->>>>>>> Stashed changes
 
 	// refreshScreen();
 	return 0;
