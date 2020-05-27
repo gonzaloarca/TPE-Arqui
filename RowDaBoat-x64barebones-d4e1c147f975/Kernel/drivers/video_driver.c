@@ -16,8 +16,8 @@
 #define LINE_WIDTH (FONT_HEIGHT + 2 * LINE_MARGIN)
 
 //Máxima cantidad de renglones que pueden aparecer en pantalla
-#define MAX_LINES  (HEIGHT/LINE_WIDTH)
-#define MAX_VECTOR_LINES (MAX_LINES +1)
+#define SCREEN_LINES  (HEIGHT/LINE_WIDTH)
+#define BUFFER_LINES (SCREEN_LINES +1)
 
 
 //Máxima cantidad de caracteres que puede entrar en un renglon
@@ -72,10 +72,7 @@ int xLast = 0;
 int yLast = 0;
 
 //Buffer de la pantalla para permitir scrolling
-char screenBuffer[MAX_VECTOR_LINES][MAX_LINE_CHARS] = {0}; // necesito una linea mas para tener la anterior
-
-//Buffer de la linea actual que se escribe en pantalla
-// static char currentLine[MAX_LINE_CHARS] = {0};
+char screenBuffer[BUFFER_LINES][MAX_LINE_CHARS] = {0}; // necesito una linea mas para tener la anterior
 
 //Cantidad de caracteres en la linea actual
 static int currentLineSize = 0;
@@ -123,83 +120,61 @@ int drawChar( char c, int x, int y, int rgb ){	//dibujar un caracter dado su esq
 	return 0;
 }
 
-// int eraseChar( int x, int y ){
-// 	for( int i = 0; i < FONT_HEIGHT; i++ ){
-// 		for( int j = 0; j < FONT_WIDTH; j++ ){
-// 			writePixel( x, y, 0 ); //en negro por ahora, hay que ver si vamos a permitir colores de ventana
-// 		}
-// 	}
-
-// 	return 0;
-// }
-
-
-
-// int printChar( char c, int rgb ){ old printChar
-// 	Point2D pos = { xLast, yLast };
-
-// 	if( xLast + 8 >= WIDTH ){
-// 		newline();
-// 		pos.x = xLast;
-// 		pos.y = yLast;	//si no entra el caracter entero en la linea, debo printearlo directamente en la sig
-// 	} else {
-// 		xLast += 8; //ta mal esto, no es siempre 8
-// 	}
-
-// 	drawChar( c, pos, rgb );
-// 	return 0;
-// }
-
 static void updateBuffer(){
-
 	xLast = 0;
+	lineCount++;					// Se agrego una linea en pantalla
 
-	lineCount++;
-	yLast = lineCount * LINE_WIDTH; //lineCount podria reemplazarse con yLast / LINE_WIDTH, pero hay que ver que otros usos le vamos a dar a yLast
-	
-	if( lineCount == MAX_LINES ){ //debo mover todo el vector 1 lugar para la izquierda si se lleno el buffer
-		firstLine = (firstLine + 1) % MAX_VECTOR_LINES;
+	if( lineCount == SCREEN_LINES ){
+		// Ahora la pantalla va a arrancar en una posicion mas alta en el buffer
+		firstLine = (firstLine + 1) % BUFFER_LINES;
 		lineCount--;
-		yLast = lineCount * LINE_WIDTH;
-		int lastLine = (firstLine + MAX_LINES -1) % MAX_VECTOR_LINES; // linea que ahora estara alfinal de la pantalla vacia
-		for(int i = 0; i < MAX_LINE_CHARS ; i++ ){
+		int lastLine = (firstLine + SCREEN_LINES -1) % BUFFER_LINES; // Linea que ahora estara alfinal de la pantalla vacia
+
+		// Solo borro caracteres que quedaron pendientes, no toda la linea
+		for(int i = 0; i < MAX_LINE_CHARS && screenBuffer[lastLine][i] != 0 ; i++ ){
 			screenBuffer[lastLine][i] = 0;
 		}
 	}
-	
+
+	yLast = lineCount * LINE_WIDTH;
 	currentLineSize = 0;
 }
-
-// static void refreshChar( int lineNumber, int charIndex ){
-// 	drawChar( screenBuffer[lineNumber][charIndex], charIndex * FONT_WIDTH, ((firstLine + lineNumber) % MAX_VECTOR_LINES) * (LINE_WIDTH) + LINE_MARGIN, 0xFFFFFF ); //blanco pa testear
-// }																			//le sumo el margen para que quede centrado 
 
 static void refreshLine( int lineNumber ){
 	// recordar que el updateBuffer me movio el firstline una posicion
 
-	int i;
-	for( i = 0; i < MAX_LINE_CHARS && screenBuffer[(firstLine + lineNumber -1) % MAX_VECTOR_LINES][i] != 0 
-		&& screenBuffer[(firstLine + lineNumber) % MAX_VECTOR_LINES][i] != 0 ; i++ ){
-		// primer ciclo, solamente sobreescribe caracteres
-		if(screenBuffer[(firstLine + lineNumber -1) % MAX_VECTOR_LINES][i] != screenBuffer[(firstLine + lineNumber) % MAX_VECTOR_LINES][i]){
-			drawChar( screenBuffer[(firstLine + lineNumber) % MAX_VECTOR_LINES][i], i * FONT_WIDTH, lineNumber * (LINE_WIDTH) + LINE_MARGIN, 0xFFFFFF);
+	int i = 0;																// indice para iterar sobre la linea
+	int currentLineIndex = (firstLine + lineNumber) % BUFFER_LINES;			// indice de la linea en el buffer que debe ser impresa en lineNumber
+	int previousLineIndex;													// indice de la linea en el buffer que se encuentra antes del ciclo escrita en pantalla
+
+	if( firstLine == 0 && lineNumber == 0 )
+		previousLineIndex = BUFFER_LINES -1;								
+	else
+		previousLineIndex = (firstLine + lineNumber -1) % BUFFER_LINES;		// Ya me asegure que el indice sera positivo
+
+	// En este primer ciclo sobreescribire los chars que no comparten la linea que se encuentra en pantalla y la que se debe escribir
+	// Finaliza una vez terminada la linea o una de las lineas
+	for( ; i < MAX_LINE_CHARS && screenBuffer[previousLineIndex][i] != 0 && screenBuffer[currentLineIndex][i] != 0 ; i++ ){
+		if(screenBuffer[previousLineIndex][i] != screenBuffer[currentLineIndex][i]){
+			drawChar( screenBuffer[currentLineIndex][i], i * FONT_WIDTH, lineNumber * (LINE_WIDTH) + LINE_MARGIN, 0xFFFFFF);
 		}
 	}
 
-	while( screenBuffer[(firstLine + lineNumber -1) % MAX_VECTOR_LINES][i] != 0 && i < MAX_LINE_CHARS) {
+	// En caso de que la nueva linea sea mas corta que la anterior, se deben borrar en pantalla las letras que quedaron
+	while( screenBuffer[previousLineIndex][i] != 0 && i < MAX_LINE_CHARS) {
 		drawChar(0, i * FONT_WIDTH, lineNumber * (LINE_WIDTH) + LINE_MARGIN, 0xFFFFFF);
-		// borro caracteres viejos que podrian haber quedado luego del string nuevoicharIndex * FONT_WIDTH, ((firstLine + lineNumber) % MAX_VECTOR_LINES) * (LINE_WIDTH) + LINE_MARGIN, 0xFFFFFF
 		i++;
 	}
-	while( screenBuffer[(firstLine + lineNumber) % MAX_VECTOR_LINES][i] != 0 && i < MAX_LINE_CHARS ) {
-		drawChar( screenBuffer[(firstLine + lineNumber) % MAX_VECTOR_LINES][i], i * FONT_WIDTH, lineNumber * (LINE_WIDTH) + LINE_MARGIN, 0xFFFFFF);
-		// agrega caracteres que pudieron faltar
+
+	// En caso de que la nueva linea sea mas larga que la anterior, se deben agregar en pantalla estas letras sobrantes
+	while( screenBuffer[currentLineIndex][i] != 0 && i < MAX_LINE_CHARS ) {
+		drawChar( screenBuffer[currentLineIndex][i], i * FONT_WIDTH, lineNumber * (LINE_WIDTH) + LINE_MARGIN, 0xFFFFFF);
 		i++;
 	}
 }
 
 void refreshScreen() {
-	for(int i = 0 ; i < MAX_LINES; i++) {
+	for(int i = 0 ; i < SCREEN_LINES; i++) {
 		refreshLine(i);
 	}
 }
@@ -212,11 +187,13 @@ int printChar( char c, int rgb ){
 	}
 
 	if( currentLineSize == MAX_LINE_CHARS ){
+		// Se llego al tope de caracteres que entran en una linea, se debe pasar a la siguiente
 		newline();
 	}
 
+	// Escribo en pantalla el nuevo caracter en la linea y posicion actual, y luego incremento la posicion para el proximo caracter
 	drawChar( c, currentLineSize * FONT_WIDTH, lineCount * (LINE_WIDTH) + LINE_MARGIN, 0xFFFFFF);
-	*(screenBuffer[ (firstLine + lineCount) % MAX_VECTOR_LINES] + currentLineSize) = c;
+	*(screenBuffer[ (firstLine + lineCount) % BUFFER_LINES] + currentLineSize) = c;
 	currentLineSize++;
 	
 
@@ -243,7 +220,8 @@ int printNullString( char * s, int rgb ){
 }
 
 void newline(){
-	if(lineCount == MAX_LINES -1) {
+	if(lineCount == SCREEN_LINES -1) {
+		// Se llego alfinal de las lineas en pantalla, se debe subir una linea para que la ultima quede libre
 		updateBuffer();
 		refreshScreen();
 	}else
