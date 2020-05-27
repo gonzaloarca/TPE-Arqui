@@ -150,28 +150,6 @@ int drawChar( char c, int x, int y, int rgb ){	//dibujar un caracter dado su esq
 // 	return 0;
 // }
 
-static void scrollLineBuffer(int lineNumber) {
-	int i;
-	for( i = 0; i < MAX_LINE_CHARS && screenBuffer[(firstLine + lineNumber) % MAX_VECTOR_LINES][i] != 0 
-		&& screenBuffer[(firstLine + lineNumber + 1) % MAX_VECTOR_LINES][i] != 0 ; i++ ){
-		// primer ciclo, solamente sobreescribe caracteres
-		if(screenBuffer[(firstLine + lineNumber) % MAX_VECTOR_LINES][i] != screenBuffer[(firstLine + lineNumber + 1) % MAX_VECTOR_LINES][i]){
-			screenBuffer[(firstLine + lineNumber) % MAX_VECTOR_LINES][i] = screenBuffer[(firstLine + lineNumber + 1) % MAX_VECTOR_LINES][i];
-		}
-	}
-
-	while( screenBuffer[(firstLine + lineNumber) % MAX_VECTOR_LINES][i] != 0 && i < MAX_LINE_CHARS ) {
-		// borro caracteres viejos que podrian haber quedado luego del string nuevo
-		screenBuffer[(firstLine + lineNumber) % MAX_VECTOR_LINES][i] = 0;
-		i++;
-	}
-	while( screenBuffer[(firstLine + lineNumber + 1) % MAX_VECTOR_LINES][i] != 0 && i < MAX_LINE_CHARS ) {
-		// agrega caracteres que pudieron faltar
-		screenBuffer[(firstLine + lineNumber) % MAX_VECTOR_LINES][i] = screenBuffer[(firstLine + lineNumber + 1) % MAX_VECTOR_LINES][i];
-		i++;
-	}
-}
-
 static void updateBuffer(){
 
 	xLast = 0;
@@ -192,9 +170,9 @@ static void updateBuffer(){
 	currentLineSize = 0;
 }
 
-static void refreshChar( int lineNumber, int charIndex ){
-	drawChar( screenBuffer[lineNumber][charIndex], charIndex * FONT_WIDTH, ((firstLine + lineNumber) % MAX_VECTOR_LINES) * (LINE_WIDTH) + LINE_MARGIN, 0xFFFFFF ); //blanco pa testear
-}																			//le sumo el margen para que quede centrado 
+// static void refreshChar( int lineNumber, int charIndex ){
+// 	drawChar( screenBuffer[lineNumber][charIndex], charIndex * FONT_WIDTH, ((firstLine + lineNumber) % MAX_VECTOR_LINES) * (LINE_WIDTH) + LINE_MARGIN, 0xFFFFFF ); //blanco pa testear
+// }																			//le sumo el margen para que quede centrado 
 
 static void refreshLine( int lineNumber ){
 	// recordar que el updateBuffer me movio el firstline una posicion
@@ -231,10 +209,10 @@ int printChar( char c, int rgb ){
 		newline();
 	}
 
+	drawChar( c, currentLineSize * FONT_WIDTH, lineCount * (LINE_WIDTH) + LINE_MARGIN, 0xFFFFFF);
 	*(screenBuffer[ (firstLine + lineCount) % MAX_VECTOR_LINES] + currentLineSize) = c;
 	currentLineSize++;
 	
-	refreshChar( (firstLine + lineCount) % MAX_LINES, (xLast) / FONT_WIDTH );
 
 	xLast += FONT_WIDTH;
 
