@@ -24,6 +24,8 @@ void load_idt() {
 
   //  Handler del Timer Tick
   setup_IDT_entry (0x20, (uint64_t)&_irq00Handler);
+  //  Handler del Teclado
+  setup_IDT_entry (0x21, (uint64_t)&_irq01Handler);
   //  Handler para sysCalls
   setup_IDT_entry (0x80, (uint64_t)&_sysCallHandler);
 

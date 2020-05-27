@@ -3,7 +3,8 @@
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
-#include "video_driver.h"
+#include <video_driver.h>
+#include <idtLoader.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -83,12 +84,8 @@ void * initializeKernelBinary()
 
 int main()
 {	
-	for( int i = 0; i < 30; i++ ){
-		for( int j = 0; j < 7; j++ ){
-			printChar( 'A' + j, 0xFFFFFF );
-			newline();
-		}
-	}
+	load_idt();
+	while(1);
 
 	return 0;
 }
