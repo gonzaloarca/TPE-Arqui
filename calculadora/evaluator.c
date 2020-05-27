@@ -1,6 +1,25 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "evaluator.h"
+
+int main_op(char *expression, int length);
+
+double strtonum(char *string, int length);
+
+int is_operand(char c);
+
+int balance (char s[]);
+
+double recursive_evaluation(char *expression, int length);
+
+double evaluate(char *expression)
+{
+	if (balance(expression) != 0)
+		return 0;
+
+	return recursive_evaluation(expression, strlen(expression));
+}
 
 /*	Esta funcion funciona recursivamente.
 **	Encuentra el ultimo operador que debe evaluar
@@ -9,7 +28,7 @@
 **		las expresiones a su izquierda y derecha.
 **	Finalmente, evalua utilizando su operador.
 */
-double evaluate(char *expression, int length)
+double recursive_evaluation(char *expression, int length)
 {
 	//	Busco la posicion del operador a evaluar
 	int operator = main_op(expression, length);
@@ -24,16 +43,16 @@ double evaluate(char *expression, int length)
 	if (operator == -1)
 	{
 		//	Si era una expresion con parentesis, tengo que evaluarla
-		if (expression[length-1] == ')')
-			return evaluate(expression, length-1);
+		if (expression[0] == '(' && expression[length-1] == ')')
+			return recursive_evaluation(expression+1, length-2);
 		//	Si no, era un numero y la tengo que convertir
 		return strtonum(expression, length);
 	}
 
 	//	Evaluo expresiones de la izquierda y la derecha del operador
 	double izq, der;
-	izq = evaluate(expression, operator);
-	der = evaluate(expression+operator+1, length-operator-1);
+	izq = recursive_evaluation(expression, operator);
+	der = recursive_evaluation(expression+operator+1, length-operator-1);
 
 	//	Segun cual operador era, devuelvo su resultado correspondiente
 	switch(expression[operator])
@@ -148,4 +167,29 @@ int is_operand(char c)
 		return 1;
 	}
 	return 0;
+}
+
+//	Funcion para checkear si los parentesis son utilizados correctamente
+//	Devuelve 0 si la expresion tiene todos sus parentesis apareados
+//	Copiada de la guia de PI
+int balance (char s[])
+{
+	int b;
+	if ( s[0] == 0 )
+		return 0;
+	
+	b = balance(s+1);
+	
+	if ( s[0] == '(' )
+	{
+		if ( b < 0 )
+			b++;
+		else if ( b == 0 )
+			b--;
+	}
+	
+	else if ( s[0] == ')' )
+		b--;
+	
+	return b;
 }
