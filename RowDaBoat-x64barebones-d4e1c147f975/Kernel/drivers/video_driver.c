@@ -205,6 +205,12 @@ void refreshScreen() {
 }
 
 int printChar( char c, int rgb ){
+	if ( c == '\n')
+	{
+		newline();
+		return 0;
+	}
+
 	if( currentLineSize == MAX_LINE_CHARS ){
 		newline();
 	}
