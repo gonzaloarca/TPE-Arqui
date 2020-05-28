@@ -3,6 +3,8 @@
 
 #include "evaluator.h"
 
+#define ANSWER 'A'
+
 int main_op(char *expression, int length);
 
 double strtonum(char *string, int length);
@@ -13,12 +15,16 @@ int balance (char s[]);
 
 double recursive_evaluation(char *expression, int length);
 
+static int last_result = 0;
+
 double evaluate(char *expression)
 {
 	if (balance(expression) != 0)
 		return 0;
 
-	return recursive_evaluation(expression, strlen(expression));
+	last_result = recursive_evaluation(expression, strlen(expression));
+
+	return last_result;
 }
 
 /*	Esta funcion funciona recursivamente.
@@ -121,6 +127,9 @@ int main_op(char *expression, int length)
 
 double strtonum(char *string, int length)
 {
+	if (string[0] == ANSWER)
+		return last_result;
+
 	//	El numero acumulado hasta ahora
 	double number = 0, aux,
 		exp = 1; 	//Exponente para la parte real del numero
