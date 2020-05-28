@@ -83,10 +83,11 @@ void * initializeKernelBinary()
 }
 
 int main()
-{	
+{
+	//	Cargamos la tabla de interrupciones	
 	load_idt();
-	while(1);
+	//	Llamamos al UserLand
+	((EntryPoint)sampleCodeModuleAddress)();
 
-	// refreshScreen();
 	return 0;
 }
