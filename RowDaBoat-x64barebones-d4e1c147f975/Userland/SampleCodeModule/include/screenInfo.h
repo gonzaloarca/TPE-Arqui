@@ -2,7 +2,7 @@
 #define _SCREEN_INFO_H
 
 // Cantidad de pantallas
-#define N 1
+#define N 2
 
 // Resolución de la pantalla (WIDTH x HEIGHT)
 #define TOTAL_WIDTH 1024
