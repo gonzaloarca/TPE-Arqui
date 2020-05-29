@@ -9,9 +9,11 @@ OBJECTS_ASM=$(SOURCES_ASM:.asm=.o)
 
 all: $(MODULE)
 
-$(MODULE): $(SOURCES) $(SOURCES_ASM) $(SOURCES_MODULES)
-	$(ASM) $(ASMFLAGS) $(SOURCES_ASM) -o $(OBJECTS_ASM)
+$(MODULE): $(SOURCES) $(OBJECTS_ASM) $(SOURCES_MODULES)
 	$(GCC) $(GCCFLAGS) -I./include -T sampleCodeModule.ld _loader.c $(SOURCES) $(SOURCES_MODULES) $(OBJECTS_ASM) -o ../$(MODULE)
+
+%.o : %.asm
+	$(ASM) $(ASMFLAGS) $< -o $@
 
 clean:
 	rm -rf *.o
