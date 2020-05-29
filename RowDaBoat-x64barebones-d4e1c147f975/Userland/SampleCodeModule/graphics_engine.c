@@ -10,11 +10,14 @@ void writePixel(int x, int y, int rgb); // funcion de ASM
 
 void setWindows(){
 	for(int i = 0 ; i < N ; i++){
-		windows[i].xStart = i*WIDTH;
+		windows[i].xStart = i*WIDTH + i*WINDOW_MARGIN;
 		windows[i].yStart = 0;
 		windows[i].firstLine = 0;
 		windows[i].lineCount = 0;
 		windows[i].currentLineSize = 0;
+		for(int j = WIDTH*i + (i-1)*WINDOW_MARGIN; j < i*WIDTH + (i)*WINDOW_MARGIN; j++)
+			for(int k = 0; k < HEIGHT ; k++)
+				writePixel( j, k, WINDOW_MARGIN_COLOR);
 	}
 }
 
@@ -127,7 +130,7 @@ int printChar( char c, int rgb ){
 	
 	// Cambio el caracter en el buffer
 	*(windows[activeWindow].screenBuffer[ (windows[activeWindow].firstLine + windows[activeWindow].lineCount) % BUFFER_LINES ] +
-	windows[activeWindow].currentLineSize) = c;			// PROBLEMA ACA
+	windows[activeWindow].currentLineSize) = c;
 	
 	// Incremento contador de caracteres en linea
 	windows[activeWindow].currentLineSize++;

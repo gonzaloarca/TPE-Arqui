@@ -4,8 +4,12 @@
 // Cantidad de pantallas
 #define N 2
 
+// Tamanio y color del margen entre ventanas
+#define WINDOW_MARGIN 4
+#define WINDOW_MARGIN_COLOR 0xFFFF0
+
 // Resolución de la pantalla (WIDTH x HEIGHT)
-#define TOTAL_WIDTH 1024
+#define TOTAL_WIDTH (1024 - (N-1)*WINDOW_MARGIN)
 
 // Resolucion de cada ventana
 #define HEIGHT 768

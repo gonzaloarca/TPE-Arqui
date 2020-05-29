@@ -9,12 +9,8 @@ int main() {
 	// 	writePixel(i,500,0xFFFFFF);
 
 	setWindows();
-	int s = 0;
 	for(int i = 0 ; i < 100000; i++){
-		if((i%200) == 0){
-			s = (s == 0);
-			switchWindow(s);
-		}
+		switchWindow(i%5);
 		printInt(i, 0xFFFFFF);
 		printChar(" ", 0xFFFFFF);
 	}
