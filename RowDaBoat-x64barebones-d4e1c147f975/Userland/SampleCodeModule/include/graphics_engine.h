@@ -25,4 +25,4 @@ void refreshScreen();
 // Funcion que permite la impresion de un entero
 int printInt( int num, int rgb );
 
-#endif _GRAPHICS_ENGINE_H
+#endif

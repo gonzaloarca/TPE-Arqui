@@ -47,10 +47,10 @@ typedef struct Pixel{
 	uint64_t x;
 	uint64_t y;
 	uint64_t rgb;
-}
+} Pixel;
 
 int writePixel(void *parameters) {
-	Pixel *p = (Pixel) parameters;
+	Pixel *p = (Pixel*) parameters;
 	char (*screen)[screenInfo->width][3] = (char (*)[(screenInfo->width)][3]) ((uint64_t)screenInfo->framebuffer);
 	screen[p->y][p->x][0] = p->rgb & 0xFF;
 	screen[p->y][p->x][1] = (p->rgb >> 8) & 0xFF;
