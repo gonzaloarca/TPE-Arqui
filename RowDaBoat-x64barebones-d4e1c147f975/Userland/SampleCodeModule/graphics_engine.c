@@ -1,18 +1,25 @@
 #include "font.h"
 #include "screenInfo.h"
+#include "graphics_engine.h"
+#include "windowADT.c"
 
-static windowCDT *windows[N];
+static windowADT windows[N];
 static int activeWindow = 0;		// por default arranca en la terminal
+
+void writePixel(int x, int y, int rgb); // funcion de ASM
 
 void setWindows(){
 	for(int i = 0 ; i < N ; i++){
-		windows[i]->xStart = i*WIDHT;
+		windows[i]->xStart = i*WIDTH;
 		windows[i]->yStart = 0;
+		windows[i]->firstLine = 0;
+		windows[i]->lineCount = 0;
+		windows[i]->currentLineSize = 0;
 	}
 }
 
 void switchWindow(int newIndex){
-	if(newIndex < 0 || newIndex > N)
+	if(newIndex < 0 || newIndex >= N || newIndex == activeWindow)
 		return;			// permanece en la ventana actual
 	else
 		activeWindow = newIndex;
@@ -54,12 +61,12 @@ static void updateBuffer(){
 		int lastLine = (windows[activeWindow]->firstLine + SCREEN_LINES -1) % BUFFER_LINES; // Linea que ahora estara alfinal de la pantalla vacia
 
 		// Solo borro caracteres que quedaron pendientes, no toda la linea
-		for(int i = 0; i < MAX_LINE_CHARS && windows[activeWindow]->screenBuffer[lastLine][i] != 0 ; i++ ){
+		for(int i = 0; i < MAX_LINE_CHARS ; i++ ){ //&& windows[activeWindow]->screenBuffer[lastLine][i] != 0
 			windows[activeWindow]->screenBuffer[lastLine][i] = 0;
 		}
 	}
 
-	windows[activeWindow]->yLast = windows[activeWindow]->lineCount * LINE_WIDTH;
+	windows[activeWindow]->yLast = windows[activeWindow]->lineCount * LINE_HEIGHT;
 	windows[activeWindow]->currentLineSize = 0;
 }
 
@@ -67,7 +74,7 @@ static void updateBuffer(){
 // modificando caracter por caracter, en caso de ser necesario, 
 // teniendo en cuenta lo que se tenia escrito en pantalla(linea vieja) y lo que se esta por escribir(linea nueva)
 static void refreshLine( int lineNumber ){
-	// recordar que el updateBuffer me movio el firstline una posicion
+	// recordar que el updateBuffer me movio el firstLine una posicion
 
 	int i = 0;																					// indice para iterar sobre la linea
 	int currentLineIndex = (windows[activeWindow]->firstLine + lineNumber) % BUFFER_LINES;		// indice de la linea en el buffer que debe ser impresa en lineNumber
@@ -82,19 +89,19 @@ static void refreshLine( int lineNumber ){
 	// Finaliza una vez terminada la linea o una de las lineas
 	for( ; i < MAX_LINE_CHARS && windows[activeWindow]->screenBuffer[previousLineIndex][i] != 0 && windows[activeWindow]->screenBuffer[currentLineIndex][i] != 0 ; i++ ){
 		if(windows[activeWindow]->screenBuffer[previousLineIndex][i] != windows[activeWindow]->screenBuffer[currentLineIndex][i]){
-			drawChar( windows[activeWindow]->screenBuffer[currentLineIndex][i], windows[activeWindow]->xStart + i * FONT_WIDTH, windows[activeWindow]->yStart + lineNumber * (LINE_WIDTH) + LINE_MARGIN, CHAR_COLOR);
+			drawChar( windows[activeWindow]->screenBuffer[currentLineIndex][i], windows[activeWindow]->xStart + i * FONT_WIDTH, windows[activeWindow]->yStart + lineNumber * (LINE_HEIGHT) , CHAR_COLOR);
 		}
 	}
 
 	// En caso de que la nueva linea sea mas corta que la anterior, se deben borrar en pantalla las letras que quedaron
 	while( windows[activeWindow]->screenBuffer[previousLineIndex][i] != 0 && i < MAX_LINE_CHARS) {
-		drawChar(0, windows[activeWindow]->xStart + i * FONT_WIDTH, windows[activeWindow]->yStart + lineNumber * (LINE_WIDTH) + LINE_MARGIN, CHAR_COLOR);
+		drawChar(0, windows[activeWindow]->xStart + i * FONT_WIDTH, windows[activeWindow]->yStart + lineNumber * (LINE_HEIGHT) , CHAR_COLOR);
 		i++;
 	}
 
 	// En caso de que la nueva linea sea mas larga que la anterior, se deben agregar en pantalla estas letras sobrantes
 	while( windows[activeWindow]->screenBuffer[currentLineIndex][i] != 0 && i < MAX_LINE_CHARS ) {
-		drawChar( windows[activeWindow]->screenBuffer[currentLineIndex][i], windows[activeWindow]->xStart + i * FONT_WIDTH, windows[activeWindow]->yStart + lineNumber * (LINE_WIDTH) + LINE_MARGIN, CHAR_COLOR);
+		drawChar( windows[activeWindow]->screenBuffer[currentLineIndex][i], windows[activeWindow]->xStart + i * FONT_WIDTH, windows[activeWindow]->yStart + lineNumber * (LINE_HEIGHT) , CHAR_COLOR);
 		i++;
 	}
 }
@@ -108,20 +115,20 @@ void refreshScreen() {
 int printChar( char c, int rgb ){
 	if ( c == '\n')
 	{
-		newline();
+		newLine();
 		return 0;
 	}
 
 	if( windows[activeWindow]->currentLineSize == MAX_LINE_CHARS ){
 		// Se llego al tope de caracteres que entran en una linea, se debe pasar a la siguiente
-		newline();
+		newLine();
 	}
 
 	// Escribo en pantalla el nuevo caracter en la linea y posicion actual, y luego incremento la posicion para el proximo caracter
-	drawChar( c, windows[activeWindow]->xStart + windows[activeWindow]->currentLineSize * FONT_WIDTH, windows[activeWindow]->yStart + windows[activeWindow]->lineCount * (LINE_WIDTH) + LINE_MARGIN, CHAR_COLOR);
+	drawChar( c, windows[activeWindow]->xStart + windows[activeWindow]->currentLineSize * FONT_WIDTH, windows[activeWindow]->yStart + windows[activeWindow]->lineCount * (LINE_HEIGHT) , CHAR_COLOR);
 	
 	// Cambio el caracter en el buffer
-	*(windows[activeWindow]->screenBuffer[ (windows[activeWindow]->firstLine + windows[activeWindow]->lineCount) % BUFFER_LINES] + windows[activeWindow]->currentLineSize) = c;
+	*(windows[activeWindow]->screenBuffer[ (windows[activeWindow]->firstLine + windows[activeWindow]->lineCount) % BUFFER_LINES ] + windows[activeWindow]->currentLineSize) = c;
 	windows[activeWindow]->currentLineSize++;
 	
 	windows[activeWindow]->xLast += FONT_WIDTH;
@@ -146,7 +153,7 @@ int printNullString( char * s, int rgb ){
 	return 0;
 }
 
-void newline(){
+void newLine(){
 	if(windows[activeWindow]->lineCount == SCREEN_LINES -1) {
 		// Se llego alfinal de las lineas en pantalla, se debe subir una linea para que la ultima quede libre
 		updateBuffer();

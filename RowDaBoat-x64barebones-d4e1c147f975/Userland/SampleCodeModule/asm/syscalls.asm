@@ -9,9 +9,9 @@ writePixel:
 	push rdx
 
 	mov rax, 7			; numero de syscall writePixel
-	mov rbx, [rbp+16]	; primer parametro
-	mov rcx, [rbp+24]
-	mov rdx, [rbp+32]
+	mov rbx, rdi		; primer parametro
+	mov rcx, rsi
+	mov rdx, rdx
 	int 80h
 
 	pop rdx

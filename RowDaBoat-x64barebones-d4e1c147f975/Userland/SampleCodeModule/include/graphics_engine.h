@@ -17,7 +17,7 @@ int printString( char * str, unsigned int count, int rgb );
 int printNullString( char * s, int rgb );
 
 // Funcion que permite realizar un cambio de linea en la ventana actual
-void newline();
+void newLine();
 
 // Funcion que permite realizar un refresco de la ventana, borrando todas las lineas mostradas
 void refreshScreen();

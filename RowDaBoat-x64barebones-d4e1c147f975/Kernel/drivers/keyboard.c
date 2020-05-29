@@ -32,7 +32,7 @@ void keyboard_handler()
 	//	Verifico que key es el codigo
 	char c = checkKey(code);
 
-	if (c != 0) printChar(c, 0xFFFFFF);
+	// if (c != 0) printChar(c, 0xFFFFFF);
 }
 
 char checkKey(int code)
