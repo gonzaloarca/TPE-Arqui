@@ -6,11 +6,7 @@ typedef struct windowCDT{
 	// Donde arranca el canvas de esta ventana
 	int xStart;
 	int yStart;
-
-	// Ultimas posiciones dentro de la ventana (no incluye desfasaje de xStart ni yStart)
-	int xLast;
-	int yLast;
-
+	
 	// Buffer de la pantalla para permitir scrolling
 	char screenBuffer[BUFFER_LINES][MAX_LINE_CHARS]; // necesito una linea mas para tener la anterior
 

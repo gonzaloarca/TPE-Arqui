@@ -7,10 +7,9 @@
 // Resolución de la pantalla (WIDTH x HEIGHT)
 #define TOTAL_WIDTH 1024
 
-
 // Resolucion de cada ventana
 #define HEIGHT 768
-#define WIDTH ((TOTAL_WIDTH/N))		// Las pantallas se distribuyen horizontalmente
+#define WIDTH (TOTAL_WIDTH/N)		// Las pantallas se distribuyen horizontalmente
 
 // Tamaño de la fuente
 #define FONT_HEIGHT 14
@@ -18,7 +17,7 @@
 
 // Ancho del renglon
 #define LINE_MARGIN  1
-#define LINE_HEIGHT (FONT_HEIGHT + LINE_MARGIN)
+#define LINE_HEIGHT (FONT_HEIGHT + 2*LINE_MARGIN)
 
 // Máxima cantidad de renglones que pueden aparecer en cada ventana
 #define SCREEN_LINES (HEIGHT/LINE_HEIGHT)
