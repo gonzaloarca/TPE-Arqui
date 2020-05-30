@@ -1,4 +1,3 @@
-#include <font.h>
 #include <screenInfo.h>
 #include <graphics_engine.h>
 #include <window.h>
@@ -6,7 +5,9 @@
 static Window windows[N] = {{0}};
 static int activeWindow = 0;		// por default arranca en la terminal
 
-void writePixel(int x, int y, int rgb); // funcion de ASM
+// Funciones ASM que ejecutan las correspondientes syscalls
+void writePixel(int x, int y, int rgb);
+void drawChar( char c, int x, int y, int rgb, int backgroundColour );
 
 void setWindows(){
 	for(int i = 0 ; i < N ; i++){
@@ -18,19 +19,19 @@ void setWindows(){
 		// Borde izquierdo
 		for(int j = i*WINDOW_WIDTH; j < i*WINDOW_WIDTH+WINDOW_MARGIN ; j++)
 			for(int k = WINDOW_MARGIN; k < WINDOW_HEIGHT - WINDOW_MARGIN; k++)		// no abarca nada del borde superior
-				writePixel( j, k, WINDOW_MARGIN_COLOR);
+				writePixel( j, k, WINDOW_MARGIN_COLOUR);
 		// Borde derecho
 		for(int j = (i+1)*WINDOW_WIDTH- WINDOW_MARGIN; j < (i+1)*WINDOW_WIDTH ; j++)
 			for(int k = WINDOW_MARGIN; k < WINDOW_HEIGHT - WINDOW_MARGIN; k++)
-				writePixel( j, k, WINDOW_MARGIN_COLOR);
+				writePixel( j, k, WINDOW_MARGIN_COLOUR);
 		// Borde superior
 		for(int j = 0 ; j < WINDOW_MARGIN ; j++)
 			for(int k = i*WINDOW_WIDTH; k < (i+1)*WINDOW_WIDTH ; k++)
-				writePixel( k, j, WINDOW_MARGIN_COLOR);
+				writePixel( k, j, WINDOW_MARGIN_COLOUR);
 		// Borde inferior
 		for(int j = TOTAL_HEIGHT - WINDOW_MARGIN ; j < TOTAL_HEIGHT ; j++)
 			for(int k = i*WINDOW_WIDTH; k < (i+1)*WINDOW_WIDTH ; k++)
-				writePixel( k, j, WINDOW_MARGIN_COLOR);
+				writePixel( k, j, WINDOW_MARGIN_COLOUR);
 	}
 }
 
@@ -39,29 +40,6 @@ void switchWindow(int newIndex){
 		return;			// permanece en la ventana actual
 	else
 		activeWindow = newIndex;
-}
-
-//  Funcion de uso interno que se encarga de utilizar la syscall para dibujar un caracter en pantalla dado su esquina izq superior y un color
-static int drawChar( char c, int x, int y, int rgb ){	
-	const unsigned char * letra = getCharMap(c);
-	if( letra == 0 ){
-		letra = getCharMap(32);		//debe printear vacio
-	}
-	for( int i = 0; i < FONT_HEIGHT; i++ ){
-		unsigned char row = letra[i];
-		for( int j = FONT_WIDTH - 1; j >= 0; j-- ){
-			unsigned char aux = row & 1;
-			if( aux == 1 ){
-				writePixel( x + j, y + i, rgb);
-			}
-			else {
-				writePixel( x + j, y + i, BACKGROUND_COLOR ); //negro por ahora
-			}
-			row = row >> 1;
-		}
-	}	
-
-	return 0;
 }
 
 //  Funcion de uso interno que realiza la actualizacion de las lineas del buffer de la ventana activa, 
@@ -112,21 +90,21 @@ static void refreshLine( int lineNumber ){
 	{
 		if(previousLine[i] != currentLine[i]){
 			drawChar(currentLine[i], currentWindow->xStart + i * FONT_WIDTH, 
-				currentWindow->yStart + lineNumber * (LINE_HEIGHT) + LINE_MARGIN, CHAR_COLOR);
+				currentWindow->yStart + lineNumber * (LINE_HEIGHT) + LINE_MARGIN, CHAR_COLOUR, BACKGROUND_COLOUR);
 		}
 	}
 
 	// En caso de que la nueva linea sea mas corta que la anterior, se deben borrar en pantalla las letras que quedaron
 	while( previousLine[i] != 0 && i < MAX_LINE_CHARS) {
 		drawChar(0, currentWindow->xStart + i * FONT_WIDTH, 
-			currentWindow->yStart + lineNumber * (LINE_HEIGHT) + LINE_MARGIN, CHAR_COLOR);
+			currentWindow->yStart + lineNumber * (LINE_HEIGHT) + LINE_MARGIN, CHAR_COLOUR, BACKGROUND_COLOUR);
 		i++;
 	}
 
 	// En caso de que la nueva linea sea mas larga que la anterior, se deben agregar en pantalla estas letras sobrantes
 	while( currentLine[i] != 0 && i < MAX_LINE_CHARS ) {
 		drawChar(currentLine[i], currentWindow->xStart + i * FONT_WIDTH, 
-			currentWindow->yStart + lineNumber * (LINE_HEIGHT) + LINE_MARGIN, CHAR_COLOR);
+			currentWindow->yStart + lineNumber * (LINE_HEIGHT) + LINE_MARGIN, CHAR_COLOUR, BACKGROUND_COLOUR);
 		i++;
 	}
 }
@@ -153,7 +131,7 @@ int printChar( char c, int rgb ){
 
 	// Escribo en pantalla el nuevo caracter en la linea y posicion actual, y luego incremento la posicion para el proximo caracter
 	drawChar( c, currentWindow->xStart + currentWindow->currentLineSize * FONT_WIDTH, 
-		currentWindow->yStart + currentWindow->lineCount * (LINE_HEIGHT) + LINE_MARGIN, CHAR_COLOR);
+		currentWindow->yStart + currentWindow->lineCount * (LINE_HEIGHT) + LINE_MARGIN, CHAR_COLOUR, BACKGROUND_COLOUR);
 	
 	// Cambio el caracter en el buffer
 	//*(windows[activeWindow].screenBuffer[ (windows[activeWindow].firstLine + windows[activeWindow].lineCount) % BUFFER_LINES ] +

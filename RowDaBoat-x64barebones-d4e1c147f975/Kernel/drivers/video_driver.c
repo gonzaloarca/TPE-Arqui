@@ -1,6 +1,7 @@
 #include <video_driver.h>
 #include <stdint.h>
 #include <keyboard.h>
+#include <font.h>
 
 extern void haltcpu();
 
@@ -56,51 +57,73 @@ int sys_writePixel(int x, int y, int rgb) {
 	return 0;
 }
 
-void sys_setStdOut( void (*printChar)(char) ){
-	stdOutPrint = printChar;
-}
-
-void sys_setStdError( void (*printCharRed)(char) ){
-	stdErrPrint = printCharRed;
-}
-
-uint64_t sys_write( unsigned int fd, const char *buffer, unsigned long count ){
-	if( fd == 1 ){	//salida estandar
-		int i = 0;
-		for( ; i < count; i++ ){
-			stdOutPrint(buffer[i]);
-		}
-		return i;
+//  Funcion de uso interno que se encarga de dibujar un caracter en pantalla(con la font default) dado su esquina izq superior y un color
+int sys_drawChar( char c, int x, int y, int rgb, int backgroundColour ){	
+	const unsigned char * letra = getCharMap(c);
+	if( letra == 0 ){
+		letra = getCharMap(32);		//debe printear vacio
 	}
-
-	if( fd == 2 ){	//standard error
-		int i = 0;
-		for( ; i < count; i++ ){
-			stdErrPrint(buffer[i]);
-		}
-		return i;
-	}
-
-	return 0; //si el fd no es stdout o stderr, no se puede escribir, por ende devuleve 0.
-}
-
-uint64_t sys_read( unsigned int fd, char *buffer, unsigned long count ){
-	if( fd == 0 ){ //entrada estandar
-		int i = 0;
-		char c = 0;
-
-		emptyBuffer();
-
-		for( ; i < count && c != '\n'; i++ ){
-			while( c != 0 ){
-				haltcpu();
-				c = readKey(); //solo entra aca una vez que haya una interrupcion de hardware; si es el timertick, devuelve 0 porque el teclado no tiene nada para dar
+	for( int i = 0; i < FONT_HEIGHT; i++ ){
+		unsigned char row = letra[i];
+		for( int j = FONT_WIDTH - 1; j >= 0; j-- ){
+			unsigned char aux = row & 1;
+			if( aux == 1 ){
+				sys_writePixel( x + j, y + i, rgb);
 			}
-			buffer[i] = c;
+			else {
+				sys_writePixel( x + j, y + i, backgroundColour );
+			}
+			row = row >> 1;
 		}
-
-		return i;
 	}
-
-	return 0; //solo implementamos leer de entrada estandar
+	return 0;
 }
+
+// void sys_setStdOut( void (*printChar)(char) ){
+// 	stdOutPrint = printChar;
+// }
+
+// void sys_setStdError( void (*printCharRed)(char) ){
+// 	stdErrPrint = printCharRed;
+// }
+
+// uint64_t sys_write( unsigned int fd, const char *buffer, unsigned long count ){
+// 	if( fd == 1 ){	//salida estandar
+// 		int i = 0;
+// 		for( ; i < count; i++ ){
+// 			stdOutPrint(buffer[i]);
+// 		}
+// 		return i;
+// 	}
+
+// 	if( fd == 2 ){	//standard error
+// 		int i = 0;
+// 		for( ; i < count; i++ ){
+// 			stdErrPrint(buffer[i]);
+// 		}
+// 		return i;
+// 	}
+
+// 	return 0; //si el fd no es stdout o stderr, no se puede escribir, por ende devuleve 0.
+// }
+
+// uint64_t sys_read( unsigned int fd, char *buffer, unsigned long count ){
+// 	if( fd == 0 ){ //entrada estandar
+// 		int i = 0;
+// 		char c = 0;
+
+// 		emptyBuffer();
+
+// 		for( ; i < count && c != '\n'; i++ ){
+// 			while( c != 0 ){
+// 				haltcpu();
+// 				c = readKey(); //solo entra aca una vez que haya una interrupcion de hardware; si es el timertick, devuelve 0 porque el teclado no tiene nada para dar
+// 			}
+// 			buffer[i] = c;
+// 		}
+
+// 		return i;
+// 	}
+
+// 	return 0; //solo implementamos leer de entrada estandar
+// }

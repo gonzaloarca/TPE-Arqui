@@ -1,5 +1,9 @@
 // (c) 2009, 2010 Lutz Sammer, License: AGPLv3
 
+// Tamaño de la fuente default
+#define FONT_HEIGHT 14
+#define FONT_WIDTH  8
+
 	/// bitmap font structure
 struct bitmap_font {
 	unsigned char Width;		///< max. character width

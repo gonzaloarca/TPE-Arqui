@@ -6,7 +6,7 @@
 
 // Tamanio y color del margen entre ventanas
 #define WINDOW_MARGIN 4
-#define WINDOW_MARGIN_COLOR 0xFFFF0
+#define WINDOW_MARGIN_COLOUR 0xFFFF0
 
 // Resolución de la pantalla (WIDTH x HEIGHT)
 #define TOTAL_WIDTH 1024
@@ -16,7 +16,7 @@
 #define WINDOW_HEIGHT 768		// Le saco el margen de arriba y de abajo
 #define WINDOW_WIDTH (TOTAL_WIDTH/N)				// Las pantallas se distribuyen horizontalmente
 
-// Tamaño de la fuente
+// Tamaño de la fuente default
 #define FONT_HEIGHT 14
 #define FONT_WIDTH  8
 
@@ -32,8 +32,8 @@
 #define MAX_LINE_CHARS ((WINDOW_WIDTH - 2*WINDOW_MARGIN)/FONT_WIDTH)		// Le saco los margenes de los costados
 
 // Color de fondo y letra
-#define BACKGROUND_COLOR 0		// negro
-#define CHAR_COLOR 0xFFFFFF		// blanco	// that's racist
+#define BACKGROUND_COLOUR 0		// negro
+#define CHAR_COLOUR 0xFFFFFF		// blanco	// that's racist
 
 
 #endif
