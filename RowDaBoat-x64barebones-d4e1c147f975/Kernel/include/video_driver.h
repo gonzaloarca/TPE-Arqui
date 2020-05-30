@@ -1,6 +1,6 @@
 #ifndef VIDEO_DRIVER_H_
 #define VIDEO_DRIVER_H_
 
-int writePixel(void *parameters);
+int sys_writePixel(int x, int y, int rgb);
 
 #endif
