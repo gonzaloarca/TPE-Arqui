@@ -12,7 +12,7 @@ int main() {
 	for(int i = 0 ; i < 100000; i++){
 		switchWindow(i%5);
 		printInt(i, 0xFFFFFF);
-		printChar(" ", 0xFFFFFF);
+		printChar(' ', 0xFFFFFF);
 	}
 	return 0;
 }

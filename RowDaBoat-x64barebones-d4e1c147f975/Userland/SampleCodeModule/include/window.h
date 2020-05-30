@@ -1,6 +1,10 @@
+#ifndef WINDOW_H
+
+#define WINDOW_H
+
 #include <screenInfo.h>
 
-typedef struct windowCDT{
+typedef struct{
 
 	// Donde arranca el canvas de esta ventana
 	int xStart;
@@ -18,4 +22,6 @@ typedef struct windowCDT{
 	// Linea en la cual arranca la pantalla
 	int firstLine;
 
-} windowCDT;
+} Window;
+
+#endif
