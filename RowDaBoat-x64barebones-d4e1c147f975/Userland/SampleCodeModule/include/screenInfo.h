@@ -9,11 +9,12 @@
 #define WINDOW_MARGIN_COLOR 0xFFFF0
 
 // Resolución de la pantalla (WIDTH x HEIGHT)
-#define TOTAL_WIDTH (1024 - (N-1)*WINDOW_MARGIN)
+#define TOTAL_WIDTH 1024
+#define TOTAL_HEIGHT 768
 
 // Resolucion de cada ventana
-#define HEIGHT 768
-#define WIDTH (TOTAL_WIDTH/N)		// Las pantallas se distribuyen horizontalmente
+#define WINDOW_HEIGHT 768		// Le saco el margen de arriba y de abajo
+#define WINDOW_WIDTH (TOTAL_WIDTH/N)				// Las pantallas se distribuyen horizontalmente
 
 // Tamaño de la fuente
 #define FONT_HEIGHT 14
@@ -24,11 +25,11 @@
 #define LINE_HEIGHT (FONT_HEIGHT + 2*LINE_MARGIN)
 
 // Máxima cantidad de renglones que pueden aparecer en cada ventana
-#define SCREEN_LINES (HEIGHT/LINE_HEIGHT)
-#define BUFFER_LINES (SCREEN_LINES +1)
+#define SCREEN_LINES ((TOTAL_HEIGHT - 2*WINDOW_MARGIN)/LINE_HEIGHT)
+#define BUFFER_LINES (SCREEN_LINES + 1)
 
 // Máxima cantidad de caracteres que puede entrar en un renglon de una ventana
-#define MAX_LINE_CHARS (WIDTH/FONT_WIDTH)
+#define MAX_LINE_CHARS ((WINDOW_WIDTH - 2*WINDOW_MARGIN)/FONT_WIDTH)		// Le saco los margenes de los costados
 
 // Color de fondo y letra
 #define BACKGROUND_COLOR 0		// negro

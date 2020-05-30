@@ -10,14 +10,27 @@ void writePixel(int x, int y, int rgb); // funcion de ASM
 
 void setWindows(){
 	for(int i = 0 ; i < N ; i++){
-		windows[i].xStart = i*WIDTH + i*WINDOW_MARGIN;
-		windows[i].yStart = 0;
+		windows[i].xStart = i*WINDOW_WIDTH + WINDOW_MARGIN;
+		windows[i].yStart = WINDOW_MARGIN;
 		windows[i].firstLine = 0;
 		windows[i].lineCount = 0;
 		windows[i].currentLineSize = 0;
-		for(int j = WIDTH*i + (i-1)*WINDOW_MARGIN; j < i*WIDTH + (i)*WINDOW_MARGIN; j++)
-			for(int k = 0; k < HEIGHT ; k++)
+		// Borde izquierdo
+		for(int j = i*WINDOW_WIDTH; j < i*WINDOW_WIDTH+WINDOW_MARGIN ; j++)
+			for(int k = WINDOW_MARGIN; k < WINDOW_HEIGHT - WINDOW_MARGIN; k++)		// no abarca nada del borde superior
 				writePixel( j, k, WINDOW_MARGIN_COLOR);
+		// Borde derecho
+		for(int j = (i+1)*WINDOW_WIDTH- WINDOW_MARGIN; j < (i+1)*WINDOW_WIDTH ; j++)
+			for(int k = WINDOW_MARGIN; k < WINDOW_HEIGHT - WINDOW_MARGIN; k++)
+				writePixel( j, k, WINDOW_MARGIN_COLOR);
+		// Borde superior
+		for(int j = 0 ; j < WINDOW_MARGIN ; j++)
+			for(int k = i*WINDOW_WIDTH; k < (i+1)*WINDOW_WIDTH ; k++)
+				writePixel( k, j, WINDOW_MARGIN_COLOR);
+		// Borde inferior
+		for(int j = TOTAL_HEIGHT - WINDOW_MARGIN ; j < TOTAL_HEIGHT ; j++)
+			for(int k = i*WINDOW_WIDTH; k < (i+1)*WINDOW_WIDTH ; k++)
+				writePixel( k, j, WINDOW_MARGIN_COLOR);
 	}
 }
 
