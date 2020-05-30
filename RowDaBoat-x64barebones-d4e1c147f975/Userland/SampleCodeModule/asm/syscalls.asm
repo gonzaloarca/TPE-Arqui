@@ -1,18 +1,21 @@
 GLOBAL writePixel
+GLOBAL read
+GLOBAL emptyBuffer
+GLOBAL getKey
 GLOBAL drawChar
 
 section .text
-writePixel:
+writePixel:				; void writePixel( int x, int y, int rgb )
 	push rbp
 	mov rbp, rsp
 	push rbx
 	push rcx
 	push rdx
 
-	mov rax, 7			; numero de syscall writePixel
+	mov rax, 7			; numero de syscall sys_writePixel
 	mov rbx, rdi		; primer parametro
 	mov rcx, rsi
-	mov rdx, rdx
+	;en rdx ya esta cargado el 3er parametro
 	int 80h
 
 	pop rdx
@@ -44,3 +47,49 @@ drawChar:
 	mov rsp, rbp
 	pop rbp
 	ret
+
+read:					; int read( unsigned int fd, char *buffer, unsigned long count )
+	push rbp
+	mov rbp, rsp
+	push rbx
+	push rcx
+	push rdx
+
+	mov rax, 3			; numero de syscall sys_read
+	mov rbx, rdi		; 1er parametro 
+	mov rcx, rsi		; 2do parametro
+	;en rdx ya esta cargado el 3er parametro
+	int 80h
+
+	pop rdx
+	pop rcx
+	pop rbx
+	mov rsp, rbp
+	pop rbp
+	ret
+
+emptyBuffer:			; void emptyBuffer()
+	push rbp
+	mov rbp, rsp
+	push rax
+
+	mov rax, 10
+	int 80h
+
+	pop rax
+	mov rsp, rbp
+	pop rbp
+	ret
+
+getKey:					; char getKey()
+	push rbp
+	mov rbp, rsp
+
+	mov rax, 11
+	int 80h
+
+	mov rsp, rbp
+	pop rbp
+	ret
+
+	

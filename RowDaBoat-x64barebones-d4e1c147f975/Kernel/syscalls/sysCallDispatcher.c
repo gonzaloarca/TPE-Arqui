@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <keyboard.h>
 #include <video_driver.h>
 
 typedef struct{
@@ -10,7 +11,7 @@ typedef struct{
 }*Registers;
 
 
-// //	La syscall 3 es read
+//	La syscall 3 es read
 // uint64_t syscall_03(uint64_t rbx, uint64_t rcx, uint64_t rdx)
 // {
 // 	return sys_read( (unsigned int) rbx, (char*) rcx, (unsigned long) rdx );
@@ -35,13 +36,18 @@ uint64_t syscall_08(uint64_t rbx, uint64_t rcx, uint64_t rdx, uint64_t rsi, uint
 	return sys_drawChar( (char) rbx, (int) rcx, (int) rdx, (int) rsi, (int) rdi);
 }
 
-//	La syscall 9 setea la salida estándar actual
-// uint64_t syscall_09(uint64_t rbx)
-// {
-// 	sys_setStdOut( (void (*)( char )) rbx );
-// 	return 0;
-// }
+//	La syscall 10 vacia el buffer de teclado
+uint64_t syscall_10()
+{
+	sys_emptyBuffer();
+	return 0;	
+}
 
+//	La syscall 11 recibe una tecla del teclado y la devuelve en formato ASCII
+uint64_t syscall_11()
+{
+	return sys_getKey();
+}
 
 //	scNumber indica a cual syscall se llamo
 //	parameters es una estructura con los parametros para la syscall
@@ -57,9 +63,13 @@ uint64_t sysCallDispatcher(uint64_t scNumber, Registers reg)
 
 		case 7: return syscall_07( reg->rbx, reg->rcx, reg->rdx );
 
-		case 8: return syscall_08( reg->rbx, reg->rcx, reg->rdx, reg->rsi, reg->rdi);
+		case 8: return syscall_08( reg->rbx, reg->rcx, reg->rdx, reg->rsi, reg->rdi );
 
-		// case 9: return sys_call09( reg->rbx );
+		//case 9: return syscall_09( reg->rbx );
+
+		case 10: return syscall_10();
+
+		case 11: return syscall_11();
 	}
 
 	return 0;

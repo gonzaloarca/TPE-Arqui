@@ -104,9 +104,6 @@ int sys_drawChar( char c, int x, int y, int rgb, int backgroundColour ){
 // 		return i;
 // 	}
 
-// 	return 0; //si el fd no es stdout o stderr, no se puede escribir, por ende devuleve 0.
-// }
-
 // uint64_t sys_read( unsigned int fd, char *buffer, unsigned long count ){
 // 	if( fd == 0 ){ //entrada estandar
 // 		int i = 0;
@@ -114,7 +111,7 @@ int sys_drawChar( char c, int x, int y, int rgb, int backgroundColour ){
 
 // 		emptyBuffer();
 
-// 		for( ; i < count && c != '\n'; i++ ){
+// 		for( ; i < count; i++ ){
 // 			while( c != 0 ){
 // 				haltcpu();
 // 				c = readKey(); //solo entra aca una vez que haya una interrupcion de hardware; si es el timertick, devuelve 0 porque el teclado no tiene nada para dar
