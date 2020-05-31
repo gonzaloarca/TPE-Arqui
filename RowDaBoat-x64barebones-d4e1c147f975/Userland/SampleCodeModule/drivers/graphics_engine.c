@@ -212,19 +212,34 @@ void getInput( char *inputBuffer, unsigned int buffer_size ){
 			case 17:		//codigo ASCII asignado al make code del Ctrl
 				ctrl = 1;
 				break;
+			
 			case 18:		//codigo ASCII asignado al break code del Ctrl
 				ctrl = 0;
 				break;
+			
+			case '\b':
+				if( i == 0 ){
+					break;
+				}
+				i--;
+				printChar( c, CHAR_COLOUR );
+				break;
+			
 			case '1':
 				if( ctrl && activeWindow != 0 ){
 					//insert rutina de cambiar de programa here
 					break;
 				}
+				inputBuffer[i++] = c;
+				printChar( c, CHAR_COLOUR );
+				break;
+			
 			case '2':
 				if( ctrl && activeWindow != 1 ){
 					//insert rutina de cambiar de programa here
 					break;
 				}
+			
 			default:
 				inputBuffer[i++] = c;
 				printChar( c, CHAR_COLOUR );	
