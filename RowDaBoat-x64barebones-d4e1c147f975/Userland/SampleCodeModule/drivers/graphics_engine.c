@@ -195,7 +195,7 @@ void newLine(){
 		updateBuffer();
 }
 
-void getInput( char *inputBuffer, unsigned int buffer_size ){
+int getInput( char *inputBuffer, unsigned int buffer_size ){
 
 	emptyBuffer();
 	char c = 0;
@@ -245,6 +245,7 @@ void getInput( char *inputBuffer, unsigned int buffer_size ){
 				printChar( c, CHAR_COLOUR );	
 		}
 	}
+	return i;
 }
 
 static void numToString( int num, char * str ){

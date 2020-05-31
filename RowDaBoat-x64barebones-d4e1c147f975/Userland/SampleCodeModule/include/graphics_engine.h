@@ -19,8 +19,8 @@ int printNullString( char * s, int rgb );
 // Funcion que permite realizar un cambio de linea en la ventana actual
 void newLine();
 
-// Funcion que permite obtener la entrada del teclado y guardarla en un buffer
-void getInput( char *inputBuffer, unsigned int buffer_size );
+// Funcion que permite obtener la entrada del teclado y guardarla en un buffer, retorna la cantidad de caracteres leidos
+int getInput( char *inputBuffer, unsigned int buffer_size );
 
 // Funcion que permite realizar un refresco de la ventana, borrando todas las lineas mostradas
 void refreshScreen();
