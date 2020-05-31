@@ -8,6 +8,10 @@ static int activeWindow = 0;		// por default arranca en la terminal
 // Funciones ASM que ejecutan las correspondientes syscalls
 void writePixel(int x, int y, int rgb);
 void drawChar( char c, int x, int y, int rgb, int backgroundColour );
+int read( unsigned int fd, char *buffer, unsigned long count ); //funcion de ASM
+void emptyBuffer();	//funcion de ASM
+char getKey();	//funcion de ASM
+void _hlt();
 
 void setWindows(){
 	for(int i = 0 ; i < N ; i++){
@@ -172,6 +176,43 @@ void newLine(){
 		refreshScreen();
 	}else
 		updateBuffer();
+}
+
+void getInput( char *inputBuffer, unsigned int buffer_size ){
+
+	emptyBuffer();
+	char c = 0;
+	int ctrl = 0;
+	int i = 0;
+
+	while( c != '\n' && i < buffer_size ){
+
+		while( ( c = getKey() ) == 0 ){
+			_hlt();
+		}	
+	
+		switch( c ){
+			case 17:		//codigo ASCII asignado al make code del Ctrl
+				ctrl = 1;
+				break;
+			case 18:		//codigo ASCII asignado al break code del Ctrl
+				ctrl = 0;
+				break;
+			case '1':
+				if( ctrl && activeWindow != 0 ){
+					//insert rutina de cambiar de programa here
+					break;
+				}
+			case '2':
+				if( ctrl && activeWindow != 1 ){
+					//insert rutina de cambiar de programa here
+					break;
+				}
+			default:
+				inputBuffer[i++] = c;
+				printChar( c, CHAR_COLOUR );	
+		}
+	}
 }
 
 static void numToString( int num, char * str ){

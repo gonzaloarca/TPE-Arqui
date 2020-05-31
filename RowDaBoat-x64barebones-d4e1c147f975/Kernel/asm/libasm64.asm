@@ -2,8 +2,12 @@ GLOBAL cpuVendor
 GLOBAL getTime
 GLOBAL canReadKey
 GLOBAL getScanCode
+GLOBAL int80htest
 
 section .text
+
+int80htest:
+	
 	
 cpuVendor:
 	push rbp
@@ -102,3 +106,5 @@ getScanCode:
 	mov rax, 0
 	in al, 60h
 	ret
+
+

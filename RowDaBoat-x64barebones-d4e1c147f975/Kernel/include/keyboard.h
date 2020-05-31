@@ -20,4 +20,10 @@ char scanCodetoChar (unsigned int scan_code, unsigned int shift);
 //	En este caso, imprime en pantalla el caracter typeado
 void keyboard_handler();
 
+//  Levanta caracter del buffer del teclado y lo devuelve codificado en ASCII
+char sys_getKey();
+
+//  Vacía el buffer
+void sys_emptyBuffer();
+
 #endif
