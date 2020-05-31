@@ -218,9 +218,10 @@ void getInput( char *inputBuffer, unsigned int buffer_size ){
 				break;
 			
 			case '\b':
-				if( i != 0 ){
-					i--;
+				if( i == 0 ){
+					break;
 				}
+				i--;
 				printChar( c, CHAR_COLOUR );
 				break;
 			
