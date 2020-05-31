@@ -35,7 +35,6 @@ static int firstPos = 0;
 
 void keyboard_handler()
 {
-	sys_drawChar( 'y', 50, 100, 0xFF0000, 0xFF0000 );
 	//	Si no habia nada para leer, no hago nada
 	if (canReadKey() == 0) return;
 	// Asigno los codigos de make y break de las teclas al buffer
@@ -110,15 +109,8 @@ char scanCodetoChar (unsigned int scan_code, unsigned int shift){
 }
 
 char sys_getKey(){
-	int i = 0;
-	char c = 0;
 
-	while( c == 0 ){
 		//haltcpu();	//para evitar hacer espera activa, uso haltcpu para que la instruccion se corra cada vez que haya una interrupcion
-		c = asciiMap(readBuffer()); //solo entra aca una vez que haya una interrupcion de hardware; si es el timertick, devuelve 0 porque el teclado no tiene nada para dar
-		//sys_drawChar( 'x', 50 + i*8, 50 + i*8, 0xFFFFFF, 0 );
-		i++;
-	}
-
-	return c;	
+		return asciiMap(readBuffer()); //solo entra aca una vez que haya una interrupcion de hardware; si es el timertick, devuelve 0 porque el teclado no tiene nada para dar
+		//sys_drawChar( 'x', 50 + i*8, 50 + i*8, 0xFFFFFF, 0 );	
 }

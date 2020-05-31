@@ -3,6 +3,7 @@ GLOBAL read
 GLOBAL emptyBuffer
 GLOBAL getKey
 GLOBAL drawChar
+GLOBAL _hlt
 
 section .text
 writePixel:				; void writePixel( int x, int y, int rgb )
@@ -92,4 +93,8 @@ getKey:					; char getKey()
 	pop rbp
 	ret
 
+_hlt:
+	sti
+	hlt
+	ret
 	

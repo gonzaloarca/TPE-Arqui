@@ -11,6 +11,7 @@ void drawChar( char c, int x, int y, int rgb, int backgroundColour );
 int read( unsigned int fd, char *buffer, unsigned long count ); //funcion de ASM
 void emptyBuffer();	//funcion de ASM
 char getKey();	//funcion de ASM
+void _hlt();
 
 void setWindows(){
 	for(int i = 0 ; i < N ; i++){
@@ -185,9 +186,11 @@ void getInput( char *inputBuffer, unsigned int buffer_size ){
 	int i = 0;
 
 	while( c != '\n' && i < buffer_size ){
-		printNullString("mbeh", CHAR_COLOUR);
-		c = getKey();
-		printNullString("mbeh2", CHAR_COLOUR);
+
+		while( ( c = getKey() ) == 0 ){
+			_hlt();
+		}	
+	
 		switch( c ){
 			case 17:		//codigo ASCII asignado al make code del Ctrl
 				ctrl = 1;
