@@ -119,13 +119,30 @@ void refreshScreen() {
 	}
 }
 
+// Funcion interna que se encarga de eliminar un caracter en la ventana actual
+static void delete(){
+	Window *currentWindow = &(windows[activeWindow]);
+	if(currentWindow->currentLineSize == 0){
+		if(currentWindow->lineCount == 0)
+			// No existen caracteres por borrar
+			return;
+
+		currentWindow->lineCount--;
+		currentWindow->currentLineSize = MAX_LINE_CHARS;
+	}
+	currentWindow->currentLineSize--;
+	drawChar(' ', currentWindow->xStart + currentWindow->currentLineSize * FONT_WIDTH, currentWindow->yStart + currentWindow->lineCount * LINE_HEIGHT + LINE_MARGIN, BACKGROUND_COLOUR, BACKGROUND_COLOUR);
+}
+
 int printChar( char c, int rgb ){
 	if ( c == '\n')
 	{
 		newLine();
 		return 0;
-	}
-
+	}else if( c == '\b'){
+		delete();
+		return 0;
+	}	
 	Window *currentWindow = &(windows[activeWindow]);
 
 	if( currentWindow->currentLineSize == MAX_LINE_CHARS ){
