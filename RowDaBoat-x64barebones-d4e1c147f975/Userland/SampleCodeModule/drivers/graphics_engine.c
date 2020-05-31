@@ -135,7 +135,7 @@ int printChar( char c, int rgb ){
 
 	// Escribo en pantalla el nuevo caracter en la linea y posicion actual, y luego incremento la posicion para el proximo caracter
 	drawChar( c, currentWindow->xStart + currentWindow->currentLineSize * FONT_WIDTH, 
-		currentWindow->yStart + currentWindow->lineCount * (LINE_HEIGHT) + LINE_MARGIN, CHAR_COLOUR, BACKGROUND_COLOUR);
+		currentWindow->yStart + currentWindow->lineCount * (LINE_HEIGHT) + LINE_MARGIN, rgb, BACKGROUND_COLOUR);
 	
 	// Cambio el caracter en el buffer
 	//*(windows[activeWindow].screenBuffer[ (windows[activeWindow].firstLine + windows[activeWindow].lineCount) % BUFFER_LINES ] +
