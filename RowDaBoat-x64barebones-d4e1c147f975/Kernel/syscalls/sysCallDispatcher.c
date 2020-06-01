@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <keyboard.h>
 #include <video_driver.h>
+#include <rtc_driver.h>
 
 typedef struct{
 	uint64_t rbx;
@@ -49,6 +50,13 @@ uint64_t syscall_11()
 	return sys_getKey();
 }
 
+//	La syscall 12 recibe un puntero a estructura de tipo TimeFormat y la rellena con los datos actuales del RTC
+uint64_t syscall_12( uint64_t rbx )
+{
+	sys_getTime( (TimeFormat *) rbx );
+	return 0;
+}
+
 //	scNumber indica a cual syscall se llamo
 //	parameters es una estructura con los parametros para la syscall
 //	Cada syscall se encarga de interpretar a la estructura
@@ -70,6 +78,8 @@ uint64_t sysCallDispatcher(uint64_t scNumber, Registers reg)
 		case 10: return syscall_10();
 
 		case 11: return syscall_11();
+
+		case 12: return syscall_12( reg->rbx );
 	}
 
 	return 0;

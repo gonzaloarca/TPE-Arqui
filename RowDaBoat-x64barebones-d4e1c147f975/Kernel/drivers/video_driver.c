@@ -45,8 +45,8 @@ struct vbe_mode_info_structure {
 
 // Busco VBEModeInfoBlock que es donde se encuentra la estructura
 struct vbe_mode_info_structure * screenInfo = (struct vbe_mode_info_structure *) 0x5C00;
-static void (*stdOutPrint)(char);	//punteros a funciones para imprimir en stdout/stderror
-static void (*stdErrPrint)(char);
+//static void (*stdOutPrint)(char);	//punteros a funciones para imprimir en stdout/stderror
+//static void (*stdErrPrint)(char);
 
 
 int sys_writePixel(int x, int y, int rgb) {

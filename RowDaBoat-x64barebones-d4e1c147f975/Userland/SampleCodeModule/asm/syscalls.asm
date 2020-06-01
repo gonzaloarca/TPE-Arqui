@@ -4,6 +4,7 @@ GLOBAL emptyBuffer
 GLOBAL getKey
 GLOBAL drawChar
 GLOBAL _hlt
+GLOBAL getTime
 
 section .text
 writePixel:				; void writePixel( int x, int y, int rgb )
@@ -87,6 +88,18 @@ getKey:					; char getKey()
 	mov rbp, rsp
 
 	mov rax, 11
+	int 80h
+
+	mov rsp, rbp
+	pop rbp
+	ret
+
+getTime:				; void getTime( TimeFormat *time )
+	push rbp
+	mov rbp, rsp
+
+	mov rax, 12
+	mov rbx, rdi
 	int 80h
 
 	mov rsp, rbp

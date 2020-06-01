@@ -1,13 +1,10 @@
 GLOBAL cpuVendor
-GLOBAL getTime
+GLOBAL getTimeRTC
 GLOBAL canReadKey
 GLOBAL getScanCode
 GLOBAL int80htest
 
 section .text
-
-int80htest:
-	
 	
 cpuVendor:
 	push rbp
@@ -35,17 +32,32 @@ cpuVendor:
 
 ;-------------------------------------------------------
 ;	Regresa el tiempo actual en un puntero a estructura
-; Al ser una estructura en C, se regresa por stack
 ;-------------------------------------------------------
 ; Llamada en C:
-; TimeFormat* getTime(TimeFormat *time);
+; void getTimeRTC(TimeFormat *time);
 ;-------------------------------------------------------
-getTime:
+getTimeRTC:
+
+
+	push rbp
+	mov rbp, rsp
+
+	push rax
+	push rcx
+	push rdx
+
+	;	Antes de poder leer la hora, debo saber si hay una actualizacion en progreso o no
+.updateCheck:
+	mov rax, 0Ah
+	out 70h, al
+	in al, 71h
+	shr al, 7				; El bit de upgrade in progress es el 7mo
+	cmp al, 0
+	jne .updateCheck		; Si el bit era 1, debo controlar de nuevo
 
 	;	En al se guarda el dato PERO en formato feo:
 	;	Primeros 4 bits son la decena
 	;	Ultimos 4 bits son la unidad
-
 	mov rax, 0
 	out 70h, al
 	in al, 71h
@@ -79,7 +91,12 @@ getTime:
 	add al, cl				; Los sumo
 	mov DWORD [rdi+8], eax	;	Horas
 
-	mov rax, rdi
+	pop rdx
+	pop rcx
+	pop rax
+
+	mov rsp, rbp
+	pop rbp
 	ret
 
 ;-------------------------------------------------------
