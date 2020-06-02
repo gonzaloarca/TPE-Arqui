@@ -4,6 +4,7 @@
 #include <window_manager.h>
 #include <rtc_driver.h>
 #include <libasm64.h>
+#include <cpuinfo.h>
 
 typedef struct{
 	uint64_t rbx;
@@ -59,8 +60,14 @@ uint64_t syscall_12( uint64_t rbx )
 }
 
 //	La syscall 13 devuelve la temperatura del CPU como un conjunto en celsius
-uint64_t syscall_13(){
+uint64_t syscall_13()
+{
 	return sys_getCPUTemp();
+}
+
+uint64_t syscall_20( uint64_t rbx )
+{
+	return sys_cpuinfo((char *) rbx);
 }
 
 //	scNumber indica a cual syscall se llamo
@@ -86,6 +93,9 @@ uint64_t sysCallDispatcher(uint64_t scNumber, Registers reg)
 		case 12: return syscall_12( reg->rbx );
 
 		case 13: return syscall_13();
+
+		case 20: return syscall_20( reg->rbx );
+
 	}
 
 	return 0;

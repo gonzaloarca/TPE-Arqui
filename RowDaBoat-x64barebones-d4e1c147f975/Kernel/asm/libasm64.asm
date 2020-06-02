@@ -11,7 +11,7 @@ section .text
 ;	Indica el fabricante del CPU
 ;-------------------------------------------------------
 ; Llamada en C:
-;	char *cpuVendor(char buffer[13]);
+;	char *cpuVendor(char buffer[12]);
 ;-------------------------------------------------------
 
 cpuVendor:
@@ -26,8 +26,6 @@ cpuVendor:
 	mov [rdi], ebx
 	mov [rdi + 4], edx
 	mov [rdi + 8], ecx
-
-	mov byte [rdi+13], 0
 
 	mov rax, rdi
 

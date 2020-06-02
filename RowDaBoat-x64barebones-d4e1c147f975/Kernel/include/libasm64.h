@@ -3,7 +3,7 @@
 #define _libasm64_h
 
 //	Indica el fabricante del CPU
-char *cpuVendor(char *result);
+char *cpuVendor(char buffer[12]);
 
 //	Indica la marca del CPU
 char *cpuBrand(char buffer[48]);
