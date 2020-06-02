@@ -2,9 +2,14 @@
 
 #define _libasm64_h
 
-//	Funcion que ya venia
+//	Indica el fabricante del CPU
 char *cpuVendor(char *result);
 
+//	Indica la marca del CPU
+char *cpuBrand(char buffer[48]);
+
+//	Regresa el tiempo actual en un puntero a estructura
+void getTimeRTC(TimeFormat *time);
 
 //	Funciones para lectura del teclado
 unsigned int canReadKey();

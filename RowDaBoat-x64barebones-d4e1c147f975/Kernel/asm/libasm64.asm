@@ -1,11 +1,18 @@
 GLOBAL cpuVendor
+GLOBAL cpuBrand
 GLOBAL getTimeRTC
 GLOBAL canReadKey
 GLOBAL getScanCode
-GLOBAL int80htest
 
 section .text
 	
+;-------------------------------------------------------
+;	Indica el fabricante del CPU
+;-------------------------------------------------------
+; Llamada en C:
+;	char *cpuVendor(char buffer[13]);
+;-------------------------------------------------------
+
 cpuVendor:
 	push rbp
 	mov rbp, rsp
@@ -14,7 +21,6 @@ cpuVendor:
 
 	mov rax, 0
 	cpuid
-
 
 	mov [rdi], ebx
 	mov [rdi + 4], edx
@@ -31,14 +37,64 @@ cpuVendor:
 	ret
 
 ;-------------------------------------------------------
+;	Indica la marca del CPU
+;-------------------------------------------------------
+; Llamada en C:
+;	char *cpuBrand(char buffer[48]);
+;-------------------------------------------------------
+
+cpuBrand:
+	push rbp
+	mov rbp, rsp
+	push rbx
+
+	; Esta instruccion es para checkear si existe la info que queremos
+	mov eax, 80000000h
+	cpuid
+	cmp eax, 80000004h
+	jb .return
+
+	mov rsi, rdi
+
+	; Con las siguientes llamadas obtengo el string en partes
+	mov eax, 80000002h
+	cpuid
+	mov [rdi], eax
+	mov [rdi+4], ebx
+	mov [rdi+8], ecx
+	mov [rdi+12], edx
+	add rdi, 16
+
+	mov eax, 80000003h
+	cpuid
+	mov [rdi], eax
+	mov [rdi+4], ebx
+	mov [rdi+8], ecx
+	mov [rdi+12], edx
+	add rdi, 16
+
+	mov eax, 80000004h
+	cpuid
+	mov [rdi], eax
+	mov [rdi+4], ebx
+	mov [rdi+8], ecx
+	mov [rdi+12], edx
+
+	mov rax, rsi
+
+.return:
+	pop rbx
+	mov rsp, rbp
+	pop rbp
+	ret
+
+;-------------------------------------------------------
 ;	Regresa el tiempo actual en un puntero a estructura
 ;-------------------------------------------------------
 ; Llamada en C:
 ; void getTimeRTC(TimeFormat *time);
 ;-------------------------------------------------------
 getTimeRTC:
-
-
 	push rbp
 	mov rbp, rsp
 
@@ -123,5 +179,3 @@ getScanCode:
 	mov rax, 0
 	in al, 60h
 	ret
-
-
