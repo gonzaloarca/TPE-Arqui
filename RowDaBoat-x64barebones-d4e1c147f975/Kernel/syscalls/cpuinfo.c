@@ -10,5 +10,5 @@ uint64_t sys_cpuinfo(char buffer[70])
 
 	cpuBrand(&(buffer[16]));
 
-	return buffer;
+	return (uint64_t) buffer;
 }

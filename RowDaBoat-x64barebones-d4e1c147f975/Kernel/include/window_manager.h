@@ -5,9 +5,9 @@
 void setWindows();
 
 // Funcion que permite el cambio de ventana activa
-int sys_switchWindow( unsigned int newIndex );
+int sys_changeWindow( unsigned int newIndex );
 
 // Funcion que permite la impresion de un caracter en la ventana actual
-int sys_write( unsigned int count, const char * str, int rgb );
+int sys_write(unsigned int fd, const char * str, unsigned long count);
 
 #endif

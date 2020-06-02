@@ -21,7 +21,6 @@ typedef struct registersType {
     uint64_t rip;
 } registersType;
 
-static int windowIdx;
 char inputBuffer[INPUT_BUFFER_SIZE];
 int indexBuffer;
 registersType reg;
@@ -34,8 +33,7 @@ uint64_t getRDI();
 
 registersType* getRegisters();
 
-void runShell( int window ){
-    // windowIdx = window;
+void runShell(){
     while(1){
         rax = getRAX();
         rdi = getRDI();

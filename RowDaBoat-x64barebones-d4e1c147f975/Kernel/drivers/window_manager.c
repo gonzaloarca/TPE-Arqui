@@ -20,23 +20,14 @@ typedef struct{
 	// Linea en la cual arranca la pantalla
 	int firstLine;
 
-	// Prompt de la ventana, de dos caracteres
-	char prompt[2];
+	int charColor;
 
 } Window;
-
-static char prompts = '>';
 
 static int printChar( char c, int rgb );
 
 static Window windows[N] = {{0}};
 static int activeWindow = 0;		// por default arranca en la terminal
-
-
-static void setPrompt(){
-	printChar(windows[activeWindow].prompt[0], CHAR_COLOR);
-	printChar(windows[activeWindow].prompt[1], CHAR_COLOR);
-}
 
 void setWindows(){
 	for(int i = 0 ; i < N ; i++){
@@ -45,8 +36,7 @@ void setWindows(){
 		windows[i].firstLine = 0;
 		windows[i].lineCount = 0;
 		windows[i].currentLineSize = 0;
-		windows[i].prompt[0] = '1' + i;
-		windows[i].prompt[1] = prompts;
+		windows[i].charColor = CHAR_COLOR;
 		// Borde izquierdo
 		for(int j = i*WINDOW_WIDTH; j < i*WINDOW_WIDTH+WINDOW_MARGIN ; j++)
 			for(int k = WINDOW_MARGIN; k < WINDOW_HEIGHT - WINDOW_MARGIN; k++)		// no abarca nada del borde superior
@@ -64,7 +54,6 @@ void setWindows(){
 			for(int k = i*WINDOW_WIDTH; k < (i+1)*WINDOW_WIDTH ; k++)
 				sys_writePixel( k, j, WINDOW_MARGIN_COLOUR);
 	}
-	setPrompt();			// Setea el prompt de la ventana default
 }
 
 int sys_changeWindow(unsigned int newIndex){
@@ -72,8 +61,6 @@ int sys_changeWindow(unsigned int newIndex){
 		return 0;			// permanece en la ventana actual
 	else{
 		activeWindow = newIndex;
-		if(windows[activeWindow].currentLineSize == 0)
-			setPrompt();
 		return 1;
 	}
 }
@@ -174,8 +161,6 @@ static void SetNewLine(){
 		refreshScreen();
 	}else
 		updateBuffer();
-
-	setPrompt();
 }
 
 static int printChar( char c, int rgb ){
@@ -213,10 +198,18 @@ static int printChar( char c, int rgb ){
 	return 0;
 }
 
-int sys_write( unsigned int count, const char * str, int rgb ){
+int sys_write(unsigned int fd, const char * str, unsigned long count){
+	
+	int color = windows[activeWindow].charColor;
+
+	if (fd == 2)	//	STDERR
+		color = 0xFF0000;
+	else if (fd != 1)	//	Solo tenemos STDOUT y STDERR
+		return 0;
+
 	for( int i = 0; i < count; i++ ){
-		printChar( str[i], rgb );
+		printChar( str[i], color );
 	}
 
-	return count;	// nunca va a tener error en escritura
+	return count;
 }

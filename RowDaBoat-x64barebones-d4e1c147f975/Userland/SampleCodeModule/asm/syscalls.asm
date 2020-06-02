@@ -29,7 +29,7 @@ writePixel:				; void writePixel( int x, int y, int rgb )
 	pop rbp
 	ret
 
-write:					; int write( unsigned int count, char * str, int rgb )
+write:					; int write( unsigned int fd, char *buffer, unsigned long count )
 	push rbp
 	mov rbp, rsp
 	push rbx

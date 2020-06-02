@@ -21,10 +21,10 @@ typedef struct{
 
 // }
 
-//	La syscall 4 es write, recibe en rbx cant de caracteres, en rcx el string y en rdx rgb
+//	La syscall 4 es write
 uint64_t syscall_04(uint64_t rbx, uint64_t rcx, uint64_t rdx)
 {
-	return sys_write( (unsigned int) rbx, (const char*) rcx, (unsigned int) rdx  );
+	return sys_write( (unsigned int) rbx, (const char*) rcx, (unsigned long) rdx  );
 }
 
 // La syscall 7 modifica el valor de un pixel en pantalla

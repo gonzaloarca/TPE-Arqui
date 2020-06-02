@@ -3,6 +3,8 @@
 
 #include <stdarg.h>
 #include <stdint.h>
+#include <syscalls.h>
+
 #define NULL 0
 #define DEFAULT_CHAR_COLOR 0xFFFFFF
 
@@ -13,14 +15,8 @@ int printf(const char *format, ...);
 // Funcion que permite escribir un caracter con color default(blanco)
 int putchar(char c);
 
-// Funcion que permite escribir un caracter con color rgb
-int putcharColor(char c, int rgb);
-
-// Funcion que permite escribir count caracteres de un string con color rgb, implementada en ASM
-int write( unsigned int count, char * str, int rgb );
-
 // Funcion que permite la impresion de un string terminado en null en la ventana actual
-int puts( char * s, int rgb );
+int puts( char * s );
 
 int scanf(const char *format, ...);
 
@@ -29,6 +25,12 @@ int strcmp(char *str1, char *str2);
 
 // Funcion que retorna la longitud de str
 int strlen(char *str);
+
+// Funcion que permite la impresion de un entero
+int printInt( int num);
+
+// Funcion que permite realizar un cambio de linea en la ventana actual
+void newLine();
 
 #endif
 

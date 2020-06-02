@@ -1,11 +1,6 @@
 #include <graphics_engine.h>
 #include <std_io.h>
-
-int read( unsigned int fd, char *buffer, unsigned long count ); //funcion de ASM
-void emptyBuffer();	//funcion de ASM
-char getKey();	//funcion de ASM
-void _hlt();
-int changeWindow(unsigned int window);
+#include <syscalls.h>
 
 static int activeWindow = 0;
 
@@ -18,16 +13,14 @@ int switchWindow( unsigned int window ){
 	return 0;
 }
 
-void newLine(){
-	write( 1,"\n", 0);
-}
-
 int getInput( char *inputBuffer, unsigned int buffer_size ){
 
 	emptyBuffer();
 	char c = 0;
 	int ctrl = 0;
 	int i = 0;
+
+	
 
 	while( c != '\n' && i < buffer_size ){
 
@@ -73,43 +66,4 @@ int getInput( char *inputBuffer, unsigned int buffer_size ){
 		}
 	}
 	return i;
-}
-
-static void numToString( int num, char * str ){
-
-	if( num == 0 ){
-		str[0] = '0';
-		str[1] = 0;
-		return;
-	}
-
-	int dig = 0;
-	int aux = num;
-
-	while( aux != 0 ){ //cuento digitos para saber desde donde arrancar a meter los caracteres
-		aux /= 10;
-		dig++;
-	}
-	
-	if( num < 0 ){
-		dig++;
-		str[0] = '-';
-		num *= -1;		//porque num % n da negativo si num < 0
-	}
-
-	int i = dig;
-	str[i--] = 0;
-
-	while( num != 0 ){
-		str[i--] = (num % 10) + '0';
-		num /= 10;
-	}
-}
-
-int printInt( int num, int rgb ){
-	char buffer[32];
-	numToString( num, buffer );
-	puts(buffer, rgb);
-
-	return 0;
 }

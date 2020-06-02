@@ -31,9 +31,8 @@
 // Máxima cantidad de caracteres que puede entrar en un renglon de una ventana
 #define MAX_LINE_CHARS ((WINDOW_WIDTH - 2*WINDOW_MARGIN)/FONT_WIDTH)		// Le saco los margenes de los costados
 
-// Color de fondo y letra
+// Color de fondo y letra predeterminados
 #define BACKGROUND_COLOR 0		// negro
-#define CHAR_COLOR 0xFFFFFF		// blanco	// that's racist
-
+#define CHAR_COLOR 0xFFFFFF		// blanco
 
 #endif

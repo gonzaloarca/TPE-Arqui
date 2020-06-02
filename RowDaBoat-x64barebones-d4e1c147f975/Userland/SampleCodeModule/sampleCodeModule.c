@@ -9,7 +9,7 @@ int main(){
 	// for(int i = 0; i < 400 ; i++)
 	// 	writePixel(i,500,0xFFFFFF);
 
-	runShell(0);
+	runShell();
 	while(1);
 	return 0;
 }
