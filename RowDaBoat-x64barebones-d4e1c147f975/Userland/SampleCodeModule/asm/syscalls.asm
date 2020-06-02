@@ -6,6 +6,7 @@ GLOBAL emptyBuffer
 GLOBAL getKey
 GLOBAL _hlt
 GLOBAL getTime
+GLOBAL getCPUTemp
 
 section .text
 writePixel:				; void writePixel( int x, int y, int rgb )
@@ -116,6 +117,17 @@ getTime:				; void getTime( TimeFormat *time )
 
 	mov rax, 12
 	mov rbx, rdi
+	int 80h
+
+	mov rsp, rbp
+	pop rbp
+	ret
+
+getCPUTemp:				; int getCPUTemp()
+	push rbp
+	mov rbp, rsp
+	
+	mov rax, 13
 	int 80h
 
 	mov rsp, rbp
