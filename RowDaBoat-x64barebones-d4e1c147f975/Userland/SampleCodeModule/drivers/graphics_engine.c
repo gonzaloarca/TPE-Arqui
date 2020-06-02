@@ -1,12 +1,10 @@
 #include <graphics_engine.h>
-
-#define CHAR_COLOR 0xFFFFFF
+#include <std_io.h>
 
 int read( unsigned int fd, char *buffer, unsigned long count ); //funcion de ASM
 void emptyBuffer();	//funcion de ASM
 char getKey();	//funcion de ASM
 void _hlt();
-int write( unsigned int count, char * str, int rgb );
 int changeWindow(unsigned int window);
 
 static int activeWindow = 0;
@@ -20,10 +18,6 @@ int switchWindow( unsigned int window ){
 	return 0;
 }
 
-void printChar(char c, int rgb){
-	write( 1, &c, rgb );
-}
-
 int printString(  unsigned int count, char * str, int rgb ){
 	write(count, str, rgb);
 
@@ -32,7 +26,7 @@ int printString(  unsigned int count, char * str, int rgb ){
 
 int printNullString( char * s, int rgb ){
 	while( *s != 0 ){
-		printChar( *s, rgb );
+		putchar( *s);
 		s++;
 	}
 
@@ -70,7 +64,7 @@ int getInput( char *inputBuffer, unsigned int buffer_size ){
 					break;
 				}
 				i--;
-				printChar( c, CHAR_COLOR );
+				putchar( c);
 				break;
 			
 			case '1':
@@ -79,7 +73,7 @@ int getInput( char *inputBuffer, unsigned int buffer_size ){
 					break;
 				}
 				inputBuffer[i++] = c;
-				printChar( c, CHAR_COLOR );
+				putchar( c);
 				break;
 			
 			case '2':
@@ -90,7 +84,7 @@ int getInput( char *inputBuffer, unsigned int buffer_size ){
 			
 			default:
 				inputBuffer[i++] = c;
-				printChar( c, CHAR_COLOR );	
+				putchar( c );	
 		}
 	}
 	return i;

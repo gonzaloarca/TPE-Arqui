@@ -22,10 +22,6 @@ typedef struct{
 
 } Window;
 
-// Funciones ASM que ejecutan las correspondientes syscalls
-void writePixel(int x, int y, int rgb);
-void drawChar( char c, int x, int y, int rgb, int backgroundColour );
-
 static Window windows[N] = {{0}};
 static int activeWindow = 0;		// por default arranca en la terminal
 
