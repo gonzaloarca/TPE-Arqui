@@ -19,7 +19,7 @@ int strcmp(char *str1, char *str2){
            	flag = 0;
         }
 
-        if (str1[i] == '\0')
+        if (str1[i] == 0)
         {
             answer = 0;
             flag = 0;
