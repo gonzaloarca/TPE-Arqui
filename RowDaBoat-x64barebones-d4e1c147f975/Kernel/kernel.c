@@ -4,6 +4,7 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 #include <video_driver.h>
+#include <window_manager.h>
 #include <idtLoader.h>
 
 extern uint8_t text;
@@ -84,6 +85,7 @@ void * initializeKernelBinary()
 
 int main()
 {
+	setWindows();
 	load_idt();
 
 	ncPrint("[Kernel Main]");
@@ -104,6 +106,5 @@ int main()
 	ncNewline();
 
 	ncPrint("[Finished]");
-
 	return 0;
 }

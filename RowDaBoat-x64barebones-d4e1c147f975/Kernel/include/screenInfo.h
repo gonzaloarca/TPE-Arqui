@@ -32,8 +32,8 @@
 #define MAX_LINE_CHARS ((WINDOW_WIDTH - 2*WINDOW_MARGIN)/FONT_WIDTH)		// Le saco los margenes de los costados
 
 // Color de fondo y letra
-#define BACKGROUND_COLOUR 0		// negro
-#define CHAR_COLOUR 0xFFFFFF		// blanco	// that's racist
+#define BACKGROUND_COLOR 0		// negro
+#define CHAR_COLOR 0xFFFFFF		// blanco	// that's racist
 
 
 #endif

@@ -28,7 +28,7 @@ static int windowIdx;
 // registersType* getRegisters();
 
 void runShell( int window ){
-    windowIdx = window;
+    // windowIdx = window;
     char inputBuffer[INPUT_BUFFER_SIZE];
     int indexBuffer;
 	// registersType reg;

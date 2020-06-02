@@ -9,7 +9,6 @@ int main(){
 	// for(int i = 0; i < 400 ; i++)
 	// 	writePixel(i,500,0xFFFFFF);
 
-	setWindows();
 	runShell(0);
 	while(1);
 	return 0;

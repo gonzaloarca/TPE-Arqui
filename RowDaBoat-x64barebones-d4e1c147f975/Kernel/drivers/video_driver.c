@@ -57,8 +57,8 @@ int sys_writePixel(int x, int y, int rgb) {
 	return 0;
 }
 
-//  Funcion de uso interno que se encarga de dibujar un caracter en pantalla(con la font default) dado su esquina izq superior y un color
-int sys_drawChar( char c, int x, int y, int rgb, int backgroundColour ){	
+//  Funcion que se encarga de dibujar un caracter en pantalla(con la font default) dado su esquina izq superior y un color
+int drawChar( char c, int x, int y, int rgb, int backgroundColour ){	
 	const unsigned char * letra = getCharMap(c);
 	if( letra == 0 ){
 		letra = getCharMap(32);		//debe printear vacio

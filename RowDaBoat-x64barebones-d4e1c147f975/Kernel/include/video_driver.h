@@ -3,6 +3,6 @@
 
 int sys_writePixel( int x, int y, int rgb );
 
-int sys_drawChar( char c, int x, int y, int rgb, int backgroundColour );
+void drawChar( char c, int x, int y, int rgb, int backgroundColour );
 
 #endif
