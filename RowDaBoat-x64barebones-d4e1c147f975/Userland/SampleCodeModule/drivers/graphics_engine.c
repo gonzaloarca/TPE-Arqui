@@ -18,21 +18,6 @@ int switchWindow( unsigned int window ){
 	return 0;
 }
 
-int printString(  unsigned int count, char * str, int rgb ){
-	write(count, str, rgb);
-
-	return 0;
-}
-
-int printNullString( char * s, int rgb ){
-	while( *s != 0 ){
-		putchar( *s);
-		s++;
-	}
-
-	return 0;
-}
-
 void newLine(){
 	write( 1,"\n", 0);
 }

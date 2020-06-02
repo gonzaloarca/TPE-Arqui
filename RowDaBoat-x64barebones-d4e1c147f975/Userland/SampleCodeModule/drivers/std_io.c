@@ -35,3 +35,12 @@ int strlen(char *str){
     for( ; str[i] != '\0' ; i++);
     return i;
 }
+
+int printNullString( char * s, int rgb ){
+    while( *s != 0 ){
+        putchar( *s);
+        s++;
+    }
+
+    return 0;
+}

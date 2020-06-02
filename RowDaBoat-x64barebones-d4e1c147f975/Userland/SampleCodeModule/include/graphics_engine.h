@@ -4,12 +4,6 @@
 // Funcion que permite la impresion de un caracter
 void printChar(char c, int rgb);
 
-// Funcion que permite la impresion de un string de count caracteres en la ventana actual
-int printString( unsigned int count, char * str,int rgb );
-
-// Funcion que permite la impresion de un string terminado en null en la ventana actual
-int printNullString( char * s, int rgb );
-
 // Funcion que permite realizar un cambio de linea en la ventana actual
 void newLine();
 

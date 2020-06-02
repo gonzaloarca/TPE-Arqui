@@ -1,5 +1,5 @@
 #include <stdint.h>
-
+#include <std_io.h>
 typedef struct{
     uint32_t secs;
     uint32_t mins;
@@ -7,8 +7,6 @@ typedef struct{
 }TimeFormat;
 
 void getTime(TimeFormat *time); //llama a syscall que te rellena la estructura de TimeFormat
-
-void printTime();
 
 void printTime(){       //se podria modularizar en una funcion para obtener el tiempo correcto, que abarcaria hasta el while, y otra para generar el string formateado del tiempo, despues juega printString
     TimeFormat time;

@@ -2,7 +2,7 @@
 #define STD_IO_H_
 
 #include <stdarg.h>
-
+#include <stdint.h>
 #define NULL 0
 #define DEFAULT_CHAR_COLOR 0xFFFFFF
 
@@ -18,6 +18,9 @@ int putcharColor(char c, int rgb);
 
 // Funcion que permite escribir count caracteres de un string con color rgb, implementada en ASM
 int write( unsigned int count, char * str, int rgb );
+
+// Funcion que permite la impresion de un string terminado en null en la ventana actual
+int printNullString( char * s, int rgb );
 
 int scanf(const char *format, ...);
 
