@@ -36,7 +36,7 @@ int strlen(char *str){
     return i;
 }
 
-int printNullString( char * s, int rgb ){
+int puts( char * s, int rgb ){
     while( *s != 0 ){
         putchar( *s);
         s++;

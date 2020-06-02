@@ -109,7 +109,7 @@ static void numToString( int num, char * str ){
 int printInt( int num, int rgb ){
 	char buffer[32];
 	numToString( num, buffer );
-	printNullString(buffer, rgb);
+	puts(buffer, rgb);
 
 	return 0;
 }

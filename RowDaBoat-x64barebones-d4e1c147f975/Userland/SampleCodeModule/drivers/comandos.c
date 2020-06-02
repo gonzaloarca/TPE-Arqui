@@ -30,5 +30,5 @@ void printTime(){       //se podria modularizar en una funcion para obtener el t
 		j++;
 	}
 
-	printNullString( timeString, 0xFFFFFF );
+	puts( timeString, 0xFFFFFF );
 }

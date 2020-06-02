@@ -20,7 +20,7 @@ int putcharColor(char c, int rgb);
 int write( unsigned int count, char * str, int rgb );
 
 // Funcion que permite la impresion de un string terminado en null en la ventana actual
-int printNullString( char * s, int rgb );
+int puts( char * s, int rgb );
 
 int scanf(const char *format, ...);
 

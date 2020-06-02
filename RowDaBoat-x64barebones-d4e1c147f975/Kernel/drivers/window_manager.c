@@ -25,7 +25,7 @@ typedef struct{
 
 } Window;
 
-static char prompts[N][2] = {{'$','>'},{'>','>'}};
+static char prompts = '>';
 
 static int printChar( char c, int rgb );
 
@@ -45,8 +45,8 @@ void setWindows(){
 		windows[i].firstLine = 0;
 		windows[i].lineCount = 0;
 		windows[i].currentLineSize = 0;
-		windows[i].prompt[0] = prompts[i][0];
-		windows[i].prompt[1] = prompts[i][1];
+		windows[i].prompt[0] = '1' + i;
+		windows[i].prompt[1] = prompts;
 		// Borde izquierdo
 		for(int j = i*WINDOW_WIDTH; j < i*WINDOW_WIDTH+WINDOW_MARGIN ; j++)
 			for(int k = WINDOW_MARGIN; k < WINDOW_HEIGHT - WINDOW_MARGIN; k++)		// no abarca nada del borde superior
