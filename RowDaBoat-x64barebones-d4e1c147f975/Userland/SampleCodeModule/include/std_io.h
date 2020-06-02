@@ -27,7 +27,7 @@ int strcmp(char *str1, char *str2);
 int strlen(char *str);
 
 // Funcion que permite la impresion de un entero
-int printInt( int num);
+int printInt(int num);
 
 // Funcion que permite realizar un cambio de linea en la ventana actual
 void newLine();
