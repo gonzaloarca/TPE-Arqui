@@ -2,6 +2,8 @@
 #include <std_io.h>
 #include <syscalls.h>
 
+//	NOTA: CAMBIARLE EL NOMBRE A ESTA LIBRERIA
+
 static int activeWindow = 0;
 
 int switchWindow( unsigned int window ){
@@ -20,7 +22,7 @@ int getInput( char *inputBuffer, unsigned int buffer_size ){
 	int ctrl = 0;
 	int i = 0;
 
-	
+	puts("$> ");
 
 	while( c != '\n' && i < buffer_size ){
 
