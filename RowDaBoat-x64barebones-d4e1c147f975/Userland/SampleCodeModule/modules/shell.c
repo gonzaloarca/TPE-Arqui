@@ -43,11 +43,11 @@ void runShell( int window ){
 
 // static void parse(){
     
-    // CASO SE EJECUTA INFOREG
-	// printf("RAX: %ld\tRBX: %ld\tRCX: %ld\nRDX: %ld\tRSI: %ld\tRDI: %ld\nRBP: %ld\tRSP: %ld\tR8:  %ld\nR9:  %ld\tR10: %ld\tR11: %ld\nR12: %ld\tR13: %ld\tR14: %ld\nR15: %ld\tRIP: %ld\n",
-	// 	rax, reg.rbx, reg.rcx,
-	// 	 reg.rdx, reg.rsi, rdi,
-	// 	  reg.rbp, reg.rsp, reg.r8,
-	// 	   reg.r9, reg.r10, reg.r11,
-	// 	    reg.r12, reg.r13, reg.r14, reg.r15, reg.rip);
+    
+// 	printf("RAX: %ld\tRBX: %ld\tRCX: %ld\nRDX: %ld\tRSI: %ld\tRDI: %ld\nRBP: %ld\tRSP: %ld\tR8:  %ld\nR9:  %ld\tR10: %ld\tR11: %ld\nR12: %ld\tR13: %ld\tR14: %ld\nR15: %ld\tRIP: %ld\n",
+// 		rax, reg.rbx, reg.rcx,
+// 		 reg.rdx, reg.rsi, rdi,
+// 		  reg.rbp, reg.rsp, reg.r8,
+// 		   reg.r9, reg.r10, reg.r11,
+// 		    reg.r12, reg.r13, reg.r14, reg.r15, reg.rip);
 // }

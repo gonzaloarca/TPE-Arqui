@@ -31,6 +31,7 @@ int strcmp(char *str1, char *str2){
 }
 
 int strlen(char *str){
-    for(int i = 0 ; str1[i] != '\0' ; i++);
+    int i = 0;
+    for( ; str[i] != '\0' ; i++);
     return i;
 }
