@@ -74,7 +74,5 @@ int getInput( char *inputBuffer, unsigned int buffer_size ){
 
 	}
 
-
-	putchar('\n');
 	return i;
 }

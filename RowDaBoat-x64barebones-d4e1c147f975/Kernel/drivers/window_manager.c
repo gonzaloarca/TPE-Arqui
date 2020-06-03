@@ -172,7 +172,7 @@ static void deleteChar(){
 	int currentLine = (currentWindow->firstLine + currentWindow->lineCount) % BUFFER_LINES;
 	int currentChar = currentWindow->currentLineSize;
 	charWithColor aux = {0,0};
-	currentWindow->screenBuffer[currentLine][currentChar] = aux;
+	currentWindow->screenBuffer[currentLine][currentChar] = aux;	// Borro el caracter en el buffer
 	drawChar(' ', currentWindow->xStart + currentWindow->currentLineSize * FONT_WIDTH, currentWindow->yStart + currentWindow->lineCount * LINE_HEIGHT + LINE_MARGIN, BACKGROUND_COLOR, BACKGROUND_COLOR);
 }
 
