@@ -72,9 +72,10 @@ uint64_t syscall_13()
 	return sys_getCPUTemp();
 }
 
+//	La syscall 20 devuelve informacion del CPU
 uint64_t syscall_20( uint64_t rbx )
 {
-	return sys_cpuinfo((char *) rbx);
+	return sys_cpuinfo((CpuInfo *) rbx);
 }
 
 //	scNumber indica a cual syscall se llamo

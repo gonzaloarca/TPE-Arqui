@@ -54,8 +54,10 @@ static void parse(){
 		//    reg.r9, reg.r10, reg.r11,
 		//     reg.r12, reg.r13, reg.r14, reg.r15, reg.rip);
     }
-    else if(strcmp( inputBuffer, "printTime" ) == 0){
+    else if(strcmp( inputBuffer, "time" ) == 0){
         printTime();
         putchar('\n');
+    } else if (strcmp(inputBuffer, "cpuinfo") == 0){
+        printCPUInfo();
     }
 }

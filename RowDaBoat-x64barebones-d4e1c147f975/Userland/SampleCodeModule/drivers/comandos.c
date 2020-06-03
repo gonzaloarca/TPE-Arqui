@@ -26,3 +26,14 @@ void printTime(){       //se podria modularizar en una funcion para obtener el t
 
 	puts( timeString );
 }
+
+void printCPUInfo()
+{
+	CpuInfo info;
+	getCPUInfo(&info);
+
+	printf("Vendor: %s\n", info.vendor);
+	printf("FamilyID: %d\n", info.family);
+	printf("Model: %d\n", info.model);
+	printf("Brand: %s\n", info.brand);
+}

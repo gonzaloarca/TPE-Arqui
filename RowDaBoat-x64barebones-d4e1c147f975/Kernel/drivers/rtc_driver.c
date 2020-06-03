@@ -1,6 +1,5 @@
 #include <rtc_driver.h>
-
-void getTimeRTC(TimeFormat *time);
+#include <libasm64.h>
 
 void sys_getTime(TimeFormat *time){
 

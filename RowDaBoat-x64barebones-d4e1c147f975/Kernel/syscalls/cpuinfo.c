@@ -1,14 +1,12 @@
 #include <libasm64.h>
 #include <stdint.h>
+#include <cpuinfo.h>
 
-uint64_t sys_cpuinfo(char buffer[70])
+uint64_t sys_cpuinfo(CpuInfo* info)
 {
-	cpuVendor(buffer);
+	cpuVendor(info->vendor);
+	cpuBrand(info->brand);
+	cpuModel(&(info->family));
 
-	buffer[13] = buffer[15] = ' ';
-	buffer[14] = '-';
-
-	cpuBrand(&(buffer[16]));
-
-	return (uint64_t) buffer;
+	return (uint64_t) info;
 }

@@ -1,5 +1,6 @@
 GLOBAL cpuVendor
 GLOBAL cpuBrand
+GLOBAL cpuModel
 GLOBAL getTimeRTC
 GLOBAL canReadKey
 GLOBAL getScanCode
@@ -11,9 +12,8 @@ section .text
 ;	Indica el fabricante del CPU
 ;-------------------------------------------------------
 ; Llamada en C:
-;	char *cpuVendor(char buffer[12]);
+;	char *cpuVendor(char buffer[13]);
 ;-------------------------------------------------------
-
 cpuVendor:
 	push rbp
 	mov rbp, rsp
@@ -26,6 +26,7 @@ cpuVendor:
 	mov [rdi], ebx
 	mov [rdi + 4], edx
 	mov [rdi + 8], ecx
+	mov byte [rdi + 12], 0
 
 	mov rax, rdi
 
@@ -41,7 +42,6 @@ cpuVendor:
 ; Llamada en C:
 ;	char *cpuBrand(char buffer[48]);
 ;-------------------------------------------------------
-
 cpuBrand:
 	push rbp
 	mov rbp, rsp
@@ -86,6 +86,61 @@ cpuBrand:
 	mov rsp, rbp
 	pop rbp
 	ret
+
+;-------------------------------------------------------
+;	Indica el modelo y la familia del CPU
+;-------------------------------------------------------
+; Llamada en C:
+;	void cpumodel(int buffer[2]);
+;-------------------------------------------------------
+cpuModel:
+	push rbp
+	mov rbp, rsp
+	push rbx
+
+	mov eax, 1
+	cpuid
+
+	; Me guardo el valor base de model
+	mov ebx, eax
+	shr ebx, 4
+	and ebx, 0xF
+	mov [rdi+4], ebx
+
+	; Obtengo el FamilyID
+	mov ebx, eax
+	shr ebx, 8
+	and ebx, 0xF
+	; Me guardo su valor base
+	mov [rdi], ebx
+
+	; Veo si es 15 o 6
+	cmp ebx, 15
+	je .quince
+	cmp ebx, 6
+	je .seis
+	jmp .return
+
+	; Si es 15, necesito el Model y Family extendido
+.quince:
+	mov ebx, eax
+	shr ebx, 20
+	and ebx, 0xFF
+	add DWORD [rdi], ebx
+	; Si es 6, solo necesito el Model extendido
+.seis:
+	mov ebx, eax
+	shr ebx, 16
+	and ebx, 0xF
+	shl ebx, 4
+	add [rdi+4], ebx
+
+.return:
+	pop rbx
+	mov rsp, rbp
+	pop rbp
+	ret
+
 
 ;-------------------------------------------------------
 ;	Regresa el tiempo actual en un puntero a estructura
