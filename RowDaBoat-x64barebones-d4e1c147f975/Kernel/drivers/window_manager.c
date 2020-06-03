@@ -167,8 +167,12 @@ static void deleteChar(){
 		currentWindow->lineCount--;
 		currentWindow->currentLineSize = MAX_LINE_CHARS;
 	}
-	currentWindow->screenBuffer[currentWindow->lineCount][currentWindow->currentLineSize-1].character = 0;	// lo borro del buffer
-	currentWindow->currentLineSize--;
+	currentWindow->currentLineSize--;	// lo borro del buffer
+
+	int currentLine = (currentWindow->firstLine + currentWindow->lineCount) % BUFFER_LINES;
+	int currentChar = currentWindow->currentLineSize;
+	charWithColor aux = {0,0};
+	currentWindow->screenBuffer[currentLine][currentChar] = aux;
 	drawChar(' ', currentWindow->xStart + currentWindow->currentLineSize * FONT_WIDTH, currentWindow->yStart + currentWindow->lineCount * LINE_HEIGHT + LINE_MARGIN, BACKGROUND_COLOR, BACKGROUND_COLOR);
 }
 
@@ -210,7 +214,7 @@ static int printChar( char c, int rgb ){
 	//*(windows[activeWindow].screenBuffer[ (windows[activeWindow].firstLine + windows[activeWindow].lineCount) % BUFFER_LINES ] +
 	//windows[activeWindow].currentLineSize) = c;
 
-	int currentLine = (currentWindow->firstLine + currentWindow->lineCount) %BUFFER_LINES;
+	int currentLine = (currentWindow->firstLine + currentWindow->lineCount) % BUFFER_LINES;
 	int currentChar = currentWindow->currentLineSize;
 
 	charWithColor newChar = {c, rgb};
