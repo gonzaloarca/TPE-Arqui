@@ -2,6 +2,7 @@ GLOBAL writePixel
 GLOBAL write
 GLOBAL read
 GLOBAL changeWindow
+GLOBAL changeWindowColor
 GLOBAL emptyBuffer
 GLOBAL getKey
 GLOBAL _hlt
@@ -69,8 +70,6 @@ read:					; int read( unsigned int fd, char *buffer, unsigned long count )
 	pop rbp
 	ret
 
-
-
 changeWindow:			; int changeWindow(unsigned int window)
 						; retorna 1 en exito, 0 caso contrario
 	push rbp
@@ -86,6 +85,20 @@ changeWindow:			; int changeWindow(unsigned int window)
 	pop rbp
 	ret
 
+changeWindowColor:		; int changeWindowColor(int rgb)
+						; retorna 1 en exito, 0 caso contrario
+	push rbp
+	mov rbp, rsp
+	push rbx
+
+	mov rax, 9			; numero de syscall sys_read
+	mov rbx, rdi		; 1er parametro
+	int 80h
+
+	pop rbx
+	mov rsp, rbp
+	pop rbp
+	ret
 
 emptyBuffer:			; void emptyBuffer()
 	push rbp
