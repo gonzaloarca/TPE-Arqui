@@ -44,20 +44,22 @@ void runShell(){
 }
 
 static void parse(){
-    inputBuffer[indexBuffer-1] = 0;         // Reemplazo el \n con 0 para utilizar strcmp
+    inputBuffer[indexBuffer] = 0;         // Reemplazo el \n con 0 para utilizar strcmp
     
-    if(strcmp( inputBuffer, "inforeg" ) == 0){
-	 //   printf("RAX: %ld\tRBX: %ld\tRCX: %ld\nRDX: %ld\tRSI: %ld\tRDI: %ld\nRBP: %ld\tRSP: %ld\tR8:  %ld\nR9:  %ld\tR10: %ld\tR11: %ld\nR12: %ld\tR13: %ld\tR14: %ld\nR15: %ld\tRIP: %ld\n",
-		// rax, reg.rbx, reg.rcx,
-		//  reg.rdx, reg.rsi, rdi,
-		//   reg.rbp, reg.rsp, reg.r8,
-		//    reg.r9, reg.r10, reg.r11,
-		//     reg.r12, reg.r13, reg.r14, reg.r15, reg.rip);
+    if(strcmp( inputBuffer, "inforeg\n" ) == 0){
+	   printf("RAX: %ld\tRBX: %ld\tRCX: %ld\nRDX: %ld\tRSI: %ld\tRDI: %ld\nRBP: %ld\tRSP: %ld\tR8:  %ld\nR9:  %ld\tR10: %ld\tR11: %ld\nR12: %ld\tR13: %ld\tR14: %ld\nR15: %ld\tRIP: %ld\n",
+		rax, reg.rbx, reg.rcx,
+		 reg.rdx, reg.rsi, rdi,
+		  reg.rbp, reg.rsp, reg.r8,
+		   reg.r9, reg.r10, reg.r11,
+		    reg.r12, reg.r13, reg.r14, reg.r15, reg.rip);
     }
-    else if(strcmp( inputBuffer, "time" ) == 0){
+    else if(strcmp( inputBuffer, "printTime\n" ) == 0){
         printTime();
         putchar('\n');
-    } else if (strcmp(inputBuffer, "cpuinfo") == 0){
-        printCPUInfo();
+    }
+    else if(strcmp( inputBuffer, "printmem\n") == 0){
+        printmem();
+        putchar('\n');
     }
 }
