@@ -1,10 +1,23 @@
 #include <std_io.h>
 #include <std_num.h>
 #include <stdarg.h>   //para tener cantidad variable de parámetros en funciones como printf y scanf
+#include <graphics_engine.h> //para llamar a getInput desde getchar hace falta
 
-#define N 4096       //maximo tamaño de conversion para cuando printf reciba strings como parametros
+#define N 4096       //maximo tamaño de conversion para cuando printf reciba strings como parametros ?? hay que ver si ponemos limite a esto no
+#define STDIN_MAXBUFFER 4096
 
+static char stdinBuffer[STDIN_MAXBUFFER];
+static int stdinFirstPos = 0;
+static int stdinLastPos = 0;
 
+int getchar(){  //devuelve chars casteados a int porque no hacemos uso de caracteres como EOF, ya que no hay un filesystem. Por ende no hay necesidad de operar con enteros en principio
+    if( stdinLastPos == stdinFirstPos ){ //hay que ver que pasa si stdinLastPos > STDIN_BUFFERSIZE
+        stdinFirstPos = 0;
+        stdinLastPos = getInput( stdinBuffer, STDIN_MAXBUFFER );
+    }
+
+    return stdinBuffer[stdinFirstPos++];
+}
 
 int putchar(char c){
 	return write( 1, &c, 1 );
@@ -32,10 +45,6 @@ int strcmp(char *str1, char *str2){
     return answer;
 }
 
-int puts(char *str){
-    return write( 1, str, strlen(str) );
-}
-
 int strlen(char *str){
     int i = 0;
     for( ; str[i] != '\0' ; i++);
@@ -53,15 +62,8 @@ int printf( const char* format, ...){
     
     int i = 0;
     int count = 0;
-    /*
-    char *s;
-    long d;
-    unsigned long ud;
-    double f;
-    char c;
-    */
-    char numAux[32];
 
+    char numAux[32];
 
     while( format[i] ){
         if( format[i] != '%' ){
@@ -106,16 +108,12 @@ int printf( const char* format, ...){
                     i++;
                     break;
                 case 'c':
-                    putchar( va_arg( args, char ) );
+                    putchar( (char) va_arg( args, int ) ); //str_arg.h promueve los chars a int
                     i++;
                     count++;
                     break;
-                case 'f': 
-                    count += floatToString( va_arg( args, float ), numAux );
-                    puts( numAux );
-                    i++;
-                    break;
-                case 'g':   
+                case 'f':   //al usar std_arg.h, cuando obtengo va_arg( args, float ), el float se promueve a double
+                case 'g':   //son el mismo caso por lo tanto
                     count += floatToString( va_arg( args, double ), numAux );
                     puts( numAux );
                     i++;

@@ -236,7 +236,7 @@ getScanCode:
 
 
 ;-------------------------------------------------------
-;	Devuelve la temperatura absoluta en ºC del CPU como conjunto
+;	Devuelve la temperatura absoluta en ºC del CPU 
 ;-------------------------------------------------------
 ; Llamada en C:
 ;	int sys_getCPUTemp();
@@ -251,14 +251,14 @@ sys_getCPUTemp:
 
 	mov rbx, 0					
 	mov rax, 0			;vacio rax para tener los 32 bits mas significativos en 0
-	mov ecx, 433		;leo la temperatura offset del CPU
+	mov ecx, 412		;leo la temperatura offset del CPU
 	rdmsr				;ejecuto la instruccion read msr
 	
 						;me quedo en edx:eax el registro entero
 						;debo solo acceder a los bits 22:16 de edx:eax
 
 	and eax, 0x7F0000	;en eax me quedan los bits 22:16
-	shr eax, 15			;ahora queda en eax el valor de la temperatura offset
+	shr eax, 16			;ahora queda en eax el valor de la temperatura offset
 	mov ebx, eax		;almaceno el valor en ebx
 
 	mov rax, 0
@@ -266,7 +266,7 @@ sys_getCPUTemp:
 	rdmsr				;leo la temperatura maxima que se aguanta el CPU
 
 	and eax, 0xFF0000	;en eax me quedan los bits 23:16
-	shr eax, 15			
+	shr eax, 16			
 
 	sub eax, ebx		;Obtengo la temperatura absoluta haciendo Tmax - Toffset
 

@@ -24,13 +24,11 @@ int getInput( char *inputBuffer, unsigned int buffer_size ){
 
 	puts("$> ");
 
-	while( i <= buffer_size ){
+	while( c != '\n' && i <= buffer_size ){
 
 		while( ( c = getKey() ) == 0 ){
 			_hlt();
 		}	
-
-		if ( c == '\n') break;
 	
 		switch( c ){
 			case 17:		//codigo ASCII asignado al make code del Ctrl
@@ -46,7 +44,7 @@ int getInput( char *inputBuffer, unsigned int buffer_size ){
 					break;
 				}
 				i--;
-				putchar( c);
+				putchar(c);
 				break;
 			
 			case '1':
@@ -55,7 +53,7 @@ int getInput( char *inputBuffer, unsigned int buffer_size ){
 					break;
 				}
 				inputBuffer[i++] = c;
-				putchar( c);
+				putchar(c);
 				break;
 			
 			case '2':
