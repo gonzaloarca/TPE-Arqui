@@ -8,31 +8,30 @@ static double strtonum(char *string, int length);
 static int is_operand(char c);
 static int balance (char s[]);
 static double recursive_evaluation(char *expression, int length);
+static int validChar(char c);
 
 static double last_result = 0;
 
 void calculator()
 {
-	char buffer[BUFFER_SIZE];
+	char buffer[BUFFER_SIZE+1];
 	int length;
-	double answer;
+	printf("CALCULATOR: write an expression with only numbers and operands\n");
+	printf("Supported: + - * / A (last answer)\n");
 	while(1)
 	{
-		length = getInput(buffer, BUFFER_SIZE);
-		buffer[length] = 0;
-		answer = evaluate(buffer);
-		printf("= %g\n", answer);
+		if ( (length = getInput(buffer, BUFFER_SIZE+1)) != 0 )
+		{
+			buffer[length] = 0;
+			if (balance(buffer) == 0)
+			{
+				last_result = recursive_evaluation(buffer, length);
+				printf("= %g\n", last_result);
+			} else
+				printf("\tWrong expression, try again\n");
+			
+		}
 	}
-}
-
-double evaluate(char *expression)
-{
-	if (balance(expression) != 0)
-		return 0;
-
-	last_result = recursive_evaluation(expression, strlen(expression));
-
-	return last_result;
 }
 
 /*	Esta funcion funciona recursivamente.
@@ -42,7 +41,7 @@ double evaluate(char *expression)
 **		las expresiones a su izquierda y derecha.
 **	Finalmente, evalua utilizando su operador.
 */
-double recursive_evaluation(char *expression, int length)
+static double recursive_evaluation(char *expression, int length)
 {
 	//	Busco la posicion del operador a evaluar
 	int operator = main_op(expression, length);
@@ -86,7 +85,7 @@ double recursive_evaluation(char *expression, int length)
 **	Este se debe encontrar fuera de un parentesis
 **		si no, se lo ignora
 */
-int main_op(char *expression, int length)
+static int main_op(char *expression, int length)
 {
 	//	brackets indica si hay parentesis abierto o cerrado
 	int brackets = 0;
@@ -128,14 +127,14 @@ int main_op(char *expression, int length)
 	return last_op;
 }
 
-double strtonum(char *string, int length)
+static double strtonum(char *string, int length)
 {
-	if (string[0] == ANSWER)
+	if (length == 1 && string[0] == ANSWER)
 		return last_result;
 
 	//	El numero acumulado hasta ahora
-	double number = 0, aux,
-		exp = 1; 	//Exponente para la parte real del numero
+	double number = 0.0, aux,
+		exp = 1.0; 	//Exponente para la parte real del numero
 	//	El char actual
 	char c;
 	//	Indica la posicion del punto decimal
@@ -171,7 +170,7 @@ double strtonum(char *string, int length)
 	return number;
 }
 
-int is_operand(char c)
+static int is_operand(char c)
 {
 	switch(c)
 	{
@@ -184,15 +183,16 @@ int is_operand(char c)
 //	Funcion para checkear si los parentesis son utilizados correctamente
 //	Devuelve 0 si la expresion tiene todos sus parentesis apareados
 //	Copiada de la guia de PI
-int balance (char s[])
+static int balance (char s[])
 {
 	int b;
-	if ( s[0] == 0 )
+	char c = *s;
+	if ( c == 0 )
 		return 0;
 	
 	b = balance(s+1);
 	
-	if ( s[0] == '(' )
+	if ( c == '(' )
 	{
 		if ( b < 0 )
 			b++;
@@ -200,8 +200,18 @@ int balance (char s[])
 			b--;
 	}
 	
-	else if ( s[0] == ')' )
+	else if ( c == ')' )
+		b--;
+
+	else if (!validChar(c))
 		b--;
 	
 	return b;
 }
+
+static int validChar(char c)
+{
+	return is_operand(c) || (c >= '0' && c <= '9')
+		||	c == ANSWER || c == '.';
+}
+

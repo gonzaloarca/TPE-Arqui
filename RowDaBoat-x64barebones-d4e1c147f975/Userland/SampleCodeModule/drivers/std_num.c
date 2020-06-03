@@ -41,7 +41,7 @@ int intToString( long int num, char * str ){
     if( num == 0 ){
         str[0] = '0';
         str[1] = 0;
-        return 0;
+        return 1;
     }
 
     int dig = 0;

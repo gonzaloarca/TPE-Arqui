@@ -50,13 +50,16 @@ int printf( const char* format, ...){
     va_list args;
     va_start( args, format );
 
+    
     int i = 0;
     int count = 0;
+    /*
     char *s;
     long d;
     unsigned long ud;
     double f;
     char c;
+    */
     char numAux[32];
 
 

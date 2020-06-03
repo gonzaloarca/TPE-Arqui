@@ -24,11 +24,13 @@ int getInput( char *inputBuffer, unsigned int buffer_size ){
 
 	puts("$> ");
 
-	while( c != '\n' && i < buffer_size ){
+	while( i <= buffer_size ){
 
 		while( ( c = getKey() ) == 0 ){
 			_hlt();
 		}	
+
+		if ( c == '\n') break;
 	
 		switch( c ){
 			case 17:		//codigo ASCII asignado al make code del Ctrl
@@ -63,9 +65,18 @@ int getInput( char *inputBuffer, unsigned int buffer_size ){
 				}
 			
 			default:
-				inputBuffer[i++] = c;
-				putchar( c );	
+				// Solo lo guardo si tengo espacio en el buffer
+				// Si no hay espacio, hay que esperar a las teclas especiales
+				if (i != buffer_size)
+				{
+					inputBuffer[i++] = c;
+					putchar( c );
+				}	
 		}
+
 	}
+
+
+	putchar('\n');
 	return i;
 }
