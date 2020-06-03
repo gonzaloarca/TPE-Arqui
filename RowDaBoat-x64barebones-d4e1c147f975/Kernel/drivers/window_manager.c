@@ -4,12 +4,19 @@
 
 typedef struct{
 
+	char character;
+	int color;
+
+}charWithColor;
+
+typedef struct{
+
 	// Donde arranca el canvas de la ventana
 	int xStart;
 	int yStart;
 
 	// Buffer de la pantalla para permitir scrolling
-	char screenBuffer[BUFFER_LINES][MAX_LINE_CHARS]; // necesito una linea mas para tener la anterior
+	charWithColor screenBuffer[BUFFER_LINES][MAX_LINE_CHARS]; // necesito una linea mas para tener la anterior
 
 	// Cantidad de caracteres en la linea actual
 	int currentLineSize;
@@ -20,6 +27,7 @@ typedef struct{
 	// Linea en la cual arranca la pantalla
 	int firstLine;
 
+	// Color a utilizar para imprimir los nuevos caracteres
 	int charColor;
 
 } Window;
@@ -65,6 +73,15 @@ int sys_changeWindow(unsigned int newIndex){
 	}
 }
 
+int sys_changeWindowColor(int rgb){
+	if(rgb < 0 || rgb > 0xFFFFFF )
+		return 0;	// no indica un color
+	else{
+		windows[activeWindow].charColor = rgb;
+		return 1;
+	}
+}
+
 //  Funcion de uso interno que realiza la actualizacion de las lineas del buffer de la ventana activa, 
 // si se llego al limite de lineas mostrada se encarga de realizar el scrolling del buffer
 static void updateBuffer(){
@@ -81,8 +98,8 @@ static void updateBuffer(){
 		int lastLine = (currentWindow->firstLine + SCREEN_LINES -1) % BUFFER_LINES; // Linea que ahora estara alfinal de la pantalla vacia
 
 		// Solo borro caracteres que quedaron pendientes, no toda la linea
-		for(int i = 0; i < MAX_LINE_CHARS && currentWindow->screenBuffer[lastLine][i] != 0 ; i++ ){
-			currentWindow->screenBuffer[lastLine][i] = 0;
+		for(int i = 0; i < MAX_LINE_CHARS && currentWindow->screenBuffer[lastLine][i].character != 0 ; i++ ){
+			currentWindow->screenBuffer[lastLine][i].character = 0;
 		}
 	}
 }
@@ -104,30 +121,30 @@ static void refreshLine( int lineNumber ){
 	else
 		previousLineIndex = (currentWindow->firstLine + lineNumber -1) % BUFFER_LINES;		// Ya me asegure que el indice sera positivo
 
-	char *currentLine = currentWindow->screenBuffer[currentLineIndex];
-	char *previousLine = currentWindow->screenBuffer[previousLineIndex];
+	charWithColor *currentLine = currentWindow->screenBuffer[currentLineIndex];
+	charWithColor *previousLine = currentWindow->screenBuffer[previousLineIndex];
 
 	// En este primer ciclo sobreescribire los chars que no comparten la linea que se encuentra en pantalla y la que se debe escribir
 	// Finaliza una vez terminada la linea o una de las lineas
-	for( ; i < MAX_LINE_CHARS && previousLine[i] != 0 && currentLine[i] != 0 ; i++ )
+	for( ; i < MAX_LINE_CHARS && previousLine[i].character != 0 && currentLine[i].character != 0 ; i++ )
 	{
-		if(previousLine[i] != currentLine[i]){
-			drawChar(currentLine[i], currentWindow->xStart + i * FONT_WIDTH, 
-				currentWindow->yStart + lineNumber * (LINE_HEIGHT) + LINE_MARGIN, CHAR_COLOR, BACKGROUND_COLOR);
+		if(previousLine[i].character != currentLine[i].character || previousLine[i].color != currentLine[i].color){
+			drawChar(currentLine[i].character, currentWindow->xStart + i * FONT_WIDTH, 
+				currentWindow->yStart + lineNumber * (LINE_HEIGHT) + LINE_MARGIN, currentLine[i].color, BACKGROUND_COLOR);
 		}
 	}
 
 	// En caso de que la nueva linea sea mas corta que la anterior, se deben borrar en pantalla las letras que quedaron
-	while( previousLine[i] != 0 && i < MAX_LINE_CHARS) {
+	while( previousLine[i].character != 0 && i < MAX_LINE_CHARS) {
 		drawChar(0, currentWindow->xStart + i * FONT_WIDTH, 
 			currentWindow->yStart + lineNumber * (LINE_HEIGHT) + LINE_MARGIN, CHAR_COLOR, BACKGROUND_COLOR);
 		i++;
 	}
 
 	// En caso de que la nueva linea sea mas larga que la anterior, se deben agregar en pantalla estas letras sobrantes
-	while( currentLine[i] != 0 && i < MAX_LINE_CHARS ) {
-		drawChar(currentLine[i], currentWindow->xStart + i * FONT_WIDTH, 
-			currentWindow->yStart + lineNumber * (LINE_HEIGHT) + LINE_MARGIN, CHAR_COLOR, BACKGROUND_COLOR);
+	while( currentLine[i].character != 0 && i < MAX_LINE_CHARS ) {
+		drawChar(currentLine[i].character, currentWindow->xStart + i * FONT_WIDTH, 
+			currentWindow->yStart + lineNumber * (LINE_HEIGHT) + LINE_MARGIN, currentLine[i].color, BACKGROUND_COLOR);
 		i++;
 	}
 }
@@ -150,6 +167,7 @@ static void deleteChar(){
 		currentWindow->lineCount--;
 		currentWindow->currentLineSize = MAX_LINE_CHARS;
 	}
+	currentWindow->screenBuffer[currentWindow->lineCount][currentWindow->currentLineSize-1].character = 0;	// lo borro del buffer
 	currentWindow->currentLineSize--;
 	drawChar(' ', currentWindow->xStart + currentWindow->currentLineSize * FONT_WIDTH, currentWindow->yStart + currentWindow->lineCount * LINE_HEIGHT + LINE_MARGIN, BACKGROUND_COLOR, BACKGROUND_COLOR);
 }
@@ -195,7 +213,8 @@ static int printChar( char c, int rgb ){
 	int currentLine = (currentWindow->firstLine + currentWindow->lineCount) %BUFFER_LINES;
 	int currentChar = currentWindow->currentLineSize;
 
-	currentWindow->screenBuffer[currentLine][currentChar] = c;
+	charWithColor newChar = {c, rgb};
+	currentWindow->screenBuffer[currentLine][currentChar] = newChar;
 	
 	// Incremento contador de caracteres en linea
 	currentWindow->currentLineSize++;
