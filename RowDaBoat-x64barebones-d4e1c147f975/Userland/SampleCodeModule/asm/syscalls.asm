@@ -76,7 +76,7 @@ changeWindow:			; int changeWindow(unsigned int window)
 	mov rbp, rsp
 	push rbx
 
-	mov rax, 8			; numero de syscall sys_read
+	mov rax, 8			
 	mov rbx, rdi		; 1er parametro
 	int 80h
 

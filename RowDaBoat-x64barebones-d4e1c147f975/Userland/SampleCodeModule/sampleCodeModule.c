@@ -10,7 +10,7 @@ int main(){
 	// for(int i = 0; i < 400 ; i++)
 	// 	writePixel(i,500,0xFFFFFF);
 
-	runShell();
-	//calculator();
+	//runShell();
+	calculator();
 	return 0;
 }

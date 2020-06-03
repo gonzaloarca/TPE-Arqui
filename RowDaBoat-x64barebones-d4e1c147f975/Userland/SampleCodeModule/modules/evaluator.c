@@ -1,6 +1,6 @@
 #include <evaluator.h>
-#include <stdio.h>
-#include <string.h>
+#include <graphics_engine.h>
+#include <std_io.h>
 
 //	Funciones internas del programa
 static int main_op(char *expression, int length);
@@ -9,23 +9,20 @@ static int is_operand(char c);
 static int balance (char s[]);
 static double recursive_evaluation(char *expression, int length);
 
-static int last_result = 0;
+static double last_result = 0;
 
 void calculator()
 {
-	char input[BUFFER_SIZE];
+	char buffer[BUFFER_SIZE];
 	int length;
 	double answer;
 	while(1)
 	{
-		length = getInput(input, BUFFER_SIZE);
-		input[length] = 0;
-		answer = evaluate(input);
-		floatToString(answer, input);
-		puts(input);
-		putchar('\n');
+		length = getInput(buffer, BUFFER_SIZE);
+		buffer[length] = 0;
+		answer = evaluate(buffer);
+		printf("= %g\n", answer);
 	}
-	return 0;
 }
 
 double evaluate(char *expression)
@@ -49,11 +46,6 @@ double recursive_evaluation(char *expression, int length)
 {
 	//	Busco la posicion del operador a evaluar
 	int operator = main_op(expression, length);
-
-	//	Codigo de Testeo, ignorar
-	//printf("Exp: ");
-	//for (int i = 0; i<length; i++) putchar(expression[i]);
-	//printf(" Op: %d\n", operator);
 
 	//	Si no habia operador principal, tengo que convertir a numero
 	//	Nota: tambien entra en este if las expresion con parentesis

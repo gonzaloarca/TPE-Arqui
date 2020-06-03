@@ -34,17 +34,12 @@ uint64_t getRDI();
 registersType* getRegisters();
 
 void runShell(){
-    int i = 0xFFFFF;    //prueba
     while(1){
         rax = getRAX();
         rdi = getRDI();
 		getRegisters(&reg);
         indexBuffer = getInput( inputBuffer, INPUT_BUFFER_SIZE );
         parse();
-
-        //prueba
-        changeWindowColor(i);
-        i+=500;
     }
 }
 
@@ -61,6 +56,6 @@ static void parse(){
     }
     else if(strcmp( inputBuffer, "printTime" ) == 0){
         printTime();
-        newLine();
+        putchar('\n');
     }
 }

@@ -15,7 +15,7 @@ int balance (char s[]);
 
 double recursive_evaluation(char *expression, int length);
 
-static int last_result = 0;
+static double last_result = 0;
 
 double evaluate(char *expression)
 {
@@ -40,9 +40,9 @@ double recursive_evaluation(char *expression, int length)
 	int operator = main_op(expression, length);
 
 	//	Codigo de Testeo, ignorar
-	//printf("Exp: ");
-	//for (int i = 0; i<length; i++) putchar(expression[i]);
-	//printf(" Op: %d\n", operator);
+	printf("Exp: ");
+	for (int i = 0; i<length; i++) putchar(expression[i]);
+	printf(" Op: %d\n", operator);
 
 	//	Si no habia operador principal, tengo que convertir a numero
 	//	Nota: tambien entra en este if las expresion con parentesis
@@ -52,7 +52,9 @@ double recursive_evaluation(char *expression, int length)
 		if (expression[0] == '(' && expression[length-1] == ')')
 			return recursive_evaluation(expression+1, length-2);
 		//	Si no, era un numero y la tengo que convertir
-		return strtonum(expression, length);
+		double answer = strtonum(expression, length);
+		printf("answer=%f\n", answer);
+		return answer;
 	}
 
 	//	Evaluo expresiones de la izquierda y la derecha del operador
@@ -153,9 +155,12 @@ double strtonum(char *string, int length)
 			else
 			{
 				exp /= 10;
+				printf("exp=%f\n", exp);
 				aux = c - '0';
 				aux *= exp;
+				printf("aux=%f\n", aux);
 				number += aux;
+				printf("number=%f\n", number);
 			}
 		}
 		else if (c == '.')

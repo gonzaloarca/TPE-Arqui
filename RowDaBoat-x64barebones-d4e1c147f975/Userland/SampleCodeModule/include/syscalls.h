@@ -25,6 +25,9 @@ char getKey();
 //	Cambiar la ventana activa
 int changeWindow(unsigned int window);
 
+//	Cambiar el color de letra de la ventana
+int changeWindowColor(int rgb);
+
 //	Temperatura del CPU
 int getCPUTemp();
 

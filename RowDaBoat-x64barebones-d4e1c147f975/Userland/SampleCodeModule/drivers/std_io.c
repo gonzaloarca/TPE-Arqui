@@ -32,7 +32,7 @@ int strcmp(char *str1, char *str2){
     return answer;
 }
 
-int puts(const char *str){
+int puts(char *str){
     return write( 1, str, strlen(str) );
 }
 
@@ -52,7 +52,6 @@ int printf( const char* format, ...){
 
     int i = 0;
     int count = 0;
-
     char *s;
     long d;
     unsigned long ud;
@@ -144,15 +143,4 @@ int printf( const char* format, ...){
     va_end(args);
     return count;
 
-}
-
-
-
-int puts( char * s ){
-    while( *s != 0 ){
-        putchar( *s);
-        s++;
-    }
-
-    return 0;
 }

@@ -16,7 +16,7 @@ int printf(const char *format, ...);
 int putchar(char c);
 
 // Funcion que permite la impresion de un string terminado en null en la ventana actual
-int puts( char * s );
+int puts(char * s);
 
 int scanf(const char *format, ...);
 
@@ -28,9 +28,6 @@ int strlen(char *str);
 
 // Funcion que permite la impresion de un entero
 int printInt(int num);
-
-// Funcion que permite realizar un cambio de linea en la ventana actual
-void newLine();
 
 #endif
 
