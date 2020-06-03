@@ -154,7 +154,7 @@ static void deleteChar(){
 	drawChar(' ', currentWindow->xStart + currentWindow->currentLineSize * FONT_WIDTH, currentWindow->yStart + currentWindow->lineCount * LINE_HEIGHT + LINE_MARGIN, BACKGROUND_COLOR, BACKGROUND_COLOR);
 }
 
-static void SetNewLine(){
+static void setNewLine(){
 	if(windows[activeWindow].lineCount == (SCREEN_LINES -1)) {
 		// Se llego alfinal de las lineas en pantalla, se debe subir una linea para que la ultima quede libre
 		updateBuffer();
@@ -164,19 +164,24 @@ static void SetNewLine(){
 }
 
 static int printChar( char c, int rgb ){
-	if ( c == '\n')
-	{
-		SetNewLine();
+	if ( c == '\n'){
+		setNewLine();
 		return 0;
 	}else if( c == '\b'){
 		deleteChar();
 		return 0;
-	}	
+	}else if( c == '\t' ){
+		for( int i = 0; i < 4; i++ ){	// tab = 4 espacios
+			printChar( 32, rgb );
+		}
+		return 0;
+	}
+
 	Window *currentWindow = &(windows[activeWindow]);
 
 	if( currentWindow->currentLineSize == MAX_LINE_CHARS ){
 		// Se llego al tope de caracteres que entran en una linea, se debe pasar a la siguiente
-		SetNewLine();
+		setNewLine();
 	}
 
 	// Escribo en pantalla el nuevo caracter en la linea y posicion actual, y luego incremento la posicion para el proximo caracter
