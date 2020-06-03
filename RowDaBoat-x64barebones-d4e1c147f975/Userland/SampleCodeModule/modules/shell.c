@@ -59,7 +59,7 @@ static void parse(){
         putchar('\n');
     }
     else if(strcmp( inputBuffer, "printmem\n") == 0){
-        printmem();
+        // printmem();
         putchar('\n');
     }
 }

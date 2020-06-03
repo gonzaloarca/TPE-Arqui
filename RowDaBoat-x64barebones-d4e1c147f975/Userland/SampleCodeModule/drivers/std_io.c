@@ -51,6 +51,10 @@ int strlen(char *str){
     return i;
 }
 
+int puts(char *str){
+    return write(1, str, strlen(str));
+}
+
 int printf( const char* format, ...){
     if( format == 0 ){
         return 0;
