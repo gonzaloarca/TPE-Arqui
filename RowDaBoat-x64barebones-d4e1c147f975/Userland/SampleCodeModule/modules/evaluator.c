@@ -72,6 +72,11 @@ static double recursive_evaluation(char *expression, int length)
 		case '*':
 			return izq * der;
 		case '/':
+			if (der == 0)
+			{
+				printf("\tWrong expression, try again\n");
+				return 0;
+			}
 			return izq / der;
 	}
 
