@@ -36,7 +36,7 @@ int floatToString(double number, char buffer[DOUBLE_SIZE])
 	return length;
 }
 
-int intToString( long int num, char * str ){
+int intToString( long num, char * str ){
 
     if( num == 0 ){
         str[0] = '0';
@@ -45,7 +45,7 @@ int intToString( long int num, char * str ){
     }
 
     int dig = 0;
-    int aux = num;
+    long aux = num;
 
     while( aux != 0 ){ //cuento digitos para saber desde donde arrancar a meter los caracteres
         aux /= 10;
