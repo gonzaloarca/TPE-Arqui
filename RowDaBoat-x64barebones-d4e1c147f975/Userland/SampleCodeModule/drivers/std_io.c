@@ -100,7 +100,12 @@ int printf( const char* format, ...){
                 case 's': 
                     puts( va_arg( args, char *) );
                     i++;
-                    break;          
+                    break;
+                case 'x':
+                    count += intToHexString( (unsigned int) va_arg( args, unsigned int ), numAux );
+                    puts( numAux );
+                    i++;
+                    break;
                 case 'd':
                     count += intToString( va_arg( args, int ), numAux );
                     puts( numAux );
@@ -134,7 +139,14 @@ int printf( const char* format, ...){
                         puts( numAux );
                         i += 2;
                         break;
-                    } //si despues de la l no habia nada de interes, debo printear el % y lo que siga, lo cual cae en el caso default
+                    } 
+                    if( format[i+1] == 'x' ){   //unsigned long en hexa
+                        count += intToHexString( (unsigned long) va_arg( args, unsigned long ), numAux );
+                        puts( numAux );
+                        i += 2;
+                        break;
+                    } 
+                    //si despues de la l no habia nada de interes, debo printear el % y lo que siga, lo cual cae en el caso default
                 default:
                     putchar('%');
                     if( format[i] == '%' ){ //si me pasan %%, puedo ahorrarme las comparaciones que siguen si hago que directamente el siguiente % ni entre al switch salteandolo
@@ -150,37 +162,4 @@ int printf( const char* format, ...){
 
 }
 
-char *intToHEX(unsigned long int num, char *buffer, unsigned int count){
 
-    char hexas[16] = {'0','1','2','3','4','5',
-                    '6', '7', '8', '9', 'A',
-                    'B', 'C', 'D', 'E', 'F'};
-
-    char invertido[count];
-    int i;
-
-    if (num == 0)
-    {
-        buffer[0] = buffer[1] = '0';
-        buffer[3] = 0;
-    }
-
-    for (i = 0; i < count-1 && num != 0; i ++)
-    {
-        invertido[i] = hexas[num%16];
-        num /= 16;
-    }
-
-    if (i % 2 == 1){
-        invertido[i++] = '0'; 
-    }
-
-    for (int j = 0; j < i; j++)
-    {
-        buffer[j] = invertido[i - 1 - j];
-    }
-
-    buffer[i] = 0;
-
-    return buffer;
-}
