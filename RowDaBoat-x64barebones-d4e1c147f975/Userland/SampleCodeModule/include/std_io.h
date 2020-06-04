@@ -29,5 +29,8 @@ int strlen(char *str);
 // Funcion que permite la impresion de un entero
 int printInt(int num);
 
+//	Convierte un long int a su representacion hexa, lo guarda en buffer[count]
+char *intToHEX(unsigned long int num, char *buffer, unsigned int count);
+
 #endif
 
