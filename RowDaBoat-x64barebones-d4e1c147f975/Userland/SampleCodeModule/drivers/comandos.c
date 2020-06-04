@@ -7,10 +7,10 @@
 #define INFOREG_MSG "inforeg\tMuestra el estado de los registros del ultimo\n guardado."
 #define PRINTTIME_MSG "inforeg\tMuestra la hora actual."
 #define PRINTMEM_MSG "printmem\tMuestra los 32 bytes siguientes a partir de la\n direccion de memoria(en hexadecimal) recibida por parametro."
-#define PRINTCPUINFO_MSG "printCPUInfo\tMuestra informacion de interes sobre el cpu."
+#define CPUINFO_MSG "cpuinfo\tMuestra informacion de interes sobre el cpu."
 
 void help(){
-	printf("Informacion sobre comandos disponibles:\n%s\n%s\n%s\n%s\n", INFOREG_MSG, PRINTTIME_MSG, PRINTMEM_MSG, PRINTCPUINFO_MSG);
+	printf("Informacion sobre comandos disponibles:\n%s\n%s\n%s\n%s\n", INFOREG_MSG, PRINTTIME_MSG, PRINTMEM_MSG, CPUINFO_MSG);
 }
 
 void printTime(){       //se podria modularizar en una funcion para obtener el tiempo correcto, que abarcaria hasta el while, y otra para generar el string formateado del tiempo, despues juega printString
