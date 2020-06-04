@@ -12,15 +12,25 @@ int getchar();
 
 char *gets(char *str);
 
-int printf(const char *format, ...);
+int fprintf(int fd, char *format, ...);
 
-// Funcion que permite escribir un caracter con color default(blanco)
-int putchar(char c);
+int printf(char *format, ...);
+
+int vfprintf(int fd, char *format, va_list arg);
+
+// Funcion que permite escribir un caracter con la opcion de elegir si se desea escribir en stdout o en stderr
+int fputc(char c, int fd);
 
 // Funcion que permite la impresion de un string terminado en null en la ventana actual
+int fputs(char* str, int fd);
+
+// Funcion que permite escribir un caracter en stdout
+int putchar(char c);
+
+// Funcion que permite la impresion de un string terminado en null en la ventana actual (sin imprimir el caracter nulo)
 int puts(char * s);
 
-int scanf(const char *format, ...);
+int scanf(char *format, ...);
 
 // Funcion que retorna -1 si str1 es menor que str2, 0 si son iguales y 1 caso contrario
 int strcmp(char *str1, char *str2);

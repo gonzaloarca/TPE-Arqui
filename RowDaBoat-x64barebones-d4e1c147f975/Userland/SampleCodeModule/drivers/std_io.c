@@ -19,8 +19,16 @@ int getchar(){  //devuelve chars casteados a int porque no hacemos uso de caract
     return stdinBuffer[stdinFirstPos++];
 }
 
+int fputc(char c, int fd){
+    if(fd != 1 && fd != 2){  //solo tenemos implementados stdout y stderr
+        return -1;
+    }
+
+    return write( fd, &c, 1 );
+}
+
 int putchar(char c){
-	return write( 1, &c, 1 );
+	return fputc(c, 1);
 }
 
 int strcmp(char *str1, char *str2){
@@ -51,44 +59,47 @@ int strlen(char *str){
     return i;
 }
 
-int puts(char *str){
-    return write(1, str, strlen(str));
+int fputs(char *str, int fd){
+    if(fd != 1 && fd != 2){  //solo tenemos implementados stdout y stderr
+        return -1;
+    }
+    return write(fd, str, strlen(str));
 }
 
-int printf( const char* format, ...){
-    if( format == 0 ){
-        return 0;
+int puts(char *str){
+    return fputs(str, 1);
+}
+
+int vfprintf(int fd, char* format, va_list arg){
+    if(format == 0 || (fd != 1 && fd != 2 )){   //solo tenemos implementados stdout y stderr
+        return -1;
     }
-
-    va_list args;
-    va_start( args, format );
-
-    
+ 
     int i = 0;
     int count = 0;
 
     char numAux[32];
 
-    while( format[i] ){
-        if( format[i] != '%' ){
-            if( format[i] != '\\' ){
-                putchar( format[i++] );
+    while(format[i]){
+        if(format[i] != '%'){
+            if(format[i] != '\\'){
+                fputc(format[i++], fd);
                 count++;
             } else {
                 i++;
-                switch( format[i] ){  //puede llegar a ser un caracter especial, como un enter o un tab
+                switch(format[i]){  //puede llegar a ser un caracter especial, como un enter o un tab
                     case 'n':
-                        putchar('\n');
+                        fputc('\n', fd);
                         i++;
                         count++;
                         break;
                     case 't':
-                        putchar('\t');
+                        fputc('\t', fd);
                         i++; 
                         count++;
                         break;
                     default:
-                        putchar( '\\' );
+                        fputc('\\', fd);
                         count++;
                         break;
                 }   
@@ -96,59 +107,64 @@ int printf( const char* format, ...){
      
         } else { // Encontre un %
             i++;
-            switch( format[i] ){
+            switch(format[i]){
                 case 's': 
-                    puts( va_arg( args, char *) );
+                    fputs(va_arg(arg, char *), fd);
+                    i++;
+                    break;
+                case 'p':   //puntero
+                    count += pointerToHexString(va_arg(arg, void *), numAux);
+                    fputs(numAux, fd);
                     i++;
                     break;
                 case 'x':
-                    count += intToHexString( (unsigned int) va_arg( args, unsigned int ), numAux );
-                    puts( numAux );
+                    count += intToHexString((unsigned int) va_arg(arg, unsigned int), numAux);
+                    fputs(numAux, fd);
                     i++;
                     break;
                 case 'd':
-                    count += intToString( va_arg( args, int ), numAux );
-                    puts( numAux );
+                    count += intToString(va_arg(arg, int), numAux);
+                    fputs(numAux, fd);
                     i++;
                     break;
                 case 'u':
-                    count += intToString( (unsigned int) va_arg( args, unsigned int ), numAux );
-                    puts( numAux );
+                    count += intToString((unsigned int) va_arg(arg, unsigned int), numAux);
+                    fputs(numAux, fd);
                     i++;
                     break;
                 case 'c':
-                    putchar( (char) va_arg( args, int ) ); //str_arg.h promueve los chars a int
+                    fputc((char) va_arg(arg, int), fd); //str_arg.h promueve los chars a int
                     i++;
                     count++;
                     break;
-                case 'f':   //al usar std_arg.h, cuando obtengo va_arg( args, float ), el float se promueve a double
+                case 'f':   //al usar std_arg.h, cuando obtengo va_arg( arg, float ), el float se promueve a double
                 case 'g':   //son el mismo caso por lo tanto
-                    count += floatToString( va_arg( args, double ), numAux );
-                    puts( numAux );
+                    count += floatToString(va_arg(arg, double), numAux);
+                    fputs(numAux, fd);
                     i++;
                     break; 
                 case 'l':
                     if( format[i+1] == 'u' ){   //unsigned long
-                        count += intToString((unsigned long) va_arg( args, unsigned long ), numAux);
-                        puts( numAux ); 
+                        count += intToString((unsigned long) va_arg(arg, unsigned long), numAux);
+                        fputs(numAux, fd); 
                         i += 2;
                         break;
                     }
                     if( format[i+1] == 'd' ){   //long
-                        count += intToString( (long) va_arg( args, long ), numAux );
-                        puts( numAux );
+                        count += intToString((long) va_arg(arg, long), numAux);
+                        fputs(numAux, fd);
                         i += 2;
                         break;
                     } 
                     if( format[i+1] == 'x' ){   //unsigned long en hexa
-                        count += intToHexString( (unsigned long) va_arg( args, unsigned long ), numAux );
-                        puts( numAux );
+                        count += intToHexString((unsigned long) va_arg(arg, unsigned long), numAux);
+                        fputs(numAux, fd);
                         i += 2;
                         break;
                     } 
                     //si despues de la l no habia nada de interes, debo printear el % y lo que siga, lo cual cae en el caso default
                 default:
-                    putchar('%');
+                    fputc('%', fd);
                     if( format[i] == '%' ){ //si me pasan %%, puedo ahorrarme las comparaciones que siguen si hago que directamente el siguiente % ni entre al switch salteandolo
                         i++;                
                     }
@@ -156,10 +172,30 @@ int printf( const char* format, ...){
             }
         }
     }
-    
-    va_end(args);
-    return count;
 
+    return count;
 }
 
+int fprintf( int fd, char* format, ...){
+    va_list arg;
+    va_start(arg, format);
+
+    int ret = vfprintf(fd, format, arg);
+
+    va_end(arg);
+
+    return ret;
+}
+
+
+int printf(char* format, ...){
+    va_list arg;
+    va_start(arg, format);
+
+    int ret = vfprintf(1, format, arg);
+
+    va_end(arg);
+    
+    return ret;    
+}
 
