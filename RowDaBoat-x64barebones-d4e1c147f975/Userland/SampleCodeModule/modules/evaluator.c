@@ -2,6 +2,8 @@
 #include <console.h>
 #include <std_io.h>
 
+#define ERROR_MSG "\tExpresion erronea, pruebe de vuelta\n"
+
 //	Funciones internas del programa
 static int main_op(char *expression, int length);
 static double strtonum(char *string, int length);
@@ -14,24 +16,37 @@ static double last_result = 0;
 
 void calculator()
 {
+	/*
 	char buffer[BUFFER_SIZE+1];
 	int length;
-	printf("CALCULATOR: write an expression with only numbers and operands\n");
-	printf("Supported: + - * / A (last answer)\n");
+	printf("\t\t\t-----CALCULADORA-----\n");
+	printf("\tEscriba una expresion inorder terminada con =\n");
+	printf("\tAprete enter para calcular el resultado\n");
+	printf("\tSoportado: + - * / A (respuesta anterior)\n");
 	while(1)
 	{
 		if ( (length = getInput(buffer, BUFFER_SIZE+1)) != 0 )
 		{
-			buffer[length] = 0;
+			buffer[--length] = 0;
+			if (buffer[length-1] != '=')
+			{
+				fprintf(2, ERROR_MSG);
+			}
 			if (balance(buffer) == 0)
 			{
 				last_result = recursive_evaluation(buffer, length);
 				printf("= %g\n", last_result);
 			} else
-				printf("\tWrong expression, try again\n");
+				fprintf(2, ERROR_MSG);
 			
 		}
 	}
+	*/
+	char buffer[BUFFER_SIZE+1];
+    printf("RBP = %x\n", getrbp());
+    printf("RSP = %x\n", getrsp());
+    getInput(buffer, BUFFER_SIZE+1);
+
 }
 
 /*	Esta funcion funciona recursivamente.
@@ -74,7 +89,7 @@ static double recursive_evaluation(char *expression, int length)
 		case '/':
 			if (der == 0)
 			{
-				printf("\tWrong expression, try again\n");
+				fprintf(2, ERROR_MSG);
 				return 0;
 			}
 			return izq / der;

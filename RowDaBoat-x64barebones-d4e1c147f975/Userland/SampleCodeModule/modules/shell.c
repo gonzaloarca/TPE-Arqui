@@ -33,14 +33,22 @@ uint64_t getRDI();
 
 registersType* getRegisters();
 
+uint64_t getrsp();
+uint64_t getrbp();
+
 void runShell(){
+    /*
     while(1){
         rax = getRAX();
         rdi = getRDI();
 		getRegisters(&reg);
         indexBuffer = getInput( inputBuffer, INPUT_BUFFER_SIZE );
         parse();
-    }
+    }*/
+    char buffer[BUFFER_SIZE+1];
+    printf("RBP = %x\n", getrbp());
+    printf("RSP = %x\n", getrsp());
+    getInput(buffer, BUFFER_SIZE+1);
 }
 
 static void parse(){

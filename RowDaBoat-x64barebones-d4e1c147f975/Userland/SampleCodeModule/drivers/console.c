@@ -2,13 +2,63 @@
 #include <std_io.h>
 #include <syscalls.h>
 
-static int activeWindow = 0;
+#define WINDOWS 2
+
+static StackFrame mainFrame;
+static Module modules[WINDOWS];
+static unsigned int activeModule = 0;
+static unsigned int numberOfModules = 0;
+
+//	Funcion de assembler que guarda el stack frame
+void markFrame(StackFrame *mainFrame);
+//	Funcion de assembler que setea el frame de nuevo
+//	y comienza a ejecutar el programa
+void setFrame(StackFrame *mainFrame, void (*program)());
+
+void setMainFrame(){
+	markFrame(&mainFrame);
+	//printf("RBP = %x\n", mainFrame.rbp);
+	//printf("RSP = %x\n", mainFrame.rsp);
+}
+
+int initModule(void (*program)(), char prompt[MAX_PROMPT], char delimiter)
+{
+	//	Si ya no tengo mas ventanas, no puedo agregar nada
+	if (numberOfModules >= WINDOWS)
+		return 0;
+
+	//	Busco la direccion del nuevo modulo en la lista
+	Module *newModule = &(modules[numberOfModules]);
+
+	//	Copio los parametros al modulo
+	newModule->program = program;
+	newModule->delimiter = delimiter;
+	for (int i = 0; prompt[i] != 0 && i < MAX_PROMPT; i++)
+		newModule->prompt[i] = prompt[i];
+
+	//	Le asigno una ventana
+	newModule->windowID = numberOfModules;
+	numberOfModules++;
+
+	return 1;
+}
+
+void startFirstProgram(){
+	if (numberOfModules == 0)
+		fprintf(1, "NO HAY PROGRAMA PARA EJECUTAR\n");
+	else
+	{
+		setFrame(&mainFrame, modules[activeModule].program);
+	}
+}
 
 static int switchWindow( unsigned int window ){
+	//	Llamo a la syscall para cambiar de ventana graficamente
 	int success = changeWindow(window);
-	if(success){
-		activeWindow = window;
-		return 1;
+	if(success)
+	{
+		activeModule = window;
+		setFrame(&mainFrame, modules[activeModule].program);
 	}
 	return 0;
 }
@@ -55,11 +105,11 @@ int getInput( char *inputBuffer, unsigned long int buffer_size )
 					break;
 				
 				default:
-					if( ctrl && c == '1' && activeWindow != 0 ){
+					if( ctrl && c == '1' && activeModule != 0 ){
 						switchWindow(0);
 						break;
 					}
-					if( ctrl && c == '2' && activeWindow != 1 ){
+					if( ctrl && c == '2' && activeModule != 1 ){
 						switchWindow(1);
 						break;
 					}
