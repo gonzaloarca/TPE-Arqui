@@ -8,6 +8,7 @@ GLOBAL _hlt
 GLOBAL getTime
 GLOBAL getCPUTemp
 GLOBAL getCPUInfo
+GLOBAL getRegisters
 
 section .text
 writePixel:				; void writePixel( int x, int y, int rgb )
@@ -152,3 +153,13 @@ getCPUInfo:
 	pop rbp
 	ret
 	
+getRegisters
+	push rbp
+	mov rbp, rsp
+
+	mov rax, 14
+	int 80h
+
+	mov rsp, rbp
+	pop rbp
+	ret

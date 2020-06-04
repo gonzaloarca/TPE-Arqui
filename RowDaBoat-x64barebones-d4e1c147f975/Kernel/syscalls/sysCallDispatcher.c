@@ -4,6 +4,7 @@
 #include <window_manager.h>
 #include <libasm64.h>
 #include <cpuinfo.h>
+#include <registers.h>
 #include <rtc_driver.h>
 
 typedef struct{
@@ -65,6 +66,12 @@ uint64_t syscall_13()
 	return sys_getCPUTemp();
 }
 
+// La syscall 14 devuelve los registros con los valores de cuando se presiono por ultima vez F1
+uint64_t syscall_14()
+{
+	return sys_getRegisters();
+}
+
 //	La syscall 20 devuelve informacion del CPU
 uint64_t syscall_20( uint64_t rbx )
 {
@@ -94,6 +101,8 @@ uint64_t sysCallDispatcher(uint64_t scNumber, Registers reg)
 		case 12: return syscall_12( reg->rbx );
 
 		case 13: return syscall_13();
+
+		case 14: return syscall_14();
 
 		case 20: return syscall_20( reg->rbx );
 

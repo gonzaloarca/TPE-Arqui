@@ -1,5 +1,6 @@
 #include <keyboard.h>
 #include <video_driver.h>
+#include <registers.h>
 
 #define LEFT_SHIFT 42
 #define RIGHT_SHIFT 54
@@ -8,6 +9,7 @@
 #define LSHIFT_RELEASED (LEFT_SHIFT+0x80)
 #define RSHIFT_RELEASED (RIGHT_SHIFT+0x80)
 #define CTRL_RELEASED 157
+#define F1 59
 #define BUFFER_SIZE 200
 
 //	Tengo que guardarme si el shift se encuentra presionado
@@ -39,6 +41,9 @@ void keyboard_handler()
 	if (canReadKey() == 0) return;
 	// Asigno los codigos de make y break de las teclas al buffer
 	buffer[lastPos] = getScanCode();
+
+	if(buffer[lastPos] == F1)
+		saveRegisters();
 
 	// Actualizo el indice del buffer circular
 	lastPos = (lastPos + 1) % BUFFER_SIZE;
