@@ -2,9 +2,9 @@
 #include <keyboard.h>
 #include <video_driver.h>
 #include <window_manager.h>
-#include <rtc_driver.h>
 #include <libasm64.h>
 #include <cpuinfo.h>
+#include <rtc_driver.h>
 
 typedef struct{
 	uint64_t rbx;

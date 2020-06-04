@@ -1,4 +1,3 @@
-#include <rtc_driver.h>
 #include <libasm64.h>
 
 void sys_getTime(TimeFormat *time){
@@ -12,6 +11,5 @@ void sys_getTime(TimeFormat *time){
         if( time->secs == timeAux.secs && time->mins == timeAux.mins && time->hours == timeAux.hours ){
             ok = 1;
         }
-    }
-  
+    }  
 }
