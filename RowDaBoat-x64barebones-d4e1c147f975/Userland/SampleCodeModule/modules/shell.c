@@ -71,7 +71,7 @@ static void parse(){
             address[i] = 0;
             printmem(address);
         }else
-            fprintf(2, "Falta ingresar la direccion como parametro.\n");
+            fprintf(2, "-printmem: Falta ingresar la direccion como parametro.\n");
     }
     else if(strcmp( inputBuffer, "cpuinfo\n") == 0){
         printCPUInfo();

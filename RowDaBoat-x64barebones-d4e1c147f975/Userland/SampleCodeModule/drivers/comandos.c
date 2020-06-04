@@ -112,22 +112,22 @@ void printmem(char* address){
 			case '0': case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9':
 				decimalAddress += (address[i-1] - '0') * pow(length-i, 16);
 				break;
-			case 'a':
+			case 'a': case 'A':
 				decimalAddress += 10 * pow(length-i, 16);
 				break;
-			case 'b':
+			case 'b': case 'B':
 				decimalAddress += 11 * pow(length-i, 16);
 				break;
-			case 'c':
+			case 'c': case 'C':
 				decimalAddress += 12 * pow(length-i, 16);
 				break;
-			case 'd':
+			case 'd': case 'D':
 				decimalAddress += 13 * pow(length-i, 16);
 				break;
-			case 'e':
+			case 'e': case 'E':
 				decimalAddress += 14 * pow(length-i, 16);
 				break;
-			case 'f':
+			case 'f': case 'F':
 				decimalAddress += 15 * pow(length-i, 16);
 				break;
 
@@ -177,5 +177,5 @@ void printmem(char* address){
 		putchar('\n');
 	}
 	else
-		fprintf(2, "Direccion invalida.\n");
+		fprintf(2, "-printmem:Direccion invalida.\n");
 }
