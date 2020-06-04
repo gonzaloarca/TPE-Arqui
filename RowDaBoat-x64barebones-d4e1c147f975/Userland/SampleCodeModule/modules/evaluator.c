@@ -1,5 +1,5 @@
 #include <evaluator.h>
-#include <graphics_engine.h>
+#include <console.h>
 #include <std_io.h>
 
 //	Funciones internas del programa

@@ -6,6 +6,8 @@
 //	de los puertos 60h y 64h
 #include <libasm64.h>
 #include <video_driver.h>
+#include <stdint.h>
+
 
 //	Funcion que se queda esperando a que toquen una tecla 
 //	(o su combinacion con shift)
@@ -20,10 +22,13 @@ char scanCodetoChar (unsigned int scan_code, unsigned int shift);
 //	En este caso, imprime en pantalla el caracter typeado
 void keyboard_handler();
 
-//  Levanta caracter del buffer del teclado y lo devuelve codificado en ASCII
-char sys_getKey();
-
 //  Vacía el buffer
 void sys_emptyBuffer();
+
+//	La syscall read() lee el buffer de teclado actual
+//	Si hay teclas en el buffer de teclado, las guarda en out_buffer
+//	y devuelve la cantidad de letras guardada
+//	Si el buffer de teclado está vacío, no guarda nada y devuelve 0
+uint64_t sys_read(char* out_buffer, unsigned long int count);
 
 #endif

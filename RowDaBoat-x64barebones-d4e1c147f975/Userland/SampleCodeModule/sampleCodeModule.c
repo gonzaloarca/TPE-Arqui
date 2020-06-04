@@ -1,5 +1,5 @@
 /* sampleCodeModule.c */
-#include <graphics_engine.h>
+#include <console.h>
 #include <shell.h>
 #include <evaluator.h>
 

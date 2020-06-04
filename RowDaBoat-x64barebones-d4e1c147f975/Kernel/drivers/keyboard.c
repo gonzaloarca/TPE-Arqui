@@ -42,11 +42,6 @@ void keyboard_handler()
 
 	// Actualizo el indice del buffer circular
 	lastPos = (lastPos + 1) % BUFFER_SIZE;
-
-	//	Verifico que key es el codigo
-	//char c = checkKey(code);
-
-	// if (c != 0) printChar(c, 0xFFFFFF);
 }
 
 char asciiMap(int code)
@@ -108,9 +103,19 @@ char scanCodetoChar (unsigned int scan_code, unsigned int shift){
 	return asccode[scan_code][shift];
 }
 
-char sys_getKey(){
+uint64_t sys_read(char* out_buffer, unsigned long int count)
+{
+	int code, i = 0;
+	char c;
 
-		//haltcpu();	//para evitar hacer espera activa, uso haltcpu para que la instruccion se corra cada vez que haya una interrupcion
-		return asciiMap(readBuffer()); //solo entra aca una vez que haya una interrupcion de hardware; si es el timertick, devuelve 0 porque el teclado no tiene nada para dar
-		//sys_drawChar( 'x', 50 + i*8, 50 + i*8, 0xFFFFFF, 0 );	
+	code = readBuffer();
+	while (code != 0 && i < count)
+	{	
+		c = asciiMap(code);
+		if ( c != 0 )
+			out_buffer[i++] = c;
+		code = readBuffer();
+	}
+
+	return i;
 }

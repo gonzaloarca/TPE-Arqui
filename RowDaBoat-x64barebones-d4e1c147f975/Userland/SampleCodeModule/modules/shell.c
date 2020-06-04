@@ -1,4 +1,4 @@
-#include <graphics_engine.h>
+#include <console.h>
 #include <std_io.h>
 #include <comandos.h>
 #define INPUT_BUFFER_SIZE 100

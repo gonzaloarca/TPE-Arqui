@@ -11,16 +11,13 @@ void writePixel( int x, int y, int rgb );
 int write(unsigned int fd, char *buffer, unsigned long count);
 
 //	Syscall para leer un file descriptor
-int read( unsigned int fd, char *buffer, unsigned long count );
+int read( char *buffer, unsigned long int count );
 
 //	Espera activa a interrupcion del teclado
 void _hlt();
 
 //	Vaciar el buffer del teclado
 void emptyBuffer();
-
-//	Obtener una tecla del teclado
-char getKey();
 
 //	Cambiar la ventana activa
 int changeWindow(unsigned int window);

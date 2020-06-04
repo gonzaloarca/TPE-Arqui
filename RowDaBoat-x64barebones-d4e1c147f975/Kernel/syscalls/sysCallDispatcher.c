@@ -14,12 +14,12 @@ typedef struct{
 	uint64_t rdi;
 }*Registers;
 
-//	La syscall 3 es read
-// uint64_t syscall_03(uint64_t rbx, uint64_t rcx, uint64_t rdx)
-// {
-// 	return sys_read( (unsigned int) rbx, (char*) rcx, (unsigned long) rdx );
+// La syscall 3 es read
+uint64_t syscall_03(uint64_t rbx, uint64_t rcx)
+{
+	return sys_read( (char*) rbx, (unsigned long int) rcx );
 
-// }
+}
 
 //	La syscall 4 es write
 uint64_t syscall_04(uint64_t rbx, uint64_t rcx, uint64_t rdx)
@@ -45,18 +45,11 @@ uint64_t syscall_09(uint64_t rbx)
 	return sys_changeWindowColor((int) rbx);
 }
 
-
 //	La syscall 10 vacia el buffer de teclado
 uint64_t syscall_10()
 {
 	sys_emptyBuffer();
 	return 0;	
-}
-
-//	La syscall 11 recibe una tecla del teclado y la devuelve en formato ASCII
-uint64_t syscall_11()
-{
-	return sys_getKey();
 }
 
 //	La syscall 12 recibe un puntero a estructura de tipo TimeFormat y la rellena con los datos actuales del RTC
@@ -86,7 +79,7 @@ uint64_t sysCallDispatcher(uint64_t scNumber, Registers reg)
 
 	switch(scNumber)
 	{
-		// case 3: return syscall_03( reg->rbx, reg->rcx, reg->rdx ); 
+		case 3: return syscall_03( reg->rbx, reg->rcx ); 
 
 		case 4: return syscall_04( reg->rbx, reg->rcx, reg->rdx ); 
 
@@ -97,8 +90,6 @@ uint64_t sysCallDispatcher(uint64_t scNumber, Registers reg)
 		case 9: return syscall_09( reg->rbx );
 	
 		case 10: return syscall_10();
-
-		case 11: return syscall_11();
 
 		case 12: return syscall_12( reg->rbx );
 

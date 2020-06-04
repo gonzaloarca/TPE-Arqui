@@ -1,7 +1,7 @@
 #include <std_io.h>
 #include <std_num.h>
 #include <stdarg.h>   //para tener cantidad variable de parámetros en funciones como printf y scanf
-#include <graphics_engine.h> //para llamar a getInput desde getchar hace falta
+#include <console.h> //para llamar a getInput desde getchar hace falta
 
 #define N 4096       //maximo tamaño de conversion para cuando printf reciba strings como parametros ?? hay que ver si ponemos limite a esto no
 #define STDIN_MAXBUFFER 4096

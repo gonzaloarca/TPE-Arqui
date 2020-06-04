@@ -4,7 +4,6 @@ GLOBAL read
 GLOBAL changeWindow
 GLOBAL changeWindowColor
 GLOBAL emptyBuffer
-GLOBAL getKey
 GLOBAL _hlt
 GLOBAL getTime
 GLOBAL getCPUTemp
@@ -61,7 +60,6 @@ read:					; int read( unsigned int fd, char *buffer, unsigned long count )
 	mov rax, 3			; numero de syscall sys_read
 	mov rbx, rdi		; 1er parametro 
 	mov rcx, rsi		; 2do parametro
-	;en rdx ya esta cargado el 3er parametro
 	int 80h
 
 	pop rdx
@@ -110,17 +108,6 @@ emptyBuffer:			; void emptyBuffer()
 	int 80h
 
 	pop rax
-	mov rsp, rbp
-	pop rbp
-	ret
-
-getKey:					; char getKey()
-	push rbp
-	mov rbp, rsp
-
-	mov rax, 11
-	int 80h
-
 	mov rsp, rbp
 	pop rbp
 	ret
