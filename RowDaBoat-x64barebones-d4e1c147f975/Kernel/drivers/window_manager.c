@@ -41,8 +41,8 @@ void setWindows(){
 	for(int i = 0 ; i < N ; i++){
 		windows[i].xStart = i*WINDOW_WIDTH + WINDOW_MARGIN;
 		windows[i].yStart = WINDOW_MARGIN;
-		windows[i].firstLine = 0;
-		windows[i].lineCount = 0;
+		windows[i].firstLine = SCREEN_LINES-1;			// queremos que arranque arranque a escribir en la pantalla desde la ultima linea
+		windows[i].lineCount = SCREEN_LINES-1;
 		windows[i].currentLineSize = 0;
 		windows[i].charColor = CHAR_COLOR;
 		// Borde izquierdo

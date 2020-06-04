@@ -44,9 +44,11 @@ void runShell(){
 }
 
 static void parse(){
-    inputBuffer[indexBuffer] = 0;         // Reemplazo el \n con 0 para utilizar strcmp
+    inputBuffer[indexBuffer] = 0;         // Reemplazo con 0 el final para utilizar strcmp
     
-    if(strcmp( inputBuffer, "inforeg\n" ) == 0){
+    if(strcmp( inputBuffer, "help\n") == 0)
+        help();
+    else if(strcmp( inputBuffer, "inforeg\n" ) == 0){
 	   printf("RAX: %ld\tRBX: %ld\tRCX: %ld\nRDX: %ld\tRSI: %ld\tRDI: %ld\nRBP: %ld\tRSP: %ld\tR8:  %ld\nR9:  %ld\tR10: %ld\tR11: %ld\nR12: %ld\tR13: %ld\tR14: %ld\nR15: %ld\tRIP: %ld\n",
 		rax, reg.rbx, reg.rcx,
 		 reg.rdx, reg.rsi, rdi,
@@ -58,11 +60,22 @@ static void parse(){
         printTime();
         putchar('\n');
     }
-    else if(strcmp( inputBuffer, "printmem\n") == 0){
-        // printmem();
-        putchar('\n');
+    else if(strcmp( "printmem", inputBuffer ) == 0){           // solo valido que lo q este al principio del input valide con el comando,
+                                                                // el resto va a ser el argumento
+        if( inputBuffer[8] == ' ' && inputBuffer[9] != '\n'){       // se ingreso un parametro
+            char address[INPUT_BUFFER_SIZE- 10] = {0};              // maximo tamanio posible del argumento("printmem " son 9 caracteres y tampoco cuento el \n)
+            int i = 0;
+            for(; inputBuffer[9 + i] != '\n' && i < indexBuffer -1; i++)   // en inputBuffer[indexBuffer] esta el \n
+                address[i] = inputBuffer[9 + i];
+
+            address[i] = 0;
+            printmem(address);
+        }else
+            fprintf(2, "Falta ingresar la direccion como parametro.\n");
     }
     else if(strcmp( inputBuffer, "cpuinfo\n") == 0){
         printCPUInfo();
     }
+    else
+        fprintf(2, "Comando no reconocido, ejecuta help para recibir informacion.\n");
 }

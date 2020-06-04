@@ -2,6 +2,7 @@ GLOBAL getRegisters
 GLOBAL getRAX
 GLOBAL getRDI
 GLOBAL getTimeRTC
+GLOBAL getMemoryASM
 
 section .text
 
@@ -111,6 +112,26 @@ getTimeRTC:
 	pop rdx
 	pop rcx
 	pop rax
+
+	mov rsp, rbp
+	pop rbp
+	ret
+
+getMemoryASM:
+	push rbp
+	mov rbp, rsp
+
+	; en rdi se encuentra la estructura a retornar y en rsi la direccion
+	; necesito imprimir 32 bytes
+
+	mov rax, [rsi]
+	mov QWORD[rdi], rax
+	mov rax, [rsi + 8]		; avanzo 8 bytes
+	mov QWORD[rdi + 8], rax
+	mov rax, [rsi + 16]
+	mov QWORD[rdi + 16], rax
+	mov rax, [rsi + 24]
+	mov QWORD[rdi + 24], rax
 
 	mov rsp, rbp
 	pop rbp
