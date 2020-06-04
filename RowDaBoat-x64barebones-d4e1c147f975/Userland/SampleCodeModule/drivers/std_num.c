@@ -104,3 +104,26 @@ int intToHexString(unsigned long int num, char buffer[MAX_INT_DIG + 1]){
 
     return i;
 }
+
+int pointerToHexString(void *pointer, char buffer[POINTER_SIZE + 1]){
+
+    //  Obtengo la conversion a hexa con su longitud real
+    int length = intToHexString((unsigned long int) pointer, buffer);
+
+    //  Llevo el string al final (para despues agregarle '0's al principio)
+    for (int i = 0; i < POINTER_SIZE && i < length; i++)
+    {
+        buffer[POINTER_SIZE - 1 - i] = buffer[length - 1 - i];
+    }
+
+    //  Agrego los ceros al principio
+    for (int i = 0; i < POINTER_SIZE - length; i++)
+    {
+        buffer[i] = '0';
+    }
+
+    //  Null terminated
+    buffer[POINTER_SIZE] = 0;
+
+    return POINTER_SIZE;
+}
