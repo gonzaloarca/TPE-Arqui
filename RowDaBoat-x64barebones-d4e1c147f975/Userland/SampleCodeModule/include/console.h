@@ -5,6 +5,8 @@
 
 #define MAX_PROMPT 5
 #define BUFFER_SIZE 100
+#define DEFAULT_DELIMITER '\n'
+#define DEFAULT_PROMPT ": "
 
 typedef struct 
 {
@@ -42,5 +44,8 @@ void startFirstProgram();
 // Funcion que permite obtener la entrada del teclado y guardarla en un buffer, 
 //	retorna la cantidad de caracteres leidos
 int getInput( char *inputBuffer, unsigned long int buffer_size );
+
+//	Espera a que el usuario presione una tecla y la devuelve
+char waitInput();
 
 #endif

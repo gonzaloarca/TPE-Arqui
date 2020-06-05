@@ -77,10 +77,16 @@ int getInput( char *inputBuffer, unsigned long int buffer_size )
 {
 	emptyBuffer();
 	int ctrl = 0, size = 0, keyboard_size, i;
-	char c, keyboard[buffer_size],
+	char c, keyboard[buffer_size], delimiter;
+		
+	if (numberOfModules == 0)
+	{
+		delimiter = DEFAULT_DELIMITER;
+		puts(DEFAULT_PROMPT);
+	} else {
 		delimiter = modules[activeModule].delimiter;
-
-	puts(modules[activeModule].prompt);
+		puts(modules[activeModule].prompt);
+	}
 
 	while (size < buffer_size)	// Podria ser while(1) pero dejamos esta condicion por las dudas
 	{
@@ -137,4 +143,16 @@ int getInput( char *inputBuffer, unsigned long int buffer_size )
 	}
 
 	return size;
+}
+
+char waitInput()
+{
+	char c;
+
+	emptyBuffer();
+
+	while ( read(&c, 1) == 0 )
+			_hlt();
+
+	return c;
 }
