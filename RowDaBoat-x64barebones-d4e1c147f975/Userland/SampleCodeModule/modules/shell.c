@@ -8,10 +8,8 @@ int indexBuffer;
 static void parse();
 
 void runShell(){
-    while(1){
-        indexBuffer = getInput( inputBuffer, INPUT_BUFFER_SIZE );
-        parse();
-    }
+    indexBuffer = getInput( inputBuffer, INPUT_BUFFER_SIZE );
+    parse();
 }
 
 static void parse(){

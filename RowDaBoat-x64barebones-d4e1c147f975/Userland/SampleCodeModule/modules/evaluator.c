@@ -15,30 +15,34 @@ static void printHelp();
 
 static double last_result = 0;
 
+static int first_time = 1;
+
 void calculator()
 {
 	char buffer[BUFFER_SIZE+1];
 	int length;
-	printf("\nHaga help= para una explicacion del programa\n");
-	while(1)
-	{
-		if ( (length = getInput(buffer, BUFFER_SIZE+1)) != 0 )
-		{
-			buffer[--length] = 0;		//	Quito el '=' del final
+	
+	if (first_time){
+		printf("\nHaga help= para una explicacion del programa\n");
+		first_time = 0;
+	}
 
-			if (strcmp(buffer,"help") == 0)
-				printHelp();
-			else if (strcmp(buffer,"clear") == 0)
-				clrScreen();
-			else
+	if ( (length = getInput(buffer, BUFFER_SIZE+1)) != 0 )
+	{
+		buffer[--length] = 0;		//	Quito el '=' del final
+
+		if (strcmp(buffer,"help") == 0)
+			printHelp();
+		else if (strcmp(buffer,"clear") == 0)
+			clrScreen();
+		else
+		{
+			if (balance(buffer) == 0)
 			{
-				if (balance(buffer) == 0)
-				{
-					last_result = recursive_evaluation(buffer, length);
-					printf("\b = %g\n", last_result);
-				} else
-					fprintf(2, ERROR_MSG);
-			}
+				last_result = recursive_evaluation(buffer, length);
+				printf("\b = %g\n", last_result);
+			} else
+				fprintf(2, ERROR_MSG);
 		}
 	}
 }

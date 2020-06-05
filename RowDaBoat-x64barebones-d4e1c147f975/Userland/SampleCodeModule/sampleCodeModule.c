@@ -4,7 +4,7 @@
 #include <shell.h>
 #include <evaluator.h>
 
-//	Esto es lo primero que se ejecuta de Userland
+//	En el main se setean los programas que van a correr en cada ventana
 int main()
 {
 	char c;

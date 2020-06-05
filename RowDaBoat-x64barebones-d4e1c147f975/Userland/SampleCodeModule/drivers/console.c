@@ -14,6 +14,21 @@ static unsigned int numberOfModules = 0;
 //	Reservo espacio para los stack frames
 static char reserve[WINDOWS][MB];
 
+//	Encerramos a los programas en ciclos infinitos
+void program1()
+{
+	while(1)
+		modules[0].program();
+}
+
+void program2()
+{
+	while(1)
+		modules[1].program();
+}
+//	Array de los programas con ciclos
+const uint64_t programs[WINDOWS] = {(uint64_t) program1, (uint64_t) program2};
+
 int initModule(void (*program)(), char prompt[MAX_PROMPT], char delimiter)
 {
 	int i;
@@ -37,8 +52,8 @@ int initModule(void (*program)(), char prompt[MAX_PROMPT], char delimiter)
 	//	el stack comienza en direcciones alta y va disminuyendo
 	uint64_t *last_address = (uint64_t*) (reserve[numberOfModules+1] - 8);
 
-	//	Y luego pongo la entrada a mi funcion
-	*last_address = (uint64_t) program;
+	//	Y luego pongo la entrada a mi programa
+	*last_address = programs[numberOfModules];
 	//	rsp al inicio de mi programa
 	newModule->stackFrame.rsp = last_address;
 	//	El rbp lo inicializo en 0
@@ -49,11 +64,13 @@ int initModule(void (*program)(), char prompt[MAX_PROMPT], char delimiter)
 	return 1;
 }
 
-void startFirstProgram(){
+void startFirstProgram(){	
 	if (numberOfModules == 0)
 		fprintf(1, "NO HAY PROGRAMA PARA EJECUTAR\n");
+
 	else
 	{
+		//	Empieza el primer programa
 		setBackup(&(modules[0].stackFrame), &(modules[0].backup));
 	}
 }
