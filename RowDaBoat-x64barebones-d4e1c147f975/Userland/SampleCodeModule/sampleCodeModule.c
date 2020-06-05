@@ -5,12 +5,10 @@
 
 //	Esto es lo primero que se ejecuta de Userland
 int main(){
-	//	Marco este stack Frame como el main
-	setMainFrame();
+
 	initModule(runShell, "$> ", '\n');
-	initModule(calculator, "?? ", '=');
+	initModule(calculator, "Exp: ", '=');
 	startFirstProgram();
-	//runShell();
-	//calculator();
+
 	return 0;
 }

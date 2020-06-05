@@ -1,4 +1,4 @@
-GLOBAL saveMainFrame
+;GLOBAL saveMainFrame
 GLOBAL setFrame
 GLOBAL getFrame
 
@@ -8,13 +8,13 @@ GLOBAL getFrame
 ; Llamada en C:
 ;	void saveMainFrame(StackFrame *mainFrame);
 ;---------------------------------------------------------------
-saveMainFrame:
-	mov rax, [rbp]
-	mov [rdi], 	rax		;	rbp apunta al rbp del main()
-	mov rax, rbp		
-	add rax, 8			;	rbp+8 es el rsp del main
-	mov [rdi+8], rax
-	ret
+;saveMainFrame:
+;	mov rax, [rbp]
+;	mov [rdi], 	rax		;	rbp apunta al rbp del main()
+;	mov rax, rbp		
+;	add rax, 8			;	rbp+8 es el rsp del main 
+;	mov [rdi+8], rax	;	(que apunta a la dir para volver a este)
+;	ret
 
 ;---------------------------------------------------------------
 ;	Funcion para guardar el stack frame actual
@@ -37,3 +37,4 @@ setFrame:
 	mov rbp, [rdi]		; Restauro el rbp
 	mov rsp, [rdi+8]	; Restauro el rsp
 	ret
+

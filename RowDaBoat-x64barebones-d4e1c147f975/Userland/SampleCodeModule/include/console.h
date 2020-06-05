@@ -16,16 +16,10 @@ typedef struct
 typedef struct 
 {
 	void (*program)();					//puntero al inicio del programa
-	unsigned int windowID;				//numero de ventana que ocupa
-	char buffer[BUFFER_SIZE];			//buffer de la terminal para cada programa
-	unsigned int size;					//tamaño del buffer ocupado actualmente
-	char prompt[MAX_PROMPT];			//"prompt" que se imprime para pedir input
+	char prompt[MAX_PROMPT+1];			//"prompt" que se imprime para pedir input
 	char delimiter;						//delimitar para leer por STDIN
 	StackFrame stackFrame;				//info del stack frame cuando se cambia de ventana
 } Module;
-
-//	Se llama a una funcion de assembler para setear el stack frame del main
-void setMainFrame();
 
 //	Funcion para agregar un nuevo modulo a la lista de modulos
 //	Regresa 1 si pudo agregarlo (hay ventanas vacias)

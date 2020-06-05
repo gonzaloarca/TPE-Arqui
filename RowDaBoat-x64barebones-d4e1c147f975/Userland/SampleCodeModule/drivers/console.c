@@ -6,22 +6,18 @@
 #define WINDOWS 2
 #define MB	0x100000
 
-//	Stack frame del main al entrar a una funcion
-static StackFrame mainFrame;
 //	Lista de modulos/programas
 static Module modules[WINDOWS];
 static unsigned int activeModule = 0;
 static unsigned int numberOfModules = 0;
 
 //	Reservo espacio para los stack frames
-static char reserve[WINDOWS*MB];
-
-void setMainFrame(){
-	saveMainFrame(&mainFrame);
-}
+static char reserve[WINDOWS][MB];
 
 int initModule(void (*program)(), char prompt[MAX_PROMPT], char delimiter)
 {
+	int i;
+
 	//	Si ya no tengo mas ventanas, no puedo agregar nada
 	if (numberOfModules >= WINDOWS)
 		return 0;
@@ -32,27 +28,22 @@ int initModule(void (*program)(), char prompt[MAX_PROMPT], char delimiter)
 	//	Copio los parametros al modulo
 	newModule->program = program;
 	newModule->delimiter = delimiter;
-	for (int i = 0; prompt[i] != 0 && i < MAX_PROMPT; i++)
+	for (i = 0; prompt[i] != 0 && i < MAX_PROMPT; i++)
 		newModule->prompt[i] = prompt[i];
+	prompt[i] = '0';
 
-	//	Seteo parametros
-	newModule->size = 0;
+	//	Voy a asignarle espacio para el stack frame:
+	// 	Tengo que moverme al final de la memoria guardada ya que
+	//	el stack comienza en direcciones alta y va disminuyendo
+	uint64_t *last_address = (uint64_t*) (reserve[numberOfModules+1] - 8);
 
-	//	Voy a asignarle espacio para el stack frame
-	//	Como el stack frame empieza en valores altos y decrece sus direcciones
-	//	hago un calculo para setearlo
-	unsigned int index = WINDOWS * MB - 8 - numberOfModules * MB;
-	//	El rbp apunta al principio del stack frame
-	//	rsp a la siguiente direccion
-	newModule->stackFrame.rsp = (uint64_t *) &(reserve[index - 8]);
-	newModule->stackFrame.rbp = (uint64_t *) &(reserve[index]);
-	//	El inicio de mi stack frame tiene el retorno al main
-	*(newModule->stackFrame.rbp) = *(mainFrame.rsp);
-	//	El rsp apunta al inicio del programa
-	*(newModule->stackFrame.rsp) = (uint64_t) program;
+	//	Y luego pongo la entrada a mi funcion
+	*last_address = (uint64_t) program;
+	//	rsp al inicio de mi programa
+	newModule->stackFrame.rsp = last_address;
+	//	El rbp lo inicializo en 0
+	newModule->stackFrame.rbp = 0;
 	
-	//	Le asigno una ventana
-	newModule->windowID = numberOfModules;
 	numberOfModules++;
 
 	return 1;
@@ -86,9 +77,10 @@ int getInput( char *inputBuffer, unsigned long int buffer_size )
 {
 	emptyBuffer();
 	int ctrl = 0, size = 0, keyboard_size, i;
-	char c, keyboard[buffer_size];
+	char c, keyboard[buffer_size],
+		delimiter = modules[activeModule].delimiter;
 
-	puts("$> ");
+	puts(modules[activeModule].prompt);
 
 	while (size < buffer_size)	// Podria ser while(1) pero dejamos esta condicion por las dudas
 	{
@@ -110,11 +102,6 @@ int getInput( char *inputBuffer, unsigned long int buffer_size )
 					ctrl = 0;
 					break;
 
-				case '\n':
-					inputBuffer[size++] = c;
-					putchar(c);
-					return size;
-				
 				case '\b':
 					if( size == 0 ){
 						break;
@@ -123,6 +110,9 @@ int getInput( char *inputBuffer, unsigned long int buffer_size )
 					putchar(c);
 					break;
 				
+				case '\n':
+					if (delimiter != '\n') break;
+
 				default:
 					if( ctrl && c == '1' && activeModule != 0 ){
 						switchWindow(0);
@@ -134,10 +124,13 @@ int getInput( char *inputBuffer, unsigned long int buffer_size )
 					}
 					// Solo lo guardo si tengo espacio en el buffer
 					// Si no hay espacio, hay que esperar a las teclas especiales
-					if (size < buffer_size - 1)
+					if (c == delimiter || size < buffer_size - 1)
 					{
 						inputBuffer[size++] = c;
-						putchar( c );
+						putchar(c);
+						if (c == delimiter) {
+							return size;
+						}
 					}	
 			}
 		}

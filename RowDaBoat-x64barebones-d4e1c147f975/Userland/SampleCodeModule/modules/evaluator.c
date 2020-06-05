@@ -2,7 +2,7 @@
 #include <console.h>
 #include <std_io.h>
 
-#define ERROR_MSG "\tExpresion erronea, pruebe de vuelta\n"
+#define ERROR_MSG "\nExpresion erronea, pruebe de vuelta\n"
 
 //	Funciones internas del programa
 static int main_op(char *expression, int length);
@@ -26,18 +26,13 @@ void calculator()
 	{
 		if ( (length = getInput(buffer, BUFFER_SIZE+1)) != 0 )
 		{
-			buffer[--length] = 0;
-			if (buffer[length-1] != '=')
-			{
-				fprintf(2, ERROR_MSG);
-			}
+			buffer[--length] = 0;		//	Quito el '=' del final
 			if (balance(buffer) == 0)
 			{
 				last_result = recursive_evaluation(buffer, length);
-				printf("= %g\n", last_result);
+				printf("\b = %g\n", last_result);
 			} else
 				fprintf(2, ERROR_MSG);
-			
 		}
 	}
 }
