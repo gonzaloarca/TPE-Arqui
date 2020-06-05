@@ -22,6 +22,9 @@ static void parse(){
     else if(strcmp( inputBuffer, "inforeg\n" ) == 0){
 	   printInforeg();
     }
+    else if(strcmp( inputBuffer, "clear\n" ) == 0){
+        clrScreen();
+    }
     else if(strcmp( inputBuffer, "printtime\n" ) == 0){
         printTime();
         putchar('\n');

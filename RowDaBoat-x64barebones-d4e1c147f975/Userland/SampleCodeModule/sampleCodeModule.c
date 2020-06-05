@@ -4,7 +4,6 @@
 #include <shell.h>
 #include <evaluator.h>
 
-
 //	Esto es lo primero que se ejecuta de Userland
 int main()
 {
@@ -17,7 +16,7 @@ int main()
 	while ((c = waitInput()) != '1' && c != '2' )
 		fprintf(2, "NUMERO DE MODULO INCORRECTO\n");
 
-	//	Aca habria que vaciar la pantalla
+	clrScreen();
 
 	if (c == '1')
 	{

@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+#define LINE_COUNT 50
 #define MAX_PROMPT 5
 #define BUFFER_SIZE 100
 #define DEFAULT_DELIMITER '\n'
@@ -47,5 +48,8 @@ int getInput( char *inputBuffer, unsigned long int buffer_size );
 
 //	Espera a que el usuario presione una tecla y la devuelve
 char waitInput();
+
+//	Limpia la pantalla
+void clrScreen();
 
 #endif
