@@ -116,8 +116,18 @@ int getInput( char *inputBuffer, unsigned long int buffer_size )
 					putchar(c);
 					break;
 				
+				case 19:		//codigo ASCII asginado al make code de la tecla F2
+					// Borro la linea actual
+					while(size>0){
+						putchar('\b');
+						size--;
+					}
+					break;
+
 				case '\n':
-					if (delimiter != '\n') break;
+					if (delimiter != '\n')
+						break;	// para que no haga saltos de linea en la calculadora
+					// si no es entra en el siguiente caso
 
 				default:
 					if( ctrl && c == '1' && activeModule != 0 ){

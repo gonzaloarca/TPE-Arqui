@@ -21,6 +21,7 @@ void calculator()
 	printf("\t\t\t-----CALCULADORA-----\n");
 	printf("\tEscriba una expresion inorder sin espacios\n");
 	printf("\tAprete '=' para calcular el resultado\n");
+	printf("\tAprete F2 para borrar la expresion actual\n");
 	printf("\tSoportado: + - * / A (respuesta anterior)\n");
 	while(1)
 	{

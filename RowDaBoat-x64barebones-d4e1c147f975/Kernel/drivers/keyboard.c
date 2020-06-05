@@ -10,6 +10,7 @@
 #define RSHIFT_RELEASED (RIGHT_SHIFT+0x80)
 #define CTRL_RELEASED 157
 #define F1 59
+#define F2 60
 #define BUFFER_SIZE 200
 
 //	Tengo que guardarme si el shift se encuentra presionado
@@ -64,6 +65,8 @@ char asciiMap(int code)
 			return 17;
 		case CTRL_RELEASED:
 			return 18;
+		case F2:
+			return 19;
 		case LSHIFT_RELEASED:
 			lshift = 0; return 0;
 		case RSHIFT_RELEASED:

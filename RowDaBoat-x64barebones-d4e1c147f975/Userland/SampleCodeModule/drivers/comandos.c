@@ -4,13 +4,17 @@
 #include <comandos.h>
 
 
-#define INFOREG_MSG "inforeg\tMuestra el estado de los registros del ultimo\n guardado."
-#define PRINTTIME_MSG "inforeg\tMuestra la hora actual."
-#define PRINTMEM_MSG "printmem\tMuestra los 32 bytes siguientes a partir de la\n direccion de memoria(en hexadecimal) recibida por parametro."
-#define CPUINFO_MSG "cpuinfo\tMuestra informacion de interes sobre el cpu."
+#define INFOREG_MSG 	"inforeg\tMuestra el estado de los registros del ultimo\n guardado(los guardados se realizan presionando F1)."
+#define PRINTTIME_MSG 	"printtime\tMuestra la hora actual del dispositivo."
+#define PRINTMEM_MSG 	"printmem\tMuestra los 32 bytes siguientes a partir de la\n direccion de memoria(en hexadecimal) recibida por parametro."
+#define CPUINFO_MSG 	"cpuinfo\tMuestra informacion de interes sobre el cpu."
+
+#define TECLA_F1		"F1\tEjecuta el guardado de los registros, para que sean\n impresos con inforeg."
+#define TECLA_F2		"F2\tEjecuta el borrado total de la linea actual."
 
 void help(){
-	printf("Informacion sobre comandos disponibles:\n%s\n%s\n%s\n%s\n", INFOREG_MSG, PRINTTIME_MSG, PRINTMEM_MSG, CPUINFO_MSG);
+	printf("-----Informacion sobre comandos disponibles--------------------\n%s\n%s\n%s\n%s\n-----Informacion sobre teclas especiales disponibles-----------\n%s\n%s\n",
+	 INFOREG_MSG, PRINTTIME_MSG, PRINTMEM_MSG, CPUINFO_MSG, TECLA_F1, TECLA_F2);
 }
 
 void printTime(){       //se podria modularizar en una funcion para obtener el tiempo correcto, que abarcaria hasta el while, y otra para generar el string formateado del tiempo, despues juega printString
