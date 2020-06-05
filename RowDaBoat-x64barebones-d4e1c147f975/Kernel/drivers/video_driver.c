@@ -45,9 +45,6 @@ struct vbe_mode_info_structure {
 
 // Busco VBEModeInfoBlock que es donde se encuentra la estructura
 struct vbe_mode_info_structure * screenInfo = (struct vbe_mode_info_structure *) 0x5C00;
-//static void (*stdOutPrint)(char);	//punteros a funciones para imprimir en stdout/stderror
-//static void (*stdErrPrint)(char);
-
 
 int sys_writePixel(int x, int y, int rgb) {
 	char (*screen)[screenInfo->width][3] = (char (*)[(screenInfo->width)][3]) ((uint64_t)screenInfo->framebuffer);
@@ -78,49 +75,3 @@ int drawChar( char c, int x, int y, int rgb, int backgroundColour ){
 	}
 	return 0;
 }
-
-// void sys_setStdOut( void (*printChar)(char) ){
-// 	stdOutPrint = printChar;
-// }
-
-// void sys_setStdError( void (*printCharRed)(char) ){
-// 	stdErrPrint = printCharRed;
-// }
-
-// uint64_t sys_write( unsigned int fd, const char *buffer, unsigned long count ){
-// 	if( fd == 1 ){	//salida estandar
-// 		int i = 0;
-// 		for( ; i < count; i++ ){
-// 			stdOutPrint(buffer[i]);
-// 		}
-// 		return i;
-// 	}
-
-// 	if( fd == 2 ){	//standard error
-// 		int i = 0;
-// 		for( ; i < count; i++ ){
-// 			stdErrPrint(buffer[i]);
-// 		}
-// 		return i;
-// 	}
-
-// uint64_t sys_read( unsigned int fd, char *buffer, unsigned long count ){
-// 	if( fd == 0 ){ //entrada estandar
-// 		int i = 0;
-// 		char c = 0;
-
-// 		emptyBuffer();
-
-// 		for( ; i < count; i++ ){
-// 			while( c != 0 ){
-// 				haltcpu();
-// 				c = readKey(); //solo entra aca una vez que haya una interrupcion de hardware; si es el timertick, devuelve 0 porque el teclado no tiene nada para dar
-// 			}
-// 			buffer[i] = c;
-// 		}
-
-// 		return i;
-// 	}
-
-// 	return 0; //solo implementamos leer de entrada estandar
-// }

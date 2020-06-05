@@ -2,11 +2,6 @@
 
 #define SYSCALLS_H
 
-//	Dibujar un pixel a la pantalla
-//	NOTA: DECIDIR SI VALE LA PENA, PORQUE SI ESTÁ
-//	EL USER TIENE ACCESS A TODA LA PANTALLA ("PELIGROSO" COMO DIRIA NICO)
-void writePixel( int x, int y, int rgb );
-
 // Funcion que permite escribir count caracteres de un string en el file descriptor fd
 int write(unsigned int fd, char *buffer, unsigned long count);
 

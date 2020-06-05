@@ -28,12 +28,6 @@ uint64_t syscall_04(uint64_t rbx, uint64_t rcx, uint64_t rdx)
 	return sys_write( (unsigned int) rbx, (const char*) rcx, (unsigned long) rdx  );
 }
 
-// La syscall 7 modifica el valor de un pixel en pantalla
-uint64_t syscall_07(uint64_t rbx, uint64_t rcx, uint64_t rdx)
-{
-	return sys_writePixel( (int) rbx , (int) rcx, (int) rdx );
-}
-
 // La syscall 8 permite el intercambio de ventana actual
 uint64_t syscall_08(uint64_t rbx)
 {
@@ -89,8 +83,6 @@ uint64_t sysCallDispatcher(uint64_t scNumber, Registers reg)
 		case 3: return syscall_03( reg->rbx, reg->rcx ); 
 
 		case 4: return syscall_04( reg->rbx, reg->rcx, reg->rdx ); 
-
-		case 7: return syscall_07( reg->rbx, reg->rcx, reg->rdx );
 
 		case 8: return syscall_08( reg->rbx );
 

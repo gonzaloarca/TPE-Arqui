@@ -1,4 +1,3 @@
-GLOBAL writePixel
 GLOBAL write
 GLOBAL read
 GLOBAL changeWindow
@@ -9,27 +8,9 @@ GLOBAL getTime
 GLOBAL getCPUTemp
 GLOBAL getCPUInfo
 GLOBAL getRegisters
+GLOBAL clearScreen
 
 section .text
-writePixel:				; void writePixel( int x, int y, int rgb )
-	push rbp
-	mov rbp, rsp
-	push rbx
-	push rcx
-	push rdx
-
-	mov rax, 7			; numero de syscall sys_writePixel
-	mov rbx, rdi		; primer parametro
-	mov rcx, rsi
-	;en rdx ya esta cargado el 3er parametro
-	int 80h
-
-	pop rdx
-	pop rcx
-	pop rbx
-	mov rsp, rbp
-	pop rbp
-	ret
 
 write:					; int write( unsigned int fd, char *buffer, unsigned long count )
 	push rbp
