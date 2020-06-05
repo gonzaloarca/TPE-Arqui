@@ -3,18 +3,50 @@
 #include <syscalls.h>
 #include <comandos.h>
 
+#define CPUINFO_MSG 	"\tMuestra informacion de interes sobre el cpu."
+#define INFOREG_MSG 	"\tMuestra el estado de los registros del ultimo\n guardado(los guardados se realizan presionando F1)."
+#define PRINTMEM_MSG 	"\tMuestra los 32 bytes siguientes a partir de la\n direccion de memoria(en hexadecimal) recibida por parametro."
+#define PRINTTIME_MSG 	"\tMuestra la hora actual del dispositivo."
 
-#define INFOREG_MSG 	"inforeg\tMuestra el estado de los registros del ultimo\n guardado(los guardados se realizan presionando F1)."
-#define PRINTTIME_MSG 	"printtime\tMuestra la hora actual del dispositivo."
-#define PRINTMEM_MSG 	"printmem\tMuestra los 32 bytes siguientes a partir de la\n direccion de memoria(en hexadecimal) recibida por parametro."
-#define CPUINFO_MSG 	"cpuinfo\tMuestra informacion de interes sobre el cpu."
-
-#define TECLA_F1		"F1\tEjecuta el guardado de los registros, para que sean\n impresos con inforeg."
-#define TECLA_F2		"F2\tEjecuta el borrado total de la linea actual."
+#define TECLA_F1		"\tEjecuta el guardado de los registros, para que sean\n impresos con inforeg."
+#define TECLA_F2		"\tEjecuta el borrado total de la linea actual."
 
 void help(){
-	printf("-----Informacion sobre comandos disponibles--------------------\n%s\n%s\n%s\n%s\n-----Informacion sobre teclas especiales disponibles-----------\n%s\n%s\n",
-	 INFOREG_MSG, PRINTTIME_MSG, PRINTMEM_MSG, CPUINFO_MSG, TECLA_F1, TECLA_F2);
+	puts("---------Informacion sobre comandos disponibles----------------");
+	changeWindowColor(0xffd300);
+	printf("%s", "cpuinfo");
+	changeWindowColor(0xffffff);
+	printf("%s\n", CPUINFO_MSG);
+
+	changeWindowColor(0xffd300);
+	printf("%s", "inforeg");
+	changeWindowColor(0xffffff);
+	printf("%s\n", INFOREG_MSG);
+
+	changeWindowColor(0xffd300);
+	printf("%s", "printmem");
+	changeWindowColor(0xffffff);
+	printf("%s\n", PRINTMEM_MSG);
+
+	changeWindowColor(0xffd300);
+	printf("%s", "printtime");
+	changeWindowColor(0xffffff);
+	printf("%s\n", PRINTTIME_MSG);
+
+	putchar('\n');
+
+	printf("---------Informacion sobre teclas especiales disponibles-------");
+	changeWindowColor(0x4ad5f2);
+	printf("%s", "F1");
+	changeWindowColor(0xffffff);
+	printf("%s\n", TECLA_F1);
+
+	changeWindowColor(0x4ad5f2);
+	printf("%s", "F2");
+	changeWindowColor(0xffffff);
+	printf("%s\n", TECLA_F2);
+
+
 }
 
 void printTime(){       //se podria modularizar en una funcion para obtener el tiempo correcto, que abarcaria hasta el while, y otra para generar el string formateado del tiempo, despues juega printString
