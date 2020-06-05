@@ -11,6 +11,7 @@ static int is_operand(char c);
 static int balance (char s[]);
 static double recursive_evaluation(char *expression, int length);
 static int validChar(char c);
+static void printHelp();
 
 static double last_result = 0;
 
@@ -18,24 +19,37 @@ void calculator()
 {
 	char buffer[BUFFER_SIZE+1];
 	int length;
-	printf("\t\t\t-----CALCULADORA-----\n");
-	printf("\tEscriba una expresion inorder sin espacios\n");
-	printf("\tAprete '=' para calcular el resultado\n");
-	printf("\tAprete F2 para borrar la expresion actual\n");
-	printf("\tSoportado: + - * / A (respuesta anterior)\n");
 	while(1)
 	{
 		if ( (length = getInput(buffer, BUFFER_SIZE+1)) != 0 )
 		{
 			buffer[--length] = 0;		//	Quito el '=' del final
-			if (balance(buffer) == 0)
+
+			if (strcmp(buffer,"help") == 0)
+				printHelp();
+			else if (strcmp(buffer,"clear") == 0)
+				clrScreen();
+			else
 			{
-				last_result = recursive_evaluation(buffer, length);
-				printf("\b = %g\n", last_result);
-			} else
-				fprintf(2, ERROR_MSG);
+				if (balance(buffer) == 0)
+				{
+					last_result = recursive_evaluation(buffer, length);
+					printf("\b = %g\n", last_result);
+				} else
+					fprintf(2, ERROR_MSG);
+			}
 		}
 	}
+}
+
+static void printHelp()
+{
+	printf("\n\t\t\t-----CALCULADORA-----\n");
+	printf("\tEscriba una expresion inorder sin espacios\n");
+	printf("\tAprete '=' para calcular el resultado\n");
+	printf("\tAprete F2 para borrar la expresion actual\n");
+	printf("\tSoportado: + - * / A (respuesta anterior)\n");
+	printf("\tComandos: help - clear\n");
 }
 
 /*	Esta funcion funciona recursivamente.
