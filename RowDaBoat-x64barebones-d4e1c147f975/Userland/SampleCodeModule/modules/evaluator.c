@@ -19,6 +19,7 @@ void calculator()
 {
 	char buffer[BUFFER_SIZE+1];
 	int length;
+	printf("\nHaga help= para una explicacion del programa\n");
 	while(1)
 	{
 		if ( (length = getInput(buffer, BUFFER_SIZE+1)) != 0 )
@@ -49,7 +50,7 @@ static void printHelp()
 	printf("\tAprete '=' para calcular el resultado\n");
 	printf("\tAprete F2 para borrar la expresion actual\n");
 	printf("\tSoportado: + - * / A (respuesta anterior)\n");
-	printf("\tComandos: help - clear\n");
+	printf("\tComandos: help clear\n");
 }
 
 /*	Esta funcion funciona recursivamente.
