@@ -69,7 +69,7 @@ uint64_t syscall_13()
 // La syscall 14 devuelve los registros con los valores de cuando se presiono por ultima vez F1
 uint64_t syscall_14()
 {
-	return sys_getRegisters();
+	return (uint64_t) sys_getRegisters();
 }
 
 //	La syscall 20 devuelve informacion del CPU
