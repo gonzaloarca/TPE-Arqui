@@ -16,7 +16,6 @@ static double last_result = 0;
 
 void calculator()
 {
-	/*
 	char buffer[BUFFER_SIZE+1];
 	int length;
 	printf("\t\t\t-----CALCULADORA-----\n");
@@ -41,12 +40,6 @@ void calculator()
 			
 		}
 	}
-	*/
-	char buffer[BUFFER_SIZE+1];
-    printf("RBP = %x\n", getrbp());
-    printf("RSP = %x\n", getrsp());
-    getInput(buffer, BUFFER_SIZE+1);
-
 }
 
 /*	Esta funcion funciona recursivamente.

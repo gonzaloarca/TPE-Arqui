@@ -1,24 +1,23 @@
 #include <console.h>
 #include <std_io.h>
 #include <syscalls.h>
+#include <frame.h>
 
 #define WINDOWS 2
+#define MB	0x100000
 
+//	Stack frame del main al entrar a una funcion
 static StackFrame mainFrame;
+//	Lista de modulos/programas
 static Module modules[WINDOWS];
 static unsigned int activeModule = 0;
 static unsigned int numberOfModules = 0;
 
-//	Funcion de assembler que guarda el stack frame
-void markFrame(StackFrame *mainFrame);
-//	Funcion de assembler que setea el frame de nuevo
-//	y comienza a ejecutar el programa
-void setFrame(StackFrame *mainFrame, void (*program)());
+//	Reservo espacio para los stack frames
+static char reserve[WINDOWS][MB];
 
 void setMainFrame(){
-	markFrame(&mainFrame);
-	//printf("RBP = %x\n", mainFrame.rbp);
-	//printf("RSP = %x\n", mainFrame.rsp);
+	saveMainFrame(&mainFrame);
 }
 
 int initModule(void (*program)(), char prompt[MAX_PROMPT], char delimiter)
@@ -36,6 +35,22 @@ int initModule(void (*program)(), char prompt[MAX_PROMPT], char delimiter)
 	for (int i = 0; prompt[i] != 0 && i < MAX_PROMPT; i++)
 		newModule->prompt[i] = prompt[i];
 
+	//	Seteo parametros
+	newModule->size = 0;
+
+	//	Voy a asignarle espacio para el stack frame
+	//	Como el stack frame empieza en valores altos y decrece sus direcciones
+	//	hago un calculo para setearlo
+	unsigned int index = WINDOWS * MB - 8 - numberOfModules * MB;
+	//	El rbp apunta al principio del stack frame
+	//	rsp a la siguiente direccion
+	newModule->stackFrame.rsp = (uint64_t *) &(reserve[index - 8]);
+	newModule->stackFrame.rbp = (uint64_t *) &(reserve[index]);
+	//	El inicio de mi stack frame tiene el retorno al main
+	*(newModule->stackFrame.rbp) = *(mainFrame.rsp);
+	//	El rsp apunta al inicio del programa
+	*(newModule->stackFrame.rsp) = (uint64_t) program;
+	
 	//	Le asigno una ventana
 	newModule->windowID = numberOfModules;
 	numberOfModules++;
@@ -48,7 +63,7 @@ void startFirstProgram(){
 		fprintf(1, "NO HAY PROGRAMA PARA EJECUTAR\n");
 	else
 	{
-		setFrame(&mainFrame, modules[activeModule].program);
+		setFrame(&(modules[0].stackFrame));
 	}
 }
 
@@ -57,8 +72,12 @@ static int switchWindow( unsigned int window ){
 	int success = changeWindow(window);
 	if(success)
 	{
+		//	Tengo que guardar el stack frame actual
+		getFrame(&(modules[activeModule].stackFrame));
+		//	Cambio el modulo activado
 		activeModule = window;
-		setFrame(&mainFrame, modules[activeModule].program);
+		//	Seteo el stack frame
+		setFrame(&(modules[activeModule].stackFrame));
 	}
 	return 0;
 }
