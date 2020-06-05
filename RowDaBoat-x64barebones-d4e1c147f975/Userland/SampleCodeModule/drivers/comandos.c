@@ -3,7 +3,9 @@
 #include <syscalls.h>
 #include <comandos.h>
 
+#define CLEAR_MSG		"\tLimpia la pantalla."
 #define CPUINFO_MSG 	"\tMuestra informacion de interes sobre el cpu."
+#define CPUTEMP_MSG		"\tMuestra la temperatura del cpu."
 #define INFOREG_MSG 	"\tMuestra el estado de los registros del ultimo\n guardado(los guardados se realizan presionando F1)."
 #define PRINTMEM_MSG 	"\tMuestra los 32 bytes siguientes a partir de la\n direccion de memoria(en hexadecimal) recibida por parametro."
 #define PRINTTIME_MSG 	"\tMuestra la hora actual del dispositivo."
@@ -14,17 +16,27 @@
 void help(){
 	puts("---------Informacion sobre comandos disponibles----------------");
 	changeWindowColor(0xffd300);
-	printf("%s", "cpuinfo");
+	printf("%s\t", "clear");
+	changeWindowColor(0xffffff);
+	printf("%s\n", CLEAR_MSG);
+
+	changeWindowColor(0xffd300);
+	printf("%s  ", "cpuinfo");
 	changeWindowColor(0xffffff);
 	printf("%s\n", CPUINFO_MSG);
 
 	changeWindowColor(0xffd300);
-	printf("%s", "inforeg");
+	printf("%s  ", "cputemp");
+	changeWindowColor(0xffffff);
+	printf("%s\n", CPUTEMP_MSG);
+
+	changeWindowColor(0xffd300);
+	printf("%s  ", "inforeg");
 	changeWindowColor(0xffffff);
 	printf("%s\n", INFOREG_MSG);
 
 	changeWindowColor(0xffd300);
-	printf("%s", "printmem");
+	printf("%s ", "printmem");
 	changeWindowColor(0xffffff);
 	printf("%s\n", PRINTMEM_MSG);
 

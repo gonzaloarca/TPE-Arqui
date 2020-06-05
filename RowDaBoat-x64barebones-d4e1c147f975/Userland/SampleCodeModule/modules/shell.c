@@ -45,6 +45,9 @@ static void parse(){
     else if(strcmp( inputBuffer, "cpuinfo\n") == 0){
         printCPUInfo();
     }
+    else if(strcmp( inputBuffer, "cputemp\n") == 0)
+        // printCPUtemp();
+        return;
     else
         fprintf(2, "Comando no reconocido, ejecuta help para recibir informacion.\n");
 }
