@@ -141,12 +141,12 @@ static double strtonum(char *string, int length)
 		return last_result;
 
 	//	El numero acumulado hasta ahora
-	double number = 0.0, aux,
+	double number = 0.0,
 		exp = 1.0; 	//Exponente para la parte real del numero
 	//	El char actual
 	char c;
-	//	Indica la posicion del punto decimal
-	int decimal = -1;	
+	//	Indica si ya se encontro el punto decimal
+	int decimal = 0;	
 
 	for (int i=0; i<length; i++)
 	{
@@ -154,7 +154,7 @@ static double strtonum(char *string, int length)
 		if (c >= '0' && c <= '9')
 		{
 			//	Si todavia no llegue al punto, es la parte entera
-			if (decimal == -1)
+			if (!decimal)
 			{
 				number *= 10;
 				number += c - '0';
@@ -163,13 +163,17 @@ static double strtonum(char *string, int length)
 			else
 			{
 				exp /= 10;
-				aux = c - '0';
-				aux *= exp;
-				number += aux;
+				number += exp * (c - '0');
 			}
 		}
 		else if (c == '.')
-			decimal = i;
+			if (decimal)
+			{
+				fprintf(2, ERROR_MSG);
+				return 0;
+			}
+			else
+				decimal = 1;
 		// Si hay un operador, hubo algun error, devuelvo 0
 		else if (is_operand(c))
 			return 0;
