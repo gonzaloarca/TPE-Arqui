@@ -14,7 +14,7 @@ static unsigned int activeModule = 0;
 static unsigned int numberOfModules = 0;
 
 //	Reservo espacio para los stack frames
-static char reserve[WINDOWS][MB];
+static char reserve[WINDOWS*MB];
 
 void setMainFrame(){
 	saveMainFrame(&mainFrame);
