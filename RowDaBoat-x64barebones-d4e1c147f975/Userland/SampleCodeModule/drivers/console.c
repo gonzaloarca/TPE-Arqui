@@ -45,7 +45,7 @@ int initModule(void (*program)(), char prompt[MAX_PROMPT], char delimiter)
 	newModule->delimiter = delimiter;
 	for (i = 0; prompt[i] != 0 && i < MAX_PROMPT; i++)
 		newModule->prompt[i] = prompt[i];
-	prompt[i] = '0';
+	prompt[i] = 0;
 
 	//	Voy a asignarle espacio para el stack frame:
 	// 	Tengo que moverme al final de la memoria guardada ya que

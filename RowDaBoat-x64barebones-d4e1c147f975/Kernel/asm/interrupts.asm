@@ -82,7 +82,6 @@ SECTION .text
 %endmacro
 
 
-
 %macro exceptionHandler 1
 	pushState
 
