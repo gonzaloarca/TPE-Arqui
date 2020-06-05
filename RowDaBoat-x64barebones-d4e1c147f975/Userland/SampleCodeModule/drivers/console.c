@@ -27,7 +27,7 @@ void program2()
 		modules[1].program();
 }
 //	Array de los programas con ciclos
-const uint64_t programs[WINDOWS] = {(uint64_t) program1, (uint64_t) program2};
+static void (*programs[WINDOWS])() = {program1, program2};
 
 int initModule(void (*program)(), char prompt[MAX_PROMPT], char delimiter)
 {
@@ -53,7 +53,7 @@ int initModule(void (*program)(), char prompt[MAX_PROMPT], char delimiter)
 	uint64_t *last_address = (uint64_t*) (reserve[numberOfModules+1] - 8);
 
 	//	Y luego pongo la entrada a mi programa
-	*last_address = programs[numberOfModules];
+	*last_address = (uint64_t) programs[numberOfModules];
 	//	rsp al inicio de mi programa
 	newModule->stackFrame.rsp = last_address;
 	//	El rbp lo inicializo en 0
