@@ -28,7 +28,12 @@ int floatToString(double number, char buffer[DOUBLE_SIZE])
 	if (integer != 0)	// Veo que la parte decimal no sea cero
 	{
 		buffer[length++] = '.';	//	Agrego el punto
-		length += intToString(integer, &(buffer[length]));
+        length += PRECISION;
+        for (int i = 1; i <= PRECISION; i++)
+        {
+            buffer[length - i] = (integer % 10) + '0';
+            integer /= 10;
+        }
 	}
 
 	buffer[length] = 0;
