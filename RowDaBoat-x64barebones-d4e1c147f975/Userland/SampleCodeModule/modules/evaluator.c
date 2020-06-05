@@ -19,8 +19,8 @@ void calculator()
 	char buffer[BUFFER_SIZE+1];
 	int length;
 	printf("\t\t\t-----CALCULADORA-----\n");
-	printf("\tEscriba una expresion inorder terminada con =\n");
-	printf("\tAprete enter para calcular el resultado\n");
+	printf("\tEscriba una expresion inorder sin espacios\n");
+	printf("\tAprete '=' para calcular el resultado\n");
 	printf("\tSoportado: + - * / A (respuesta anterior)\n");
 	while(1)
 	{

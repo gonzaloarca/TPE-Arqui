@@ -1,40 +1,36 @@
 ;GLOBAL saveMainFrame
-GLOBAL setFrame
-GLOBAL getFrame
+GLOBAL getBackup
+GLOBAL setBackup
 
 ;---------------------------------------------------------------
-;	Funcion para guardar el stack frame del main
+;	Funcion para realizar un backup de los registros necesarios
 ;---------------------------------------------------------------
 ; Llamada en C:
-;	void saveMainFrame(StackFrame *mainFrame);
+;	void getBackup(StackFrame *frame, RegBackup *backup);
 ;---------------------------------------------------------------
-;saveMainFrame:
-;	mov rax, [rbp]
-;	mov [rdi], 	rax		;	rbp apunta al rbp del main()
-;	mov rax, rbp		
-;	add rax, 8			;	rbp+8 es el rsp del main 
-;	mov [rdi+8], rax	;	(que apunta a la dir para volver a este)
-;	ret
-
-;---------------------------------------------------------------
-;	Funcion para guardar el stack frame actual
-;---------------------------------------------------------------
-; Llamada en C:
-;	void getFrame(StackFrame *mainFrame);
-;---------------------------------------------------------------
-getFrame:
-	mov [rdi], rbp		;	rbp no cambia al entrar a esta funcion
-	mov [rdi+8], rsp	;	rsp no cambia al entrar a esta funcion
+getBackup:
+	mov [rdi], rbp		
+	mov [rdi+8], rsp
+	mov [rsi], rbx
+	mov [rsi+8], r12
+	mov [rsi+16], r13
+	mov [rsi+24], r14
+	mov [rsi+32], r15
 	ret
 
 ;---------------------------------------------------------------
-;	Funcion para cambiar el stack frame actual
+;	Funcion para hacer un restore del backup
 ;---------------------------------------------------------------
 ; Llamada en C:
-;	void setFrame(StackFrame *mainFrame);
+;	void setBackup(StackFrame *frame, RegBackup *backup);
 ;---------------------------------------------------------------
-setFrame:
-	mov rbp, [rdi]		; Restauro el rbp
-	mov rsp, [rdi+8]	; Restauro el rsp
+setBackup:
+	mov rbp, [rdi]		
+	mov rsp, [rdi+8]	
+	mov rbx, [rsi]
+	mov r12, [rsi+8]
+	mov r13, [rsi+16]
+	mov r14, [rsi+24]
+	mov r15, [rsi+32]
 	ret
 

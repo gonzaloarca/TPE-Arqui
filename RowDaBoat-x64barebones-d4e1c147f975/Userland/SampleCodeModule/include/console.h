@@ -12,6 +12,15 @@ typedef struct
 	uint64_t *rsp;
 } StackFrame;
 
+typedef struct
+{
+	uint64_t rbx;
+	uint64_t r12;
+	uint64_t r13;
+	uint64_t r14;
+	uint64_t r15;
+} RegBackup;
+
 //	Estructura que representa a los modulos (programas) "activos" 
 typedef struct 
 {
@@ -19,6 +28,7 @@ typedef struct
 	char prompt[MAX_PROMPT+1];			//"prompt" que se imprime para pedir input
 	char delimiter;						//delimitar para leer por STDIN
 	StackFrame stackFrame;				//info del stack frame cuando se cambia de ventana
+	RegBackup backup; 					//registros a preservar entre llamados
 } Module;
 
 //	Funcion para agregar un nuevo modulo a la lista de modulos

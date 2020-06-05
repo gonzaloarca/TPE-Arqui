@@ -43,7 +43,7 @@ int initModule(void (*program)(), char prompt[MAX_PROMPT], char delimiter)
 	newModule->stackFrame.rsp = last_address;
 	//	El rbp lo inicializo en 0
 	newModule->stackFrame.rbp = 0;
-	
+
 	numberOfModules++;
 
 	return 1;
@@ -54,7 +54,7 @@ void startFirstProgram(){
 		fprintf(1, "NO HAY PROGRAMA PARA EJECUTAR\n");
 	else
 	{
-		setFrame(&(modules[0].stackFrame));
+		setBackup(&(modules[0].stackFrame), &(modules[0].backup));
 	}
 }
 
@@ -64,11 +64,11 @@ static int switchWindow( unsigned int window ){
 	if(success)
 	{
 		//	Tengo que guardar el stack frame actual
-		getFrame(&(modules[activeModule].stackFrame));
+		getBackup(&(modules[activeModule].stackFrame), &(modules[activeModule].backup));
 		//	Cambio el modulo activado
 		activeModule = window;
 		//	Seteo el stack frame
-		setFrame(&(modules[activeModule].stackFrame));
+		setBackup(&(modules[activeModule].stackFrame), &(modules[activeModule].backup));
 	}
 	return 0;
 }

@@ -1,13 +1,11 @@
 #ifndef FRAME_ASM_H
 
 #define FRAME_ASM_H
-/*
+
 //	Funcion de assembler que guarda el stack frame
-void saveMainFrame(StackFrame *mainFrame);
-*/
-void getFrame(StackFrame *mainFrame);
+void getBackup(StackFrame *frame, RegBackup *backup);
 
 //	Funcion de assembler que setea el frame actual
-void setFrame(StackFrame *mainFrame);
+void setBackup(StackFrame *frame, RegBackup *backup);
 
 #endif
