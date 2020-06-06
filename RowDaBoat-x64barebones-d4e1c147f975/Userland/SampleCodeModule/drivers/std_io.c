@@ -263,7 +263,7 @@ int scanf(char* format, ...){
                         break;
                     
                     case 's':
-                        while( (c = getchar()) != ' ' || c != '\n' );  // salteo caracteres hasta toparme con un enter o un espacio//guarda que estas obteniendo el enter aca si es que llego                     
+                        while( (c = getchar()) != ' ' && c != '\n' );  // salteo caracteres hasta toparme con un enter o un espacio//guarda que estas obteniendo el enter aca si es que llego                     
                         i++;
                         break;
 
@@ -374,7 +374,7 @@ int scanf(char* format, ...){
                         char *aux = argS;
                         do{
                             *(aux++) = c;
-                        }while( (c = getchar()) != ' ' || c != '\n' );  //guarda que estas obteniendo el enter aca si es que llego
+                        }while( (c = getchar()) != ' ' && c != '\n' );  //guarda que estas obteniendo el enter aca si es que llego
                         *aux = 0;
                         i++;
                         argsRead++;
