@@ -6,7 +6,7 @@
 //	Digitos de precision para el double
 #define PRECISION 4	
 
-#define MAX_INT_DIG 16
+#define MAX_INT_DIG 20
 
 //	Cantidad de carateres hexa en una direccion de memoria
 //	(64 bits / 4)
@@ -18,11 +18,11 @@ int floatToString(double number, char buffer[DOUBLE_SIZE]);
 
 //	Convierte un integer a String
 //	Devuelve la longitud del string creado
-int intToString( long int num, char buffer[MAX_INT_DIG] );
+int intToString( long int num, char buffer[MAX_INT_DIG + 1] );
 
 //	Convierte un integer a String en formato hexadecimal
 //	Devuelve la longitud del string creado
-int intToHexString(unsigned long int num, char buffer[MAX_INT_DIG + 1]);
+int intToHexString(unsigned long int num, char buffer[MAX_INT_DIG]);
 
 //	Convierte una direccion de memoria a un numero hexadecimal
 //	Devuelve la longitud del string

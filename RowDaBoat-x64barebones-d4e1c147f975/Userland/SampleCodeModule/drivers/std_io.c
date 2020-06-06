@@ -1,9 +1,9 @@
 #include <std_io.h>
 #include <std_num.h>
+#include <c_type.h>
 #include <stdarg.h>   //para tener cantidad variable de parámetros en funciones como printf y scanf
 #include <console.h> //para llamar a getInput desde getchar hace falta
 
-#define N 4096       //maximo tamaño de conversion para cuando printf reciba strings como parametros ?? hay que ver si ponemos limite a esto no
 #define STDIN_MAXBUFFER 4096
 
 static char stdinBuffer[STDIN_MAXBUFFER];
@@ -199,3 +199,336 @@ int printf(char* format, ...){
     return ret;    
 }
 
+int scanf(char* format, ...){
+    va_list args;
+    va_start(args, format);
+
+    int argsRead = 0, i = 0;
+    int c = 0;
+    int *argD;
+    long *argLD;
+    float *argF;
+    double *argG;
+    unsigned *argU;
+    unsigned long *argLU;
+    int neg = 0;
+    float expF;
+    double expG;
+    int comma;
+    char *argC;
+    char *argS;
+
+    c = getchar();
+    while( format[i] != 0 ){   //guarda, puede ser que haya que hacer un do-while, porque hago getchar al final del ciclo, y otra vez al principio, y capaz que me coma el enter asi --> validar enter al final del ciclo si no?
+        while( c == '\n' ){
+            c = getchar();
+        }
+
+        if( format[i] != '%' && format[i] != c ){
+            return argsRead;    //a la primera que no coincide el formato con la entrada, salgo de la funcion.
+        }
+        if( format[i] == '%'){
+            i++;
+            if( format[i] == '*' ){ //debo ignorar el campo, siempre y cuando lo que siga sea un caracter de formato valido
+                i++;
+                switch( format[i] ){
+                    case 'd':
+                    case 'u':
+                    case 'l':
+                        if( format[i] == 'l' && format[i+1] != 'd' && format[i+1] != 'u' ){
+                            return argsRead;    //no hay especificadores de formato distintos de lu y ld que empiecen con l
+                        }
+
+                        if( !isdigit(c) && c != '-' && c != '+' ){
+                            return argsRead;
+                        } 
+
+                        if( c == '-' ){
+                            c = getchar();          //para que pase al siguiente digito
+                            if( !isdigit(c) ){
+                                return argsRead;    //me pasaron "-"; no era un numero, debo salir
+                            }
+                        }
+
+                        if( c == '+' ){
+                            c = getchar();
+                            if( !isdigit(c) ){
+                                return argsRead;    //me pasaron "+" sin estar seguido de ningun digito, debo salir.
+                            }
+                        }
+                        
+                        while( isdigit(c = getchar()) );   //salteo los caracteres numericos hasta toparme con algo que no sea un numero
+
+                        i++;
+                        break;
+                    
+                    case 's':
+                        while( (c = getchar()) != ' ' || c != '\n' );  // salteo caracteres hasta toparme con un enter o un espacio//guarda que estas obteniendo el enter aca si es que llego                     
+                        i++;
+                        break;
+
+                    case 'f':
+                    case 'g':
+                        if( !isdigit(c) && c != '.' && c != '-' && c != '+' ){
+                            return argsRead;
+                        }
+                        comma = 0;
+                        
+                        if( c == '-' ){
+                            c = getchar();
+                            if( !isdigit(c) && c != '.' ){
+                                return argsRead;            //caso en que me pasen "." como argumento
+                            }
+                        }
+
+                        if( c == '+' ){
+                            c = getchar();
+                            if( !isdigit(c) && c != '.' ){
+                                return argsRead;           //caso en que me pasen "+" como argumento
+                            }
+                        }
+
+                        if( c == '.' ){                    
+                            c = getchar();
+                            if( !isdigit(c) ){
+                                return argsRead;        //caso en que me pasen "." como argumento
+                            }
+                            comma = 1;
+                        }
+
+                        do{
+                            if( c == '.' ){
+                                if( comma != 0 ){ //no pueden pasarme 2 puntos en un float
+                                    break;
+                                }
+                                comma = 1;
+                            } 
+                        }while( isdigit(c = getchar()) || c == '.' );
+
+                        i++;
+                        break;
+
+                    case 'c':
+                        c = getchar();
+                        i++;
+                        break;
+                }
+            } else {
+                switch( format[i] ){ 
+                    case 'd':
+                    case 'u':
+                        if( !isdigit(c) && c != '-' && c != '+' ){
+                            return argsRead;
+                        } 
+                        neg = 0;
+                        if( c == '-' ){
+                            c = getchar();          //para que pase al siguiente digito
+                            if( !isdigit(c) ){
+                                return argsRead;    //me pasaron "-"; no era un numero, debo salir
+                            }
+                            neg = 1;
+                        }
+
+                        if( c == '+' ){
+                            c = getchar();
+                            if( !isdigit(c) ){
+                                return argsRead;    //me pasaron "+" sin estar seguido de ningun digito, debo salir.
+                            }
+                        }
+
+                        if( format[i] == 'd' ){
+                            argD = va_arg(args, int*);
+                            *argD = 0;
+                            do{
+                                *argD = *argD * 10 + ( c - '0' );
+                            }while( isdigit(c = getchar()) );   //debe cortar una vez que el caracter leido no sea mas un digito
+                            
+                            if( neg ){
+                                *argD *= -1;
+                            }
+                        } else {    //format[i] == 'u'
+                            argU = va_arg(args, unsigned int*);
+                            *argU = 0;
+                            do{
+                                *argU = *argU * 10 + ( c - '0' );
+                            }while( isdigit(c = getchar()) );   //debe cortar una vez que el caracter leido no sea mas un digito
+                            
+                            if( neg ){
+                                *argU *= -1;
+                            }
+                        }
+                        i++;
+                        argsRead++;
+                        break;
+
+                    case 'c':
+                        argC = va_arg(args, char*);
+                        *argC = c;
+                        c = getchar();
+                        i++;
+                        argsRead++;
+                        break;  //aca evito hacer otro getchar
+                    
+                    case 's':
+                        argS = va_arg(args, char*);
+                        char *aux = argS;
+                        do{
+                            *(aux++) = c;
+                        }while( (c = getchar()) != ' ' || c != '\n' );  //guarda que estas obteniendo el enter aca si es que llego
+                        *aux = 0;
+                        i++;
+                        argsRead++;
+                        break;
+                    
+                    case 'f':
+                    case 'g':
+                        if( !isdigit(c) && c != '.' && c != '-' && c != '+' ){
+                            return argsRead;
+                        }
+                        comma = 0;
+                        neg = 0;
+                        
+
+                        
+                        if( c == '-' ){
+                            c = getchar();
+                            if( !isdigit(c) && c != '.' ){
+                                return argsRead;            //caso en que me pasen "." como argumento
+                            }
+                            neg = 1;
+                        }
+
+                        if( c == '+' ){
+                            c = getchar();
+                            if( !isdigit(c) && c != '.' ){
+                                return argsRead;           //caso en que me pasen "+" como argumento
+                            }
+                        }
+
+                        if( c == '.' ){                    
+                            c = getchar();
+                            if( !isdigit(c) ){
+                                return argsRead;        //caso en que me pasen "." como argumento
+                            }
+                            comma = 1;
+                        }
+
+                        if( format[i] == 'f' ){              
+                            argF = va_arg(args, float*);
+                            *argF = 0;
+                            expF = 1.0;
+                            
+                            do{
+                                if( c == '.' ){
+                                    if( comma != 0 ){ //no pueden pasarme 2 puntos en un float
+                                        break;
+                                    }
+                                    comma = 1;
+                                } else if( !comma ){
+                                    *argF = *argF * 10 + ( c - '0' );
+                                } else {
+                                    expF /= 10;
+                                    *argF = *argF + ( ( c - '0' ) * expF );
+                                }
+                            }while( isdigit(c = getchar()) || c == '.' );
+
+                            if( neg ){
+                                *argF *= -1;
+                            }
+
+                        } else {    //format[i] == 'g'                    
+                            argG = va_arg(args, double*);
+                            *argG = 0;
+                            expG = 1.0;
+
+                            do{
+                                if( c == '.' ){
+                                    if( comma != 0 ){ //no pueden pasarme 2 puntos en un float
+                                        break;
+                                    }
+                                    comma = 1;
+                                } else if( comma == 0 ){
+                                    *argG = *argG * 10 + ( c - '0' );
+                                } else {
+                                    expG /= 10;
+                                    *argG = *argG + ( ( c - '0' ) * expG );
+                                }
+                            }while( isdigit(c = getchar()) || c == '.' );
+
+                            if( neg ){
+                                *argG *= -1;
+                            }
+                        }
+                    
+                        i++;
+                        argsRead++;
+                        break;
+
+                    case 'l':
+                        i++;
+                        if( format[i] == 'd' || format[i] == 'u' ){
+                            if( !isdigit(c) && c != '-' && c != '+' ){
+                                return argsRead;
+                            } 
+
+                            neg = 0;
+                            if( c == '-' ){
+                                c = getchar();          //para que pase al siguiente digito
+                                if( !isdigit(c) ){
+                                    return argsRead;    //me pasaron "-"; no era un numero, debo salir
+                                }
+                                neg = 1;
+                            }
+
+                            if( c == '+' ){
+                                c = getchar();
+                                if( !isdigit(c) ){
+                                    return argsRead;    //me pasaron "+" sin estar seguido de ningun digito, debo salir.
+                                }
+                            }
+                            if( format[i] == 'd' ){
+                                argLD = va_arg(args, long*);
+                                *argLD = 0;
+                                do{
+                                    *argLD = *argLD * 10 + ( c - '0' );
+                                }while( isdigit(c = getchar()) );   //debe cortar una vez que el caracter leido no sea mas un digito
+                                
+                                if( neg ){
+                                    *argLD *= -1;
+                                }
+                            } else {    //format[i] == 'u'
+                                argLU = va_arg(args, unsigned long*);
+                                *argLU = 0;
+                                do{
+                                    *argLU = *argLU * 10 + ( c - '0' );
+                                }while( isdigit(c = getchar()) );   //debe cortar una vez que el caracter leido no sea mas un digito
+                                
+                                if( neg ){
+                                    *argLU *= -1;
+                                }
+                            }
+                            i++;
+                            argsRead++;
+                            break;
+                        } else {
+                            return argsRead;    //si no era un especificador de formato valido, corto el scanf.
+                        }
+
+                    default: //si caigo aca, no habia ningun caracter valido despues del % --> a no ser que dicho caracter sea un %, corto la funcion porque no existe nada con ese formato  
+                        if( format[i] == '%' && c == format[i] ){   //si me topo con un %%, entonces quiere decir que la entrada debe tener un % explicito. No quiero que lo tome como delimitador de formato para la proxima iteracion, por ende incremento i
+                            i++;
+                            break;
+                        }
+                        
+                        return argsRead;
+                }
+            }
+        } else {
+            c = getchar();
+            i++;
+        }
+    }
+
+    return argsRead;
+    
+}
