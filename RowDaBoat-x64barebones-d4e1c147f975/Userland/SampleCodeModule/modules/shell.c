@@ -6,10 +6,15 @@
 char inputBuffer[INPUT_BUFFER_SIZE];
 int indexBuffer;
 static void parse();
+static PromptData prData = { "$> ", '\n' };
+
 
 void runShell(){
-    indexBuffer = getInput( inputBuffer, INPUT_BUFFER_SIZE );
-    parse();
+    
+    while(1){
+        indexBuffer = getInput( inputBuffer, INPUT_BUFFER_SIZE, prData.symbol, prData.delimiter );
+        parse();
+    }
 }
 
 static void parse(){

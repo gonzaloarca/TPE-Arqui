@@ -13,7 +13,7 @@ static int stdinLastPos = 0;
 int getchar(){  //devuelve chars casteados a int porque no hacemos uso de caracteres como EOF, ya que no hay un filesystem. Por ende no hay necesidad de operar con enteros en principio
     if( stdinLastPos == stdinFirstPos ){ //hay que ver que pasa si stdinLastPos > STDIN_BUFFERSIZE
         stdinFirstPos = 0;
-        stdinLastPos = getInput( stdinBuffer, STDIN_MAXBUFFER );
+        stdinLastPos = getInput( stdinBuffer, STDIN_MAXBUFFER, "", '\n' );
     }
 
     return stdinBuffer[stdinFirstPos++];

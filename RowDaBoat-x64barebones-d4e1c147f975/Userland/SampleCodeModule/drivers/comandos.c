@@ -12,8 +12,7 @@
 
 #define TECLA_F1		"\tEjecuta el guardado de los registros, para que sean\n impresos con inforeg."
 #define TECLA_F2		"\tEjecuta el borrado total de la linea actual."
-#define TECLA_CTRL_1	"\tEjecuta el cambio a la ventana de la izquierda."
-#define TECLA_CTRL_2	"\tEjecuta el cambio a la ventana de la derecha."
+#define TECLA_CTRL_1	"\tEjecuta el cambio de proceso."
 
 void help(){
 	puts("---------Informacion sobre comandos disponibles----------------");
@@ -64,11 +63,6 @@ void help(){
 	printf("%s", "CTRL+1");
 	changeWindowColor(0xffffff);
 	printf("%s\n", TECLA_CTRL_1);
-
-	changeWindowColor(0x4ad5f2);
-	printf("%s", "CTRL+2");
-	changeWindowColor(0xffffff);
-	printf("%s\n", TECLA_CTRL_2);
 
 }
 

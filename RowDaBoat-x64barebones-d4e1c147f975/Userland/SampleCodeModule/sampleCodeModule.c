@@ -1,6 +1,6 @@
 #include <console.h>
 #include <std_io.h>
-
+#include <syscalls.h>
 #include <shell.h>
 #include <evaluator.h>
 
@@ -20,14 +20,14 @@ int main()
 
 	if (c == '1')
 	{
-		initModule(runShell, "$> ", '\n');
-		initModule(calculator, "Exp: ", '=');
+		initProcess(runShell);	//hay que dejar el prompt y el delimitador en Userland.
+		initProcess(calculator);
 	} else {
-		initModule(calculator, "Exp: ", '=');
-		initModule(runShell, "$> ", '\n');
+		initProcess(calculator);
+		initProcess(runShell);
 	}
 
-	startFirstProgram();
+	runFirstProcess();
 
 	return 0;
 }

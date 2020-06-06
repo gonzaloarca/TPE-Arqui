@@ -6,6 +6,7 @@
 #include <cpuinfo.h>
 #include <registers.h>
 #include <rtc_driver.h>
+#include <process_manager.h>
 
 typedef struct{
 	uint64_t rbx;
@@ -72,6 +73,22 @@ uint64_t syscall_20( uint64_t rbx )
 	return sys_cpuinfo((CpuInfo *) rbx);
 }
 
+//	La syscall 21 recibe un puntero a funcion de un proceso y lo inicializa
+uint64_t syscall_21( uint64_t rbx ){
+	return sys_initModule((void (*)()) rbx);
+}
+
+//	La syscall 22 cambia el programa activo al siguiente en la lista de programas
+uint64_t syscall_22(){
+	return sys_switchProcess();
+}
+
+//	La syscall 23 corre el primer proceso si es que hay al menos uno cargado
+uint64_t syscall_23(){
+	sys_runFirstProcess();
+	return 0;
+}
+
 //	scNumber indica a cual syscall se llamo
 //	parameters es una estructura con los parametros para la syscall
 //	Cada syscall se encarga de interpretar a la estructura
@@ -97,6 +114,12 @@ uint64_t sysCallDispatcher(uint64_t scNumber, Registers reg)
 		case 14: return syscall_14();
 
 		case 20: return syscall_20( reg->rbx );
+
+		case 21: return syscall_21( reg->rbx );
+
+		case 22: return syscall_22();
+
+		case 23: return syscall_23();
 
 	}
 

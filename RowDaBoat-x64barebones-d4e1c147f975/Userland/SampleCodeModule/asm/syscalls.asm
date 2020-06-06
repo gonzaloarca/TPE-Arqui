@@ -9,6 +9,9 @@ GLOBAL getCPUTemp
 GLOBAL getCPUInfo
 GLOBAL getRegisters
 GLOBAL clearScreen
+GLOBAL initProcess
+GLOBAL switchProcess
+GLOBAL runFirstProcess
 
 section .text
 
@@ -97,11 +100,13 @@ emptyBuffer:			; void emptyBuffer()
 getTime:				; void getTime( TimeFormat *time )
 	push rbp
 	mov rbp, rsp
+	push rax
 
 	mov rax, 12
 	mov rbx, rdi
 	int 80h
 
+	pop rax
 	mov rsp, rbp
 	pop rbp
 	ret
@@ -134,13 +139,51 @@ getCPUInfo:
 	pop rbp
 	ret
 	
-getRegisters
+getRegisters:
 	push rbp
 	mov rbp, rsp
 
 	mov rax, 14
 	int 80h
 
+	mov rsp, rbp
+	pop rbp
+	ret
+
+initProcess:		;int initProcess( void (*program)() )
+	push rbp
+	mov rbp, rsp
+	push rbx
+
+	mov rax, 21
+	mov rbx, rdi
+	int 80h
+
+	pop rbx
+	mov rsp, rbp
+	pop rbp
+	ret
+
+switchProcess:		;int switchProcess()
+	push rbp
+	mov rbp, rsp
+
+	mov rax, 22
+	int 80h
+
+	mov rsp, rbp
+	pop rbp
+	ret
+
+runFirstProcess:	;void runFirstProcess()
+	push rbp
+	mov rbp, rsp
+	push rax
+
+	mov rax, 23
+	int 80h
+
+	pop rax
 	mov rsp, rbp
 	pop rbp
 	ret

@@ -1,5 +1,4 @@
 #ifndef SYSCALLS_H
-
 #define SYSCALLS_H
 
 // Funcion que permite escribir count caracteres de un string en el file descriptor fd
@@ -14,8 +13,14 @@ void _hlt();
 //	Vaciar el buffer del teclado
 void emptyBuffer();
 
-//	Cambiar la ventana activa
-int changeWindow(unsigned int window);
+int switchProcess();
+
+//	Funcion para agregar un nuevo modulo a la lista de modulos
+//	Regresa 0 si pudo agregarlo (hay espacio para correr mas procesos)
+//	1 si no (no hay mas espacio)
+int initProcess( void (*program)() );
+
+void runFirstProcess();
 
 //	Cambiar el color de letra de la ventana
 int changeWindowColor(int rgb);
@@ -41,5 +46,6 @@ typedef struct{
 
 //	Efectua la syscall para obtener informacion del CPU
 void getCPUInfo(CpuInfo* info);
+
 
 #endif
