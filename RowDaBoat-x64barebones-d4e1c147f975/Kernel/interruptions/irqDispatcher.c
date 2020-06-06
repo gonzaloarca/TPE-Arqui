@@ -21,5 +21,3 @@ void irqDispatcher(uint64_t irq) {
 	}
 	return;
 }
-
-

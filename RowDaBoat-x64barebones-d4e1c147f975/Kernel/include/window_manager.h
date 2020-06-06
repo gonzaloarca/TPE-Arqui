@@ -1,6 +1,8 @@
 #ifndef _WINDOW_MANAGER_H
 #define _WINDOW_MANAGER_H
 
+#include <registers.h>
+
 // Funcion de booteo, establece parametros default de cada ventana a mostrar en la pantalla
 void setWindows();
 
@@ -12,5 +14,8 @@ int sys_changeWindowColor(int rgb);
 
 // Funcion que permite la impresion de un caracter en la ventana actual
 int sys_write(unsigned int fd, const char * str, unsigned long count);
+
+// Funcion que imprime los registros pasados por parametro
+void printRegisters(RegistersType *reg);
 
 #endif

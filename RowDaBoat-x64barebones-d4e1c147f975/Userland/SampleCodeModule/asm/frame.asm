@@ -1,4 +1,3 @@
-;GLOBAL saveMainFrame
 GLOBAL getBackup
 GLOBAL setBackup
 

@@ -1,6 +1,7 @@
 #include <window_manager.h>
 #include <screenInfo.h>
 #include <video_driver.h>
+#include <stdint.h>
 
 typedef struct{
 
@@ -240,4 +241,122 @@ int sys_write(unsigned int fd, const char * str, unsigned long count){
 	}
 
 	return count;
+}
+
+// Funcion de uso interno para obtener la cantidad de caracteres de un long
+static int intLength(long num){
+	int dig = 0;
+	while( num != 0 ){ //cuento digitos para saber desde donde arrancar a meter los caracteres
+        num /= 10;
+        dig++;
+    }
+
+    return dig;
+}
+
+// Funcion que transforma un int en un String, retorna la longitud
+static int uint64_tToString( uint64_t num, char * str ){
+
+    if( num == 0 ){
+        str[0] = '0';
+        str[1] = 0;
+        return 1;
+    }
+
+    int dig = intLength(num);
+    
+    if( num < 0 ){
+        dig++;
+        str[0] = '-';
+        num *= -1;      //porque num % n da negativo si num < 0
+    }
+
+    int i = dig;
+    str[i--] = 0;
+
+    while( num != 0 ){
+        str[i--] = (num % 10) + '0';
+        num /= 10;
+    }
+
+    return dig;
+}
+
+void printRegisters(RegistersType *reg){
+	char aux[10];	// maxima longitud de un longint
+	int longitud;
+	
+	longitud = uint64_tToString(reg->rax, aux);
+	sys_write(2, "RAX: ", 5);
+	sys_write(2, aux, longitud);
+
+	longitud = uint64_tToString(reg->rbx, aux);
+	sys_write(2, "    RBX: ", 9);
+	sys_write(2, aux, longitud);
+
+	longitud = uint64_tToString(reg->rcx, aux);
+	sys_write(2, "    RCX: ", 9);
+	sys_write(2, aux, longitud);
+	sys_write(2, "\n", 1);
+
+	longitud = uint64_tToString(reg->rdx, aux);
+	sys_write(2, "RDX: ", 5);
+	sys_write(2, aux, longitud);
+
+	longitud = uint64_tToString(reg->rbp, aux);
+	sys_write(2, "    RBP: ", 9);
+	sys_write(2, aux, longitud);
+
+	longitud = uint64_tToString(reg->rdi, aux);
+	sys_write(2, "    RDI: ", 9);
+	sys_write(2, aux, longitud);
+	sys_write(2, "\n", 1);
+
+	longitud = uint64_tToString(reg->rsi, aux);
+	sys_write(2, "RSI: ", 5);
+	sys_write(2, aux, longitud);
+
+	longitud = uint64_tToString(reg->r8, aux);
+	sys_write(2, "    R8: ", 8);
+	sys_write(2, aux, longitud);
+
+	longitud = uint64_tToString(reg->r9, aux);
+	sys_write(2, "    R9: ", 8);
+	sys_write(2, aux, longitud);
+	sys_write(2, "\n", 1);
+
+	longitud = uint64_tToString(reg->r10, aux);
+	sys_write(2, "R10: ", 5);
+	sys_write(2, aux, longitud);
+
+	longitud = uint64_tToString(reg->r11, aux);
+	sys_write(2, "    R11: ", 9);
+	sys_write(2, aux, longitud);
+
+	longitud = uint64_tToString(reg->r12, aux);
+	sys_write(2, "    R12: ", 9);
+	sys_write(2, aux, longitud);
+	sys_write(2, "\n", 1);
+
+	longitud = uint64_tToString(reg->r13, aux);
+	sys_write(2, "R13: ", 5);
+	sys_write(2, aux, longitud);
+
+	longitud = uint64_tToString(reg->r14, aux);
+	sys_write(2, "    R14: ", 9);
+	sys_write(2, aux, longitud);
+
+	longitud = uint64_tToString(reg->r15, aux);
+	sys_write(2, "    R15: ", 9);
+	sys_write(2, aux, longitud);
+	sys_write(2, "\n", 1);
+
+	longitud = uint64_tToString(reg->rsp, aux);
+	sys_write(2, "RSP: ", 5);
+	sys_write(2, aux, longitud);
+
+	longitud = uint64_tToString(reg->rip, aux);
+	sys_write(2, "    RIP: ", 9);
+	sys_write(2, aux, longitud);
+	sys_write(2, "\n", 1);
 }

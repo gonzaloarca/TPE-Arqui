@@ -1,4 +1,5 @@
 #include <registers.h>
+#include <window_manager.h>
 
 static RegistersType reg;
 

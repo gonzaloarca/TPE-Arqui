@@ -153,6 +153,10 @@ _irq05Handler:
 _exception0Handler:
 	exceptionHandler 0
 
+;Invalid Opcode Exception
+_exception6Handler:
+	exceptionHandler 6
+
 ;---------------------------------------------------
 ;	SysCall Handler
 ;---------------------------------------------------

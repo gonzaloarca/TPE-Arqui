@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <keyboard.h>
 #include <font.h>
+#include <registers.h>
 
 extern void haltcpu();
 
