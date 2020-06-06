@@ -43,7 +43,16 @@ void help();
 // Programa que imprime los valores de los registros que se tenian la ultima vez que se presiono f1
 void printInforeg();
 
-//
+// Retorna estructura con los valores correspondientes a los 32 bytes siguientes a address
+void getMemoryASM(memType* answer, uint64_t address);
+
+//  Funcion que retorna una estructura con los valores de los registros de la ultima vez que se presiono la tecla especial F1
 RegistersType* getRegisters();
+
+// Programa para ejecutar excepcion de dividir por cero
+void executeZeroException();
+
+// Programa para ejecutar excepcion de instruccion indefinida
+void executeUIException();
 
 #endif

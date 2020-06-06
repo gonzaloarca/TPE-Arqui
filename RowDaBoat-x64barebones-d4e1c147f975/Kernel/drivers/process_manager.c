@@ -75,3 +75,21 @@ void sys_runFirstProcess(){
 	}
 }
 
+void recoverModule(){
+
+	// Busco la direccion donde arranca el stack del modulo actual
+	uint64_t *last_address = (uint64_t*) (reserve[activeModule+1] - 8);
+
+	// Obtengo la direccion al modulo actual
+	Module *newModule = &(modules[activeModule]);
+
+	//	Y luego pongo la entrada al programa del modulo actual al inicio de su stack
+	*last_address = (uint64_t) modules[activeModule].program;
+	//	Ubico rsp al inicio del programa
+	newModule->stackFrame.rsp = last_address;
+	//	Reinicio rbp
+	newModule->stackFrame.rbp = 0;
+
+	//	Seteo el stack frame para que se realize el cambio
+	setBackup(&(modules[activeModule].stackFrame), &(modules[activeModule].backup));
+}

@@ -23,8 +23,13 @@ typedef struct RegistersType {
     uint64_t rip;
 } RegistersType;
 
+// Funcion que se encarga de guardar los valores de los registros en la estructura estatica.
 void saveRegisters();
 
+// Funcion de assembler que utiliza saveRegisters para guardar los registros en la estructura reg cuando se preisona F1.
+void saveRegistersASMf1(RegistersType *reg);
+
+// Syscall que retorna la estructura con los registros de la ultima vez que se presiono la tecla especial F1.
 RegistersType* sys_getRegisters();
 
 #endif

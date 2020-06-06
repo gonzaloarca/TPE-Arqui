@@ -1,14 +1,28 @@
-#define ZERO_EXCEPTION_ID 0
-#define OPCODE_ECEPTION_ID 6
+#include <process_manager.h>
+#include <registers.h>
+#include <window_manager.h>
 
-static void zero_division(){
-	// se imprimen registros
-	// recoverModule();
+#define ZERO_EXCEPTION_ID 0
+#define UNDEFINEDINSTRUCTION_EXCEPTION_ID 6
+
+// Funcion de assembler que utiliza saveRegisters para guardar los registros en la estructura reg cuando se lanza una excepcion sin error code.
+void saveRegistersASMexcp(RegistersType *reg);
+
+static RegistersType reg; // Variable auxiliar para imprimir registros una vez lanzada una excepcion
+
+static void divideByZeroException(){
+	saveRegistersASMexcp(&reg);
+	sys_write(2, "DIVIDE BY ZERO EXCEPTION\n", 25);
+	printRegisters(&reg);
+	recoverModule();
 	return;
 }
 
-static void opcode(){
-	// se imprimen registros
+static void undefinedInstructionException(){
+	saveRegistersASMexcp(&reg);
+	sys_write(2, "UNDEFINED INSTRUCTION EXCEPTION\n", 32);
+	printRegisters(&reg);
+	recoverModule();
 	return;
 }
 
@@ -19,10 +33,13 @@ void exceptionDispatcher(int excpNumber) {
 	switch(excpNumber)
 	{
 		case ZERO_EXCEPTION_ID:
-			zero_division();
+			divideByZeroException();
 			break;
-		case OPCODE_ECEPTION_ID:
-			opcode();
+		case UNDEFINEDINSTRUCTION_EXCEPTION_ID:
+			undefinedInstructionException();
 			break;
+
+		default:
+			recoverModule();			// Para que ante una excepcion que no se tiene una rutina especifica no se cuelge el sistema
 	}
 }

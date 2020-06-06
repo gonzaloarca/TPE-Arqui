@@ -1,6 +1,7 @@
 GLOBAL getTimeRTC
 GLOBAL getMemoryASM
-
+GLOBAL executeZeroException
+GLOBAL executeUIException
 section .text
 
 ;-------------------------------------------------------
@@ -89,4 +90,15 @@ getMemoryASM:
 
 	mov rsp, rbp
 	pop rbp
+	ret
+
+; Lanza la excepcion de dividir por cero
+executeZeroException:
+	mov rbx, 0
+	div rbx
+	ret
+
+; Lanza la excepcion de codigo invalido(undefined instruction)
+executeUIException:
+	UD2
 	ret

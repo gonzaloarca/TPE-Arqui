@@ -33,10 +33,16 @@ void getBackup(StackFrame *frame, RegBackup *backup);
 //	Funcion de assembler que setea el frame actual
 void setBackup(StackFrame *frame, RegBackup *backup);
 
+// Syscall para agregar un modulo a la cola de procesos
 int sys_initModule(void (*program)());
 
+// Syscall que cambia al siguiente proceso en la cola
 int sys_switchProcess();
 
+// Syscall que arranca el primer proceso, en caso de existir
 void sys_runFirstProcess();
+
+// Funcion para resetear el proceso actual debido a una excepcion
+void recoverModule();
 
 #endif

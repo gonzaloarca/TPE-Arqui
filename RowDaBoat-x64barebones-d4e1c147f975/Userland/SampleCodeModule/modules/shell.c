@@ -51,6 +51,10 @@ static void parse(){
     else if(strcmp( inputBuffer, "cputemp\n") == 0)
         // printCPUtemp();
         return;
+    else if(strcmp( inputBuffer, "executeZeroException\n") == 0)
+        executeZeroException();
+    else if(strcmp( inputBuffer, "executeUIException\n") == 0)
+        executeUIException();
     else
         fprintf(2, "Comando no reconocido, ejecuta help para recibir informacion.\n");
 }

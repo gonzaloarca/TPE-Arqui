@@ -29,10 +29,12 @@ void load_idt() {
   //  Handler para sysCalls
   setup_IDT_entry (0x80, (uint64_t)&_sysCallHandler);
 
+  // Divide by zero exception
   setup_IDT_entry (0x00, (uint64_t)&_exception0Handler);
+  // Undefined Instruction exception
+  setup_IDT_entry (0x06, (uint64_t)&_exception6Handler);
 
-
-	//Solo interrupcion timer tick habilitadas
+  // Interrupcion de teclado y timertick habilitadas
 	picMasterMask(0xFC); 
 	picSlaveMask(0xFF);
         

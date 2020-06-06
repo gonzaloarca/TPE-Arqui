@@ -9,6 +9,8 @@
 #define INFOREG_MSG 	"\tMuestra el estado de los registros del ultimo\n guardado(los guardados se realizan presionando F1)."
 #define PRINTMEM_MSG 	"\tMuestra los 32 bytes siguientes a partir de la\n direccion de memoria(en hexadecimal) recibida por parametro."
 #define PRINTTIME_MSG 	"\tMuestra la hora actual del dispositivo."
+#define EXCP_0_MSG		"\tComando para verificar la rutina de\n excepcion de division por cero."
+#define EXCP_6_MSG		"\tComando para verificar la rutina de\n excepcion de operacion invalida(Undefined Instruction)."
 
 #define TECLA_F1		"\tEjecuta el guardado de los registros, para que sean\n impresos con inforeg."
 #define TECLA_F2		"\tEjecuta el borrado total de la linea actual."
@@ -46,6 +48,16 @@ void help(){
 	changeWindowColor(0xffffff);
 	printf("%s\n", PRINTTIME_MSG);
 
+	changeWindowColor(0xffd300);
+	printf("%s", "executeZeroException");
+	changeWindowColor(0xffffff);
+	printf("%s\n", EXCP_0_MSG);
+
+	changeWindowColor(0xffd300);
+	printf("%s", "executeUIException  ");
+	changeWindowColor(0xffffff);
+	printf("%s\n", EXCP_6_MSG);
+
 	putchar('\n');
 
 	printf("---------Informacion sobre teclas especiales disponibles-------");
@@ -64,6 +76,7 @@ void help(){
 	changeWindowColor(0xffffff);
 	printf("%s\n", TECLA_CTRL_1);
 
+	putchar('\n');
 }
 
 void printTime(){       //se podria modularizar en una funcion para obtener el tiempo correcto, que abarcaria hasta el while, y otra para generar el string formateado del tiempo, despues juega printString
@@ -101,8 +114,6 @@ void printCPUInfo()
 	printf("Model: %d\n", info.model);
 	printf("Brand: %s\n", info.brand);
 }
-
-void getMemoryASM(memType* answer, uint64_t address);
 
 static int pow(int potencia, int base){
 	int ans = 1;

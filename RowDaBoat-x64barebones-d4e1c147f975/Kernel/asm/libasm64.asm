@@ -7,6 +7,8 @@ GLOBAL getScanCode
 GLOBAL sys_getCPUTemp
 GLOBAL saveRegistersASM
 
+GLOBAL saveRegistersASMexcp
+
 section .text
 	
 ;-------------------------------------------------------
@@ -290,7 +292,6 @@ sys_getCPUTemp:
 saveRegistersASM:
 	push rbp
 	mov rbp, rsp
-	push rbx
 
 	mov rax, [rbp]		; rbp de saveRegisters de C
 
@@ -303,10 +304,58 @@ saveRegistersASM:
 	; en rax tengo la posicion donde esta guardando el rbp viejo
 	; en rax+8 retorno a irq Master
 	; en rax+16 tengo el ultimo registro pusheado q es r15
-	; empiezo guardando ese y luego con un contador voy guardando el resto
+
+	add rax, 16
+
+	call fillRegisters
+
+	mov rsp, rbp
+	pop rbp
+	ret
+
+
+;-------------------------------------------------------
+;	Guarda en la estructura indicada por parametro los registros al lanzarse una excepcion
+;-------------------------------------------------------
+; Llamada en C:
+;	void saveRegistersASMexcp(registersType reg)
+;-------------------------------------------------------
+saveRegistersASMexcp:
+	push rbp
+	mov rbp, rsp
+
+	mov rax, [rbp]		; rbp de zero_division
+
+	mov rax, [rax]		; rbp de exceptionDispatcher
+
+	; en rax tengo la posicion donde esta guardando el rbp viejo
+	; en rax+8 retorno a exception Handler
+	; en rax+16 tengo el ultimo registro pusheado q es r15
+
+	add rax, 16
+
+	call fillRegisters
+
+	mov rsp, rbp
+	pop rbp
+	ret
+
+
+
+;-------------------------------------------------------
+;	Funcion interna para guardar en la estructura recibida en rax los 16 registros
+;-------------------------------------------------------
+; 	fillRegisters		
+;			recibe en rax el puntero a r15 y en rdi el puntero a la estructura de tipo RegistersType
+;			(sigue el comportamiento de como se pushean los registros en una interrupcion)
+;-------------------------------------------------------
+fillRegisters:
+	push rbp
+	mov rbp, rsp
+	push rbx
+	push rcx
 
 	mov rcx, 15
-	add rax, 16
 
 .ciclo:
 	dec rcx
@@ -316,7 +365,7 @@ saveRegistersASM:
 	cmp rcx, 0
 	jnz .ciclo
 
-	; ahora tengo RIP, CS, EFLAGS, RSP y SS que fueron guardados por la interrupcion
+	; ahora tengo RIP, CS, EFLAGS, RSP y SS que fueron guardados por la excepcion(no hay error code)
 
 	mov rbx, [rax]
 	mov QWORD[rdi + 8*16], rbx				;rip
@@ -324,6 +373,7 @@ saveRegistersASM:
 	mov rbx, [rax+24]
 	mov QWORD[rdi + 8*15], rbx				;rsp
 
+	pop rcx
 	pop rbx
 	mov rsp, rbp
 	pop rbp
