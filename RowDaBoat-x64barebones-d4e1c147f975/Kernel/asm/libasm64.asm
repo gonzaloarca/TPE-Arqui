@@ -292,8 +292,6 @@ saveRegistersASM:
 	mov rbp, rsp
 	push rbx
 
-	; no armo stackframe asi llego a la funcion que me llamo
-
 	mov rax, [rbp]		; rbp de saveRegisters de C
 
 	mov rax, [rax]		; rbp de keyboardHandler
@@ -305,62 +303,26 @@ saveRegistersASM:
 	; en rax tengo la posicion donde esta guardando el rbp viejo
 	; en rax+8 retorno a irq Master
 	; en rax+16 tengo el ultimo registro pusheado q es r15
+	; empiezo guardando ese y luego con un contador voy guardando el resto
 
-	add rax, 16				
+	mov rcx, 15
+	add rax, 16
+
+.ciclo:
+	dec rcx
 	mov rbx, [rax]
-	mov QWORD[rdi + 8*14], rbx				;r15
+	mov QWORD[rdi + 8*rcx], rbx
 	add rax, 8
-	mov rbx, [rax]
-	mov QWORD[rdi + 8*13], rbx				;r14
-	add rax, 8
-	mov rbx, [rax]
-	mov QWORD[rdi + 8*12], rbx				;r13
-	add rax, 8
-	mov rbx, [rax]
-	mov QWORD[rdi + 8*11], rbx				;r12
-	add rax, 8
-	mov rbx, [rax]
-	mov QWORD[rdi + 8*10], rbx				;r11
-	add rax, 8
-	mov rbx, [rax]
-	mov QWORD[rdi + 8*9], rbx				;r10
-	add rax, 8
-	mov rbx, [rax]
-	mov QWORD[rdi + 8*8], rbx				;r9
-	add rax, 8
-	mov rbx, [rax]
-	mov QWORD[rdi + 8*7], rbx				;r8
-	add rax, 8
-	mov rbx, [rax]
-	mov QWORD[rdi + 8*6], rbx				;rsi
-	add rax, 8
-	mov rbx, [rax]
-	mov QWORD[rdi + 8*5], rbx				;rdi
-	add rax, 8
-	mov rbx, [rax]
-	mov QWORD[rdi + 8*4], rbx				;rbp
-	add rax, 8
-	mov rbx, [rax]
-	mov QWORD[rdi + 8*3], rbx				;rdx
-	add rax, 8
-	mov rbx, [rax]
-	mov QWORD[rdi + 8*2], rbx				;rcx
-	add rax, 8
-	mov rbx, [rax]
-	mov QWORD[rdi + 8*1], rbx				;rbx
-	add rax, 8
-	mov rbx, [rax]
-	mov QWORD[rdi + 8*0], rbx				;rax
+	cmp rcx, 0
+	jnz .ciclo
 
 	; ahora tengo RIP, CS, EFLAGS, RSP y SS que fueron guardados por la interrupcion
 
-	add rax, 8
-	mov rbx, [rax]
-	mov QWORD[rdi + 8*15], rbx				;rsp
-
-	add rax, 24
 	mov rbx, [rax]
 	mov QWORD[rdi + 8*16], rbx				;rip
+
+	mov rbx, [rax+24]
+	mov QWORD[rdi + 8*15], rbx				;rsp
 
 	pop rbx
 	mov rsp, rbp
