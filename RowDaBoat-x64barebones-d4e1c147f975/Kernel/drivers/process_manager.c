@@ -1,4 +1,5 @@
 #include <process_manager.h>
+#include <window_manager.h>
 
 #define WINDOWS 2
 #define MB	0x100000
@@ -29,12 +30,11 @@ int sys_initModule(void (*program)())
 	//	el stack comienza en direcciones alta y va disminuyendo
 	uint64_t *last_address = (uint64_t*) (reserve[numberOfModules+1] - 8);
 
-	//	Y luego pongo la entrada a mi programa
-	*last_address = (uint64_t) modules[numberOfModules].program;
-	//	rsp al inicio de mi programa
-	newModule->stackFrame.rsp = last_address;
-	//	El rbp lo inicializo en 0
-	newModule->stackFrame.rbp = 0;
+	//	Pongo la entrada a mi programa
+	newModule->backup.rip = (uint64_t) modules[numberOfModules].program;
+	//	rsp al inicio del stack frame
+	newModule->backup.rsp = (uint64_t) last_address;
+
 	//	Le asigno el numero de process ID segun la cantidad de procesos corriendo hasta el momento
 	newModule->pid = numberOfModules;
 	//	Se le asigna al mapa de pid-window la ventana que ocupara el programa (tomamos la funcion identidad por convencion)
@@ -45,7 +45,7 @@ int sys_initModule(void (*program)())
 	return 0;
 }
 
-int sys_switchProcess(){
+int switchProcess(){
 	if( numberOfModules <= 1 ){
 		return 1;
 	}
@@ -55,11 +55,11 @@ int sys_switchProcess(){
 	if(success)
 	{
 		//	Tengo que guardar el stack frame actual
-		getBackup(&(modules[activeModule].stackFrame), &(modules[activeModule].backup));
+		getBackupINT(&(modules[activeModule].backup));
 		//	Cambio el modulo activado
 		activeModule = nextPid;
 		//	Seteo el stack frame
-		setBackup(&(modules[activeModule].stackFrame), &(modules[activeModule].backup));
+		setBackupINT(&(modules[activeModule].backup));
 	}
 	return 0;
 }
@@ -71,7 +71,7 @@ void sys_runFirstProcess(){
 	else
 	{
 		//	Empieza el primer programa
-		setBackup(&(modules[0].stackFrame), &(modules[0].backup));
+		startRunning(modules[activeModule].backup.rip, modules[activeModule].backup.rsp);
 	}
 }
 
@@ -83,13 +83,11 @@ void recoverModule(){
 	// Obtengo la direccion al modulo actual
 	Module *newModule = &(modules[activeModule]);
 
-	//	Y luego pongo la entrada al programa del modulo actual al inicio de su stack
-	*last_address = (uint64_t) modules[activeModule].program;
-	//	Ubico rsp al inicio del programa
-	newModule->stackFrame.rsp = last_address;
-	//	Reinicio rbp
-	newModule->stackFrame.rbp = 0;
+	//	Pongo la entrada a mi programa
+	newModule->backup.rip = (uint64_t) modules[activeModule].program;
+	//	rsp al inicio del stack frame
+	newModule->backup.rsp = (uint64_t) last_address;
 
-	//	Seteo el stack frame para que se realize el cambio
-	setBackup(&(modules[activeModule].stackFrame), &(modules[activeModule].backup));
+	startRunningEXC(newModule->backup.rip, newModule->backup.rsp);
+
 }

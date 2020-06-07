@@ -78,11 +78,6 @@ uint64_t syscall_21( uint64_t rbx ){
 	return sys_initModule((void (*)()) rbx);
 }
 
-//	La syscall 22 cambia el programa activo al siguiente en la lista de programas
-uint64_t syscall_22(){
-	return sys_switchProcess();
-}
-
 //	La syscall 23 corre el primer proceso si es que hay al menos uno cargado
 uint64_t syscall_23(){
 	sys_runFirstProcess();
@@ -116,8 +111,6 @@ uint64_t sysCallDispatcher(uint64_t scNumber, Registers reg)
 		case 20: return syscall_20( reg->rbx );
 
 		case 21: return syscall_21( reg->rbx );
-
-		case 22: return syscall_22();
 
 		case 23: return syscall_23();
 

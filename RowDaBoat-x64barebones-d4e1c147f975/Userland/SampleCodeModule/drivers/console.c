@@ -2,13 +2,10 @@
 #include <std_io.h>
 #include <syscalls.h>
 
-#define WINDOWS 2
-#define MB	0x100000
-
 int getInput( char *inputBuffer, unsigned long int buffer_size, char *promptSymbol, char promptDelimiter )
 {
 	emptyBuffer();
-	int ctrl = 0, size = 0, keyboard_size, i;
+	int size = 0, keyboard_size, i;
 	char c, keyboard[buffer_size];
 
 	puts(promptSymbol);
@@ -25,14 +22,6 @@ int getInput( char *inputBuffer, unsigned long int buffer_size, char *promptSymb
 			c = keyboard[i];
 
 			switch( c ){
-				case 17:		//codigo ASCII asignado al make code del Ctrl
-					ctrl = 1;
-					break;
-				
-				case 18:		//codigo ASCII asignado al break code del Ctrl
-					ctrl = 0;
-					break;
-
 				case '\b':
 					if( size == 0 ){
 						break;
@@ -55,10 +44,6 @@ int getInput( char *inputBuffer, unsigned long int buffer_size, char *promptSymb
 					// si no es entra en el siguiente caso
 
 				default:
-					if( ctrl && c == '1' ){
-						switchProcess();
-						break;
-					}
 					if (c == promptDelimiter || size < buffer_size - 1)
 					{
 						inputBuffer[size++] = c;

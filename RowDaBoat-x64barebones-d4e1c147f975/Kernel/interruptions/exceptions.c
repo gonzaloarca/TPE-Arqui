@@ -26,6 +26,14 @@ static void undefinedInstructionException(){
 	return;
 }
 
+static void defaultException(){
+	saveRegistersASMexcp(&reg);
+	sys_write(2, "UNKNOWN EXCEPTION\n", 32);
+	printRegisters(&reg);
+	recoverModule();
+	return;
+}
+
 
 // excpNumber indica la excepcion a la que se llamo
 // Este dispatcher se encargara de ejecutar la rutina de tratamiento correspondiente a la excepcion
@@ -40,6 +48,6 @@ void exceptionDispatcher(int excpNumber) {
 			break;
 
 		default:
-			recoverModule();			// Para que ante una excepcion que no se tiene una rutina especifica no se cuelge el sistema
+			defaultException();			// Para que ante una excepcion que no se tiene una rutina especifica no se cuelge el sistema
 	}
 }

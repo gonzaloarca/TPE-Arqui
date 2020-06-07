@@ -1,16 +1,16 @@
 #include <keyboard.h>
 #include <video_driver.h>
 #include <registers.h>
+#include <process_manager.h>
 
 #define LEFT_SHIFT 42
 #define RIGHT_SHIFT 54
 #define CAPS_LOCK 58
-#define CTRL 29
 #define LSHIFT_RELEASED (LEFT_SHIFT+0x80)
 #define RSHIFT_RELEASED (RIGHT_SHIFT+0x80)
-#define CTRL_RELEASED 157
 #define F1 59
 #define F2 60
+#define F3 61
 #define BUFFER_SIZE 200
 
 //	Tengo que guardarme si el shift se encuentra presionado
@@ -46,6 +46,9 @@ void keyboard_handler()
 	if(buffer[lastPos] == F1)
 		saveRegisters();
 
+	if(buffer[lastPos] == F3)
+		switchProcess();
+
 	// Actualizo el indice del buffer circular
 	lastPos = (lastPos + 1) % BUFFER_SIZE;
 }
@@ -61,10 +64,6 @@ char asciiMap(int code)
 			rshift = 1; return 0;
 		case CAPS_LOCK:
 			caps = !caps; return 0;
-		case CTRL:
-			return 17;
-		case CTRL_RELEASED:
-			return 18;
 		case F2:
 			return 19;
 		case LSHIFT_RELEASED:
