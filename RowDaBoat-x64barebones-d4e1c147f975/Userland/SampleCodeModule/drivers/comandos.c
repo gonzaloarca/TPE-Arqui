@@ -253,3 +253,11 @@ void printInforeg(){
 		   reg->r9, reg->r10, reg->r11,
 		    reg->r12, reg->r13, reg->r14, reg->r15, reg->rip);
 }
+
+void printCPUTemp(){
+	int temp = getCPUTemp();
+	changeWindowColor(0xff4500);
+	printf("Temperatura actual del CPU: ");
+	changeWindowColor(0xffffff);
+	printf("%d C\n", temp);
+}

@@ -34,6 +34,9 @@ void printTime();
 //	Programa que imprime informacion del CPU
 void printCPUInfo();
 
+//  Programa que imprime la temperatura actual del CPU
+void printCPUTemp();
+
 // Programa que imprime el valor de 4 direcciones de memoria a partir de la indicada por parametro
 void printmem(char* address);
 

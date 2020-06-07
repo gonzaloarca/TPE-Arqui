@@ -13,6 +13,7 @@ static PromptData prData = { "$> ", '\n' };
 
 void runShell(){
     
+    printf("\nIngrese help y presione enter para una explicacion del programa\n");
     while(1){
         indexBuffer = getInput( inputBuffer, INPUT_BUFFER_SIZE, prData.symbol, prData.delimiter );
         parse();
@@ -50,9 +51,10 @@ static void parse(){
     else if(strcmp( inputBuffer, "cpuinfo\n") == 0){
         printCPUInfo();
     }
-    else if(strcmp( inputBuffer, "cputemp\n") == 0)
-        // printCPUtemp();
+    else if(strcmp( inputBuffer, "cputemp\n") == 0){
+        printCPUTemp();
         return;
+    }
     else if(strcmp( inputBuffer, "executeZeroException\n") == 0)
         executeZeroException();
     else if(strcmp( inputBuffer, "executeUIException\n") == 0)
