@@ -94,8 +94,8 @@ getMemoryASM:
 
 ; Lanza la excepcion de dividir por cero
 executeZeroException:
-	mov rbx, 0
-	div rbx
+	mov rax, 0
+	div rax
 	ret
 
 ; Lanza la excepcion de codigo invalido(undefined instruction)

@@ -1,39 +1,13 @@
 #include <window_manager.h>
-#include <screenInfo.h>
-#include <video_driver.h>
-#include <stdint.h>
 
-typedef struct{
-
-	char character;
-	int color;
-
-}charWithColor;
-
-typedef struct{
-
-	// Donde arranca el canvas de la ventana
-	int xStart;
-	int yStart;
-
-	// Buffer de la pantalla para permitir scrolling
-	charWithColor screenBuffer[BUFFER_LINES][MAX_LINE_CHARS]; // necesito una linea mas para tener la anterior
-
-	// Cantidad de caracteres en la linea actual
-	int currentLineSize;
-
-	// Cantidad de lineas escritas actualmente
-	int lineCount;
-
-	// Linea en la cual arranca la pantalla
-	int firstLine;
-
-	// Color a utilizar para imprimir los nuevos caracteres
-	int charColor;
-
-} Window;
-
+// Funcion interna que se encarga de escribir un char en pantalla
 static int printChar( char c, int rgb );
+
+// Funcion interna que se encarga de borrar el simbolo de espera de escritura en caso de estar presente cuando se cambia de ventana
+static void blockIdleSymbol();
+
+// Funcion interna que se encarga de borrar el simbolo de espera de escritura en caso de estar presente sin validaciones
+static void deleteIdleSymbol();
 
 static Window windows[N] = {{0}};
 static int activeWindow = 0;		// por default arranca en la terminal
@@ -69,6 +43,7 @@ int sys_changeWindow(unsigned int newIndex){
 	if(newIndex < 0 || newIndex >= N || newIndex == activeWindow)
 		return 0;			// permanece en la ventana actual
 	else{
+		blockIdleSymbol();	// para asegurarme que no deje basura
 		activeWindow = newIndex;
 		return 1;
 	}
@@ -165,9 +140,12 @@ static void deleteChar(){
 			// No existen caracteres por borrar
 			return;
 
+		deleteIdleSymbol();	// para que no quede basura, lo tengo que hacer antes del cambio de linea
 		currentWindow->lineCount--;
 		currentWindow->currentLineSize = MAX_LINE_CHARS;
-	}
+	}else
+		deleteIdleSymbol();	// para que no quede basura
+	
 	currentWindow->currentLineSize--;	// lo borro del buffer
 
 	int currentLine = (currentWindow->firstLine + currentWindow->lineCount) % BUFFER_LINES;
@@ -375,4 +353,27 @@ void printRegisters(RegistersType *reg){
 	sys_write(2, "    RIP: ", 9);
 	sys_write(2, aux, longitud);
 	sys_write(2, "\n", 1);
+}
+
+void idleSymbol(){
+	if(windows[activeWindow].currentLineSize != MAX_LINE_CHARS)
+		if(windows[activeWindow].flagIdle == 0){
+			drawChar( IDLE_SYMBOL, windows[activeWindow].xStart + windows[activeWindow].currentLineSize * FONT_WIDTH, 
+				windows[activeWindow].yStart + windows[activeWindow].lineCount * (LINE_HEIGHT) + LINE_MARGIN, windows[activeWindow].charColor, BACKGROUND_COLOR);
+			windows[activeWindow].flagIdle = 1;
+		}
+		else{
+			deleteIdleSymbol();
+		}
+}
+
+static void deleteIdleSymbol(){
+	drawChar( 0, windows[activeWindow].xStart + windows[activeWindow].currentLineSize * FONT_WIDTH, 
+	windows[activeWindow].yStart + windows[activeWindow].lineCount * (LINE_HEIGHT) + LINE_MARGIN, windows[activeWindow].charColor, BACKGROUND_COLOR);
+	windows[activeWindow].flagIdle = 0;
+}
+
+static void blockIdleSymbol(){
+	if(windows[activeWindow].currentLineSize != MAX_LINE_CHARS && windows[activeWindow].flagIdle == 1)
+		deleteIdleSymbol();
 }

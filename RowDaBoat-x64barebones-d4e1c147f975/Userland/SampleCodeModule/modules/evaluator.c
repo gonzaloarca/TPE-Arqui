@@ -49,9 +49,10 @@ static void printHelp()
 {
 	printf("\n\t\t\t-----CALCULADORA-----\n");
 	printf("\tEscriba una expresion inorder sin espacios\n");
+	printf("\tSoportado: + - * / A (respuesta anterior)\n");
 	printf("\tAprete '=' para calcular el resultado\n");
 	printf("\tAprete F2 para borrar la expresion actual\n");
-	printf("\tSoportado: + - * / A (respuesta anterior)\n");
+	printf("\tAprete F3 para ejecutar el cambio de proceso\n");
 	printf("\tComandos: help clear\n");
 }
 
