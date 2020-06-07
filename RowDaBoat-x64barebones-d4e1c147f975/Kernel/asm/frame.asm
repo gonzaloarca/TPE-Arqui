@@ -2,6 +2,7 @@ GLOBAL getBackupINT
 GLOBAL setBackupINT
 GLOBAL startRunning
 GLOBAL startRunningEXC
+GLOBAL restart
 
 ;-------------------------------------------------------
 ;	Guarda en la estructura indicada por parametro los registros
@@ -188,4 +189,15 @@ startRunningEXC:
 	pop rbx
 	mov rsp, rbp
 	pop rbp
+	ret
+
+;-------------------------------------------------------
+;	Ejecuta el programa indicado por los parametros
+;	CUIDADO: NUNCA EJECUTAR DENTRO DE UNA INTERRUPCION
+;-------------------------------------------------------
+;	void restart(uint64_t rip, uint64_t rsp);
+;-------------------------------------------------------
+restart:
+	mov rsp, rsi
+	push rdi
 	ret

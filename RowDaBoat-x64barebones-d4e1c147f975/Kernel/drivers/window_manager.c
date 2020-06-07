@@ -357,6 +357,7 @@ void printRegisters(RegistersType *reg){
 
 void idleSymbol(){
 	if(windows[activeWindow].currentLineSize != MAX_LINE_CHARS)
+	{
 		if(windows[activeWindow].flagIdle == 0){
 			drawChar( IDLE_SYMBOL, windows[activeWindow].xStart + windows[activeWindow].currentLineSize * FONT_WIDTH, 
 				windows[activeWindow].yStart + windows[activeWindow].lineCount * (LINE_HEIGHT) + LINE_MARGIN, windows[activeWindow].charColor, BACKGROUND_COLOR);
@@ -365,6 +366,7 @@ void idleSymbol(){
 		else{
 			deleteIdleSymbol();
 		}
+	}
 }
 
 static void deleteIdleSymbol(){

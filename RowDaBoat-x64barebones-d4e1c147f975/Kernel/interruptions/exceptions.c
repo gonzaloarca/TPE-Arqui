@@ -34,7 +34,6 @@ static void defaultException(){
 	return;
 }
 
-
 // excpNumber indica la excepcion a la que se llamo
 // Este dispatcher se encargara de ejecutar la rutina de tratamiento correspondiente a la excepcion
 void exceptionDispatcher(int excpNumber) {

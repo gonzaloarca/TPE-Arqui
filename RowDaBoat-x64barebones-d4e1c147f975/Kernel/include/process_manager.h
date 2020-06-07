@@ -24,6 +24,9 @@ void startRunning(uint64_t rip, uint64_t rsp);
 //	Setea para inciar a correr un programa luego de una interrupcion
 void startRunningEXC(uint64_t rip, uint64_t rsp);
 
+//	Reinicia un modulo cuando se termina
+void restart(uint64_t rip, uint64_t rsp);
+
 // Syscall para agregar un modulo a la cola de procesos
 int sys_initModule(void (*program)());
 

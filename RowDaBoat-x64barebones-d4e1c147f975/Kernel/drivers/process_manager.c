@@ -4,6 +4,9 @@
 #define WINDOWS 2
 #define MB	0x100000
 
+static void newStackFrame(Module *module);
+static void restartModule();
+
 //	Lista de modulos/programas
 static Module modules[WINDOWS];
 static int windowMap[WINDOWS] = {0}; //mapa que recibe el pid de un programa y devuelve el indice de la ventana que le corresponde
@@ -25,20 +28,13 @@ int sys_initModule(void (*program)())
 	//	Le asigno al modulo el puntero al programa recibido
 	newModule->program = program;
 
-	//	Voy a asignarle espacio para el stack frame:
-	// 	Tengo que moverme al final de la memoria guardada ya que
-	//	el stack comienza en direcciones alta y va disminuyendo
-	uint64_t *last_address = (uint64_t*) (reserve[numberOfModules+1] - 8);
-
-	//	Pongo la entrada a mi programa
-	newModule->backup.rip = (uint64_t) modules[numberOfModules].program;
-	//	rsp al inicio del stack frame
-	newModule->backup.rsp = (uint64_t) last_address;
-
 	//	Le asigno el numero de process ID segun la cantidad de procesos corriendo hasta el momento
 	newModule->pid = numberOfModules;
+
 	//	Se le asigna al mapa de pid-window la ventana que ocupara el programa (tomamos la funcion identidad por convencion)
 	windowMap[newModule->pid] = newModule->pid;
+
+	newStackFrame(newModule);
 
 	numberOfModules++;
 
@@ -75,20 +71,40 @@ void sys_runFirstProcess(){
 	}
 }
 
-void recoverModule(){
+static void newStackFrame(Module *module)
+{
+	//	Voy a asignarle espacio para el stack frame:
+	// 	Tengo que moverme al final de la memoria guardada ya que
+	//	el stack comienza en direcciones alta y va disminuyendo
+	uint64_t *last_address = (uint64_t*) (reserve[module->pid + 1] - 8);
 
-	// Busco la direccion donde arranca el stack del modulo actual
-	uint64_t *last_address = (uint64_t*) (reserve[activeModule+1] - 8);
-
-	// Obtengo la direccion al modulo actual
-	Module *newModule = &(modules[activeModule]);
+	//	Seteo el programa de reseteo (en caso de terminar de ejecutar el modulo)
+	*last_address = (uint64_t) restartModule;
 
 	//	Pongo la entrada a mi programa
-	newModule->backup.rip = (uint64_t) modules[activeModule].program;
+	module->backup.rip = (uint64_t) module->program;
+
 	//	rsp al inicio del stack frame
-	newModule->backup.rsp = (uint64_t) last_address;
+	module->backup.rsp = (uint64_t) last_address;
+}
+
+void recoverModule()
+{
+	// Obtengo la direccion al modulo actual
+	Module *module = &(modules[activeModule]);
+
+	newStackFrame(module);
 
 	//	El programa de antes de la interrupcion se reinicia
-	startRunningEXC(newModule->backup.rip, newModule->backup.rsp);
+	startRunningEXC(module->backup.rip, module->backup.rsp);
+}
 
+static void restartModule()
+{
+	// Obtengo la direccion al modulo actual
+	Module *module = &(modules[activeModule]);
+
+	newStackFrame(module);
+
+	restart(module->backup.rip, module->backup.rsp);
 }
