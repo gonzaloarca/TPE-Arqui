@@ -13,7 +13,8 @@ void _hlt();
 //	Vaciar el buffer del teclado
 void emptyBuffer();
 
-int switchProcess();
+//	Limpia la pantalla actual
+void clrScreen();
 
 //	Funcion para agregar un nuevo modulo a la lista de modulos
 //	Regresa 0 si pudo agregarlo (hay espacio para correr mas procesos)

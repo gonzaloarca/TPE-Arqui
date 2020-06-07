@@ -282,6 +282,22 @@ static int uint64_tToString( uint64_t num, char * str ){
     return dig;
 }
 
+void sys_clrScreen()
+{
+	Window *currentWindow = &(windows[activeWindow]);
+
+	for (int i = 0; i < BUFFER_LINES - 1; i++)
+	{
+		for (int j = 0; j < MAX_LINE_CHARS; j++)
+		{
+			currentWindow->screenBuffer[i][j].character = 0;
+			drawChar(0, currentWindow->xStart + j * FONT_WIDTH,
+				currentWindow->yStart + i * LINE_HEIGHT + LINE_MARGIN,
+				CHAR_COLOR, BACKGROUND_COLOR);
+		}
+	}
+}
+
 void printRegisters(RegistersType *reg){
 	char aux[10];	// maxima longitud de un longint
 	int longitud;

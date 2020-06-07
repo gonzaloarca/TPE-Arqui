@@ -70,15 +70,3 @@ char waitInput()
 
 	return c;
 }
-
-void clrScreen()
-{
-	char buffer[LINE_COUNT + 1];
-
-	for (int i = 0; i < LINE_COUNT; i++)
-		buffer[i] = '\n';
-
-	buffer[LINE_COUNT] = 0;
-
-	puts(buffer);
-}

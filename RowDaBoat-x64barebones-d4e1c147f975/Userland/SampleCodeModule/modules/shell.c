@@ -1,6 +1,8 @@
 #include <console.h>
 #include <std_io.h>
 #include <comandos.h>
+#include <syscalls.h>
+
 #define INPUT_BUFFER_SIZE 100
 
 char inputBuffer[INPUT_BUFFER_SIZE];

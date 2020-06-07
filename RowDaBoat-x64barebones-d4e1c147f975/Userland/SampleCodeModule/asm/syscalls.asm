@@ -8,9 +8,8 @@ GLOBAL getTime
 GLOBAL getCPUTemp
 GLOBAL getCPUInfo
 GLOBAL getRegisters
-GLOBAL clearScreen
+GLOBAL clrScreen
 GLOBAL initProcess
-GLOBAL switchProcess
 GLOBAL runFirstProcess
 
 section .text
@@ -50,6 +49,19 @@ read:					; int read( unsigned int fd, char *buffer, unsigned long count )
 	pop rdx
 	pop rcx
 	pop rbx
+	mov rsp, rbp
+	pop rbp
+	ret
+
+clrScreen:				;void clrScreen()
+	push rbp
+	mov rbp, rsp
+	push rax
+
+	mov rax, 7
+	int 80h
+
+	pop rax
 	mov rsp, rbp
 	pop rbp
 	ret
@@ -160,17 +172,6 @@ initProcess:		;int initProcess( void (*program)() )
 	int 80h
 
 	pop rbx
-	mov rsp, rbp
-	pop rbp
-	ret
-
-switchProcess:		;int switchProcess()
-	push rbp
-	mov rbp, rsp
-
-	mov rax, 22
-	int 80h
-
 	mov rsp, rbp
 	pop rbp
 	ret

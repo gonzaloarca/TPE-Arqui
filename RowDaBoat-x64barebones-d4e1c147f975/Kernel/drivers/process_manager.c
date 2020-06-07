@@ -88,6 +88,7 @@ void recoverModule(){
 	//	rsp al inicio del stack frame
 	newModule->backup.rsp = (uint64_t) last_address;
 
+	//	El programa de antes de la interrupcion se reinicia
 	startRunningEXC(newModule->backup.rip, newModule->backup.rsp);
 
 }

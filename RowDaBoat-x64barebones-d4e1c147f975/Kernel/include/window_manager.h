@@ -15,6 +15,9 @@ int sys_changeWindowColor(int rgb);
 // Funcion que permite la impresion de un caracter en la ventana actual
 int sys_write(unsigned int fd, const char * str, unsigned long count);
 
+//	Syscall que limpia la pantalla activa actualmente
+void sys_clrScreen();
+
 // Funcion que imprime los registros pasados por parametro
 void printRegisters(RegistersType *reg);
 

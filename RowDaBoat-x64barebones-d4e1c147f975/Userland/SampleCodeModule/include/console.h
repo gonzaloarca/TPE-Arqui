@@ -20,7 +20,4 @@ int getInput( char *inputBuffer, unsigned long int buffer_size, char *promptSymb
 //	Espera a que el usuario presione una tecla y la devuelve
 char waitInput();
 
-//	Limpia la pantalla
-void clrScreen();
-
 #endif
