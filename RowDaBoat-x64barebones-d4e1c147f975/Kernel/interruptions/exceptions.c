@@ -28,7 +28,7 @@ static void undefinedInstructionException(){
 
 static void defaultException(){
 	saveRegistersASMexcp(&reg);
-	sys_write(2, "UNKNOWN EXCEPTION\n", 32);
+	sys_write(2, "UNKNOWN EXCEPTION\n", 18);
 	printRegisters(&reg);
 	recoverModule();
 	return;
