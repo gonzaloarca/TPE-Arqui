@@ -1,13 +1,22 @@
 #ifndef _KEYBOARD_H
-
 #define _KEYBOARD_H
 
 //	Ver esta libreria para las funciones asembler de lectura
 //	de los puertos 60h y 64h
 #include <libasm64.h>
-#include <video_driver.h>
 #include <stdint.h>
+#include <registers.h>
+#include <process_manager.h>
 
+#define LEFT_SHIFT 42
+#define RIGHT_SHIFT 54
+#define CAPS_LOCK 58
+#define LSHIFT_RELEASED (LEFT_SHIFT+0x80)
+#define RSHIFT_RELEASED (RIGHT_SHIFT+0x80)
+#define F1 59
+#define F2 60
+#define F3 61
+#define BUFFER_SIZE 200
 
 //	Funcion que se queda esperando a que toquen una tecla 
 //	(o su combinacion con shift)

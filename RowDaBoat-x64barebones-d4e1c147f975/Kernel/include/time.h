@@ -1,5 +1,7 @@
-#ifndef _TIME_H_
-#define _TIME_H_
+#ifndef _TIME_H
+#define _TIME_H
+
+#include <screenInfo.h>
 
 void timer_handler();
 int ticks_elapsed();

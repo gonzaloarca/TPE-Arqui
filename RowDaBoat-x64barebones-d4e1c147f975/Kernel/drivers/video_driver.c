@@ -1,10 +1,4 @@
 #include <video_driver.h>
-#include <stdint.h>
-#include <keyboard.h>
-#include <font.h>
-#include <registers.h>
-
-extern void haltcpu();
 
 struct vbe_mode_info_structure {
 	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
@@ -46,6 +40,9 @@ struct vbe_mode_info_structure {
 
 // Busco VBEModeInfoBlock que es donde se encuentra la estructura
 struct vbe_mode_info_structure * screenInfo = (struct vbe_mode_info_structure *) 0x5C00;
+
+// Funcion de interrupts.asm
+extern void haltcpu();
 
 int sys_writePixel(int x, int y, int rgb) {
 	char (*screen)[screenInfo->width][3] = (char (*)[(screenInfo->width)][3]) ((uint64_t)screenInfo->framebuffer);

@@ -1,6 +1,4 @@
 #include <console.h>
-#include <std_io.h>
-#include <syscalls.h>
 
 int getInput( char *inputBuffer, unsigned long int buffer_size, char *promptSymbol, char promptDelimiter )
 {

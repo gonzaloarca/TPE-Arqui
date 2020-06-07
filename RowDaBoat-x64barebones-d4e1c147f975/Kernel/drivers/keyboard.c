@@ -1,17 +1,4 @@
 #include <keyboard.h>
-#include <video_driver.h>
-#include <registers.h>
-#include <process_manager.h>
-
-#define LEFT_SHIFT 42
-#define RIGHT_SHIFT 54
-#define CAPS_LOCK 58
-#define LSHIFT_RELEASED (LEFT_SHIFT+0x80)
-#define RSHIFT_RELEASED (RIGHT_SHIFT+0x80)
-#define F1 59
-#define F2 60
-#define F3 61
-#define BUFFER_SIZE 200
 
 //	Tengo que guardarme si el shift se encuentra presionado
 static int lshift = 0;

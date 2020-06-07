@@ -1,25 +1,25 @@
 #include <process_manager.h>
 #include <window_manager.h>
+#include <screenInfo.h>
 
-#define WINDOWS 2
 #define MB	0x100000
 
 static void newStackFrame(Module *module);
 static void restartModule();
 
 //	Lista de modulos/programas
-static Module modules[WINDOWS];
-static int windowMap[WINDOWS] = {0}; //mapa que recibe el pid de un programa y devuelve el indice de la ventana que le corresponde
+static Module modules[N];
+static int windowMap[N] = {0}; //mapa que recibe el pid de un programa y devuelve el indice de la ventana que le corresponde
 static unsigned int activeModule = 0;	
 static unsigned int numberOfModules = 0;
 
 //	Reservo espacio para los stack frames
-static char reserve[WINDOWS][MB];
+static char reserve[N][MB];
 
 int sys_initModule(void (*program)())
 {
 	//	Si ya no tengo mas ventanas, no puedo agregar nada
-	if (numberOfModules >= WINDOWS)
+	if (numberOfModules >= N)
 		return 1;
 
 	//	Busco la direccion del nuevo modulo en la lista

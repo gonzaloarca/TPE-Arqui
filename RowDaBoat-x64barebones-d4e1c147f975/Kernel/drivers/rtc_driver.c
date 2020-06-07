@@ -1,4 +1,4 @@
-#include <libasm64.h>
+#include <rtc_driver.h>
 
 void sys_getTime(TimeFormat *time){
 

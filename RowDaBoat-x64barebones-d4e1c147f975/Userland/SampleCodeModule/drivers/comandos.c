@@ -1,8 +1,7 @@
-#include <stdint.h>
-#include <std_io.h>
-#include <syscalls.h>
 #include <comandos.h>
 
+
+// Constantes utilizadas por el comando help
 #define CLEAR_MSG		"\tLimpia la pantalla."
 #define CPUINFO_MSG 	"\tMuestra informacion de interes sobre el cpu."
 #define CPUTEMP_MSG		"\tMuestra la temperatura del cpu."

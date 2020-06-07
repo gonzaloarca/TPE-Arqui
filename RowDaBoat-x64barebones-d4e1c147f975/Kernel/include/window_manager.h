@@ -6,6 +6,7 @@
 #include <video_driver.h>
 #include <stdint.h>
 
+// Estructura que utiliza el buffer de la ventana para saber el caracter y color de cierta posicion
 typedef struct{
 
 	char character;
@@ -13,6 +14,7 @@ typedef struct{
 
 }charWithColor;
 
+// Estructura que maneja el comportamiento visual de una ventana en la pantalla
 typedef struct{
 
 	// Donde arranca el canvas de la ventana

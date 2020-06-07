@@ -1,6 +1,9 @@
 #ifndef	CONSOLE_H
 #define CONSOLE_H
 
+#include <std_io.h>
+#include <syscalls.h>
+
 #define LINE_COUNT 50
 #define MAX_PROMPT 5
 #define BUFFER_SIZE 100

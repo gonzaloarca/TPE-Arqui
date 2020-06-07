@@ -1,16 +1,10 @@
 #include <std_io.h>
-#include <std_num.h>
-#include <c_type.h>
-#include <stdarg.h>   //para tener cantidad variable de parámetros en funciones como printf y scanf
-#include <console.h> //para llamar a getInput desde getchar hace falta
-
-#define STDIN_MAXBUFFER 4096
 
 static char stdinBuffer[STDIN_MAXBUFFER];
 static int stdinFirstPos = 0;
 static int stdinLastPos = 0;
 
-int getchar(){  //devuelve chars casteados a int porque no hacemos uso de caracteres como EOF, ya que no hay un filesystem. Por ende no hay necesidad de operar con enteros en principio
+int getchar(){ 
     if( stdinLastPos == stdinFirstPos ){ //hay que ver que pasa si stdinLastPos > STDIN_BUFFERSIZE
         stdinFirstPos = 0;
         stdinLastPos = getInput( stdinBuffer, STDIN_MAXBUFFER, "", '\n' );

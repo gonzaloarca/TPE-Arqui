@@ -1,6 +1,11 @@
 #ifndef _COMANDOS_H
 #define _COMANDOS_H
 
+#include <stdint.h>
+#include <std_io.h>
+#include <syscalls.h>
+
+// Estructura utilizada para imprimir los valores de 32 bytes de memoria
 typedef struct memType {
 	uint64_t mem1;
 	uint64_t mem2;
@@ -8,6 +13,7 @@ typedef struct memType {
 	uint64_t mem4;
 } memType;
 
+// Estructura utilizada para manejar una copia de los registros realizada en algun momento
 typedef struct RegistersType {
 	uint64_t rax;
     uint64_t rbx;
@@ -40,7 +46,7 @@ void printCPUTemp();
 // Programa que imprime el valor de 4 direcciones de memoria a partir de la indicada por parametro
 void printmem(char* address);
 
-// Programa que muestra informacion sobre posibles usos de la terminal
+// Programa que muestra informacion sobre los posibles usos de la terminal
 void help();
 
 // Programa que imprime los valores de los registros que se tenian la ultima vez que se presiono f1

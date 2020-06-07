@@ -1,8 +1,4 @@
 #include <evaluator.h>
-#include <console.h>
-#include <std_io.h>
-
-#define ERROR_MSG "\nExpresion erronea, pruebe de vuelta\n"
 
 //	Funciones internas del programa
 static int main_op(char *expression, int length);
@@ -50,6 +46,7 @@ static void printHelp()
 	printf("\n\t\t\t-----CALCULADORA-----\n");
 	printf("\tEscriba una expresion inorder sin espacios\n");
 	printf("\tSoportado: + - * /\n");
+	printf("\tLa letra A denota el resultado de la ultima expresion\n");
 	printf("\tApriete '=' para calcular el resultado\n");
 	printf("\tApriete F2 para borrar la expresion actual\n");
 	printf("\tApriete F3 para ejecutar el cambio de proceso\n");

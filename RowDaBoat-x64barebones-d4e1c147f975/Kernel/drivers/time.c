@@ -1,5 +1,4 @@
 #include <time.h>
-#include <window_manager.h>
 
 static unsigned long ticks = 0;
 
