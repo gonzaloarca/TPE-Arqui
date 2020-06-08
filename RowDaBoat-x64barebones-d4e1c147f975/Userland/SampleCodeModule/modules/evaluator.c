@@ -12,31 +12,43 @@ static void printHelp();
 static PromptData prData = { "Exp: ", '=' };
 
 static double last_result = 0;
+static int error = 0;
 
 void calculator()
 {
 	char buffer[BUFFER_SIZE+1];
 	int length;
+	double result;
 	printf("\nIngrese help= para una explicacion del programa\n");
 
 	while(1){
 		if ( (length = getInput(buffer, BUFFER_SIZE+1, prData.symbol, prData.delimiter)) != 0 )
 		{
-			buffer[--length] = 0;		//	Quito el '=' del final
-
-			if (strcmp(buffer,"help") == 0)
-				printHelp();
-			else if (strcmp(buffer,"clear") == 0)
-				clrScreen();
-			else
+			if (length > 1)
 			{
-				if (balance(buffer) == 0)
+				buffer[--length] = 0;		//	Quito el '=' del final
+
+				if (strcmp(buffer,"help") == 0)
+					printHelp();
+				else if (strcmp(buffer,"clear") == 0)
+					clrScreen();
+				else
 				{
-					last_result = recursive_evaluation(buffer, length);
-					printf("\b = %g\n", last_result);
-				} else
-					fprintf(2, ERROR_MSG);
-			}
+					if (balance(buffer) == 0)
+					{
+						result = recursive_evaluation(buffer, length);
+						if (error == 0){
+							printf("\b = %g", result);
+							last_result = result;
+						} else
+							error = 0;
+					} else
+						fprintf(2, ERROR_MSG);
+				}
+			} else
+				fprintf(2, ERROR_MSG);
+				
+			puts("\n");
 		}
 	}
 }
@@ -94,6 +106,7 @@ static double recursive_evaluation(char *expression, int length)
 			if (der == 0)
 			{
 				fprintf(2, ERROR_MSG);
+				error = 1;
 				return 0;
 			}
 			return izq / der;
@@ -186,6 +199,7 @@ static double strtonum(char *string, int length)
 			if (decimal)
 			{
 				fprintf(2, ERROR_MSG);
+				error = 1;
 				return 0;
 			}
 			else
