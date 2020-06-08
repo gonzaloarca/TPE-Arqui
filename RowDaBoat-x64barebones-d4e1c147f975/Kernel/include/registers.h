@@ -21,6 +21,7 @@ typedef struct RegistersType {
     uint64_t r15;
     uint64_t rsp;
     uint64_t rip;
+    uint64_t eflags;
 } RegistersType;
 
 // Funcion que se encarga de guardar los valores de los registros en la estructura estatica.

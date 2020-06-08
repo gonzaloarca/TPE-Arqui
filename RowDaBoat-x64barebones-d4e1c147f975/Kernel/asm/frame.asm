@@ -45,6 +45,9 @@ getBackupINT:
 	mov rbx, [rax]
 	mov QWORD[rdi + 8*16], rbx				;rip
 
+	mov rbx, [rax+16]
+	mov QWORD[rdi + 8*17], rbx				;eflags
+
 	mov rbx, [rax+24]
 	mov QWORD[rdi + 8*15], rbx				;rsp
 
@@ -93,10 +96,13 @@ setBackupINT:
 	; ahora tengo RIP, CS, EFLAGS, RSP y SS que fueron guardados por la interrupcion
 
 	mov rbx, QWORD[rdi+8*16]
-	mov [rax], rbx
+	mov [rax], rbx						;rip
+
+	mov rbx, QWORD[rdi+8*17]
+	mov [rax+16], rbx					;eflags
 
 	mov rbx, QWORD[rdi+8*15]
-	mov [rax+24], rbx
+	mov [rax+24], rbx					;rsp
 
 	pop rbx
 	mov rsp, rbp
