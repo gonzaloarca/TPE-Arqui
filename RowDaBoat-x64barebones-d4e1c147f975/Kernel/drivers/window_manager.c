@@ -266,18 +266,15 @@ void sys_clrScreen()
 
 	setNewLine();
 
-	for (int i = 0; i < BUFFER_LINES; i++)
+	for (int i = 0; i < BUFFER_LINES -1 ; i++)
 	{
-		for (int j = 0; j < MAX_LINE_CHARS; j++)
+		for (int j = 0; j < MAX_LINE_CHARS && currentWindow->screenBuffer[(currentWindow->firstLine + i) % BUFFER_LINES][j].character != 0 ; j++)
 		{
-			//	Vacío el buffer de pantalla
-			currentWindow->screenBuffer[i][j].character = 0;
-			//	Limpio la pantalla menos por la ultima linea (borde)
-			if ( i != BUFFER_LINES - 1){
-				drawChar(' ', currentWindow->xStart + j * FONT_WIDTH,
+			//	Vacío la parte del buffer que aparece en pantalla(que es la que tiene contenido, la otra linea se encuentra en cero) y la pantalla
+			currentWindow->screenBuffer[(currentWindow->firstLine + i) % BUFFER_LINES][j].character = 0;
+			drawChar(' ', currentWindow->xStart + j * FONT_WIDTH,
 					currentWindow->yStart + i * LINE_HEIGHT + LINE_MARGIN,
 					CHAR_COLOR, BACKGROUND_COLOR);
-			}
 		}
 	}
 }
