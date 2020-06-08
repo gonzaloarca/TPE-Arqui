@@ -82,6 +82,10 @@ void printTime(){       //se podria modularizar en una funcion para obtener el t
     TimeFormat time;
 	getTime( &time );
 	
+	//	Hora local Argentina
+	if (time.hours >= 3) time.hours -= 3;
+	else time.hours = 24 + time.hours - 3;
+
 	char timeString[9];
 
     timeString[2] = ':';
