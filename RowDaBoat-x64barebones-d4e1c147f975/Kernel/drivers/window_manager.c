@@ -264,14 +264,20 @@ void sys_clrScreen()
 {
 	Window *currentWindow = &(windows[activeWindow]);
 
-	for (int i = 0; i < BUFFER_LINES - 1; i++)
+	setNewLine();
+
+	for (int i = 0; i < BUFFER_LINES; i++)
 	{
 		for (int j = 0; j < MAX_LINE_CHARS; j++)
 		{
+			//	Vacío el buffer de pantalla
 			currentWindow->screenBuffer[i][j].character = 0;
-			drawChar(0, currentWindow->xStart + j * FONT_WIDTH,
-				currentWindow->yStart + i * LINE_HEIGHT + LINE_MARGIN,
-				CHAR_COLOR, BACKGROUND_COLOR);
+			//	Limpio la pantalla menos por la ultima linea (borde)
+			if ( i != BUFFER_LINES - 1){
+				drawChar(' ', currentWindow->xStart + j * FONT_WIDTH,
+					currentWindow->yStart + i * LINE_HEIGHT + LINE_MARGIN,
+					CHAR_COLOR, BACKGROUND_COLOR);
+			}
 		}
 	}
 }
