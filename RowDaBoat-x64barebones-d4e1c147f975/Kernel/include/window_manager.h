@@ -44,6 +44,9 @@ typedef struct{
 // Funcion de booteo, establece parametros default de cada ventana a mostrar en la pantalla
 void setWindows();
 
+// Funcion para cambiar la ventana activa
+int sys_changeWindow(unsigned int newIndex);
+
 // Funcion que permite el cambio del color de los caracteres a escribir en la ventana actual
 int sys_changeWindowColor(int rgb);
 
