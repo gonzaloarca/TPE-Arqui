@@ -1,5 +1,9 @@
 #include <std_io.h>
 
+#define STDIN_MAXBUFFER 4096
+#define NULL 0
+#define DEFAULT_CHAR_COLOR 0xFFFFFF
+
 static char stdinBuffer[STDIN_MAXBUFFER];
 static int stdinFirstPos = 0;
 static int stdinLastPos = 0;

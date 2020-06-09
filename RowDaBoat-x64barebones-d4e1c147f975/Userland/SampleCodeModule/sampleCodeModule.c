@@ -8,7 +8,7 @@ int main()
 {
 	char c;
 
-	puts("Elija que modulo quiere empezar a correr:\n");
+	puts("Elija que modulo quiere empezar a correr y presione ENTER:\n");
 	puts("1 - Shell\n");
 	puts("2 - Calculadora\n");
 

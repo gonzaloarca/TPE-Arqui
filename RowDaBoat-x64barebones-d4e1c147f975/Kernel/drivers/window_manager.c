@@ -20,6 +20,7 @@ void setWindows(){
 		windows[i].lineCount = SCREEN_LINES-1;
 		windows[i].currentLineSize = 0;
 		windows[i].charColor = CHAR_COLOR;
+		windows[i].flagIdle = 0;
 		// Borde izquierdo
 		for(int j = i*WINDOW_WIDTH; j < i*WINDOW_WIDTH+WINDOW_MARGIN ; j++)
 			for(int k = WINDOW_MARGIN; k < WINDOW_HEIGHT - WINDOW_MARGIN; k++)		// no abarca nada del borde superior
@@ -51,10 +52,10 @@ int sys_changeWindow(unsigned int newIndex){
 
 int sys_changeWindowColor(int rgb){
 	if(rgb < 0 || rgb > 0xFFFFFF )
-		return 0;	// no indica un color
+		return 1;	// no indica un color
 	else{
 		windows[activeWindow].charColor = rgb;
-		return 1;
+		return 0;
 	}
 }
 

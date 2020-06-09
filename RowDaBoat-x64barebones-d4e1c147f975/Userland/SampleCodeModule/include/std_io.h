@@ -7,10 +7,6 @@
 #include <c_type.h>
 #include <stdarg.h>   //para tener cantidad variable de parámetros en funciones como printf y scanf
 
-#define STDIN_MAXBUFFER 4096
-#define NULL 0
-#define DEFAULT_CHAR_COLOR 0xFFFFFF
-
 //devuelve chars casteados a int porque no hacemos uso de caracteres como EOF, ya que no hay un filesystem. Por ende no hay necesidad de operar con enteros en principio
 int getchar();
 

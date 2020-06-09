@@ -62,7 +62,7 @@ read:					; int read( char *buffer, unsigned long count, char delim )
 	ret
 
 ;-------------------------------------------------------
-;	SYSCALL WRITE: RAX = 7
+;	SYSCALL clrScreen: RAX = 7
 ;			Limpia la pantalla actual
 ;-------------------------------------------------------
 ; Llamada en C:
@@ -104,26 +104,6 @@ changeWindowColor:
 	ret
 
 ;-------------------------------------------------------
-;	SYSCALL emptyBuffer: RAX = 10
-;			Vacia el buffer del teclado
-;-------------------------------------------------------
-; Llamada en C:
-;	void emptyBuffer()
-;-------------------------------------------------------
-emptyBuffer:
-	push rbp
-	mov rbp, rsp
-	push rax
-
-	mov rax, 10
-	int 80h
-
-	pop rax
-	mov rsp, rbp
-	pop rbp
-	ret
-
-;-------------------------------------------------------
 ;	SYSCALL getTime: RAX = 12
 ;			Rellena la estructura con informacion del tiempo actual
 ;-------------------------------------------------------
@@ -145,7 +125,7 @@ getTime:
 	ret
 
 ;-------------------------------------------------------
-;	SYSCALL getTime: RAX = 13
+;	SYSCALL getCPUTemp: RAX = 13
 ;			Retorna la temperatura del cpu
 ;-------------------------------------------------------
 ; Llamada en C:
@@ -163,7 +143,7 @@ getCPUTemp:				; int getCPUTemp()
 	ret
 
 ;-------------------------------------------------------
-;	SYSCALL getTime: RAX = 14
+;	SYSCALL getRegisters: RAX = 14
 ;			Funcion que retorna una estructura con los valores de los registros de la ultima vez que se presiono la tecla especial F1
 ;-------------------------------------------------------
 ; Llamada en C:
@@ -202,7 +182,7 @@ initProcess:
 	ret
 
 ;-------------------------------------------------------
-;	SYSCALL initProcess: RAX = 23
+;	SYSCALL runFirstProcess: RAX = 23
 ;			Funcion que se encarga de correr el primer proceso en la cola, en caso de existir
 ;-------------------------------------------------------
 ; Llamada en C:

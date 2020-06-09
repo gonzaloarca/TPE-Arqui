@@ -1,5 +1,9 @@
 #include <evaluator.h>
 
+#define ANSWER 'A'
+#define ERROR_MSG "\nExpresion erronea, pruebe de vuelta\n"
+#define BUFFER_SIZE 100
+
 //	Funciones internas del programa
 static int main_op(char *expression, int length);
 static double strtonum(char *string, int length);

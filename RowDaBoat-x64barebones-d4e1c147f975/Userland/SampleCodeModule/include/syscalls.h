@@ -28,9 +28,6 @@ int write(unsigned int fd, char *buffer, unsigned long count);
 //	Syscall para leer de entrada estandar en un buffer hasta que se llegue a "count" caracteres o se llegue al caracter "delim"
 int read( char *buffer, unsigned long int count, char delim );
 
-//	Vaciar el buffer del teclado
-void emptyBuffer();
-
 //	Limpia la pantalla actual
 void clrScreen();
 
