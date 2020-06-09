@@ -155,6 +155,7 @@ static void deleteChar(){
 	drawChar(' ', currentWindow->xStart + currentWindow->currentLineSize * FONT_WIDTH, currentWindow->yStart + currentWindow->lineCount * LINE_HEIGHT + LINE_MARGIN, BACKGROUND_COLOR, BACKGROUND_COLOR);
 }
 
+// Funcion interna que inicia una nueva linea
 static void setNewLine(){
 	if(windows[activeWindow].lineCount == (SCREEN_LINES -1)) {
 		// Se llego alfinal de las lineas en pantalla, se debe subir una linea para que la ultima quede libre
@@ -164,6 +165,8 @@ static void setNewLine(){
 		updateBuffer();
 }
 
+
+// Funcion interna que se encarga de la impresion de un caracter
 static int printChar( char c, int rgb ){
 	if ( c == '\n'){
 		setNewLine();

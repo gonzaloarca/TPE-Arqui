@@ -13,27 +13,6 @@ typedef struct memType {
 	uint64_t mem4;
 } memType;
 
-// Estructura utilizada para manejar una copia de los registros realizada en algun momento
-typedef struct RegistersType {
-	uint64_t rax;
-    uint64_t rbx;
-    uint64_t rcx;
-    uint64_t rdx;
-    uint64_t rbp;
-    uint64_t rdi;
-    uint64_t rsi;
-    uint64_t r8;
-    uint64_t r9;
-    uint64_t r10;
-    uint64_t r11;
-    uint64_t r12;
-    uint64_t r13;
-    uint64_t r14;
-    uint64_t r15;
-    uint64_t rsp;
-    uint64_t rip;
-} RegistersType;
-
 //	Programa que imprime la hora actual
 void printTime();
 
@@ -64,15 +43,13 @@ char *cpuBrand(char buffer[48]);
 //	Indica el modelo y la familia del CPU
 void cpuModel(int buffer[2]);
 
+// Estructura en la que se retorna informacion del cpu
 typedef struct{
 	char vendor[13];
 	char brand[48];
 	int family;
 	int model;
 } CpuInfo;
-
-//  Funcion que retorna una estructura con los valores de los registros de la ultima vez que se presiono la tecla especial F1
-RegistersType* getRegisters();
 
 // Programa para ejecutar excepcion de dividir por cero
 void executeZeroException();

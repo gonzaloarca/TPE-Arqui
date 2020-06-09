@@ -35,12 +35,6 @@ uint64_t syscall_07()
 	return 1;
 }
 
-// La syscall 8 permite el intercambio de ventana actual
-uint64_t syscall_08(uint64_t rbx)
-{
-	return sys_changeWindow((unsigned int) rbx);
-}
-
 // La syscall 9 permite el cambio de color de los caracteres a escribir en la ventana actual
 uint64_t syscall_09(uint64_t rbx)
 {
@@ -97,9 +91,7 @@ uint64_t sysCallDispatcher(uint64_t scNumber, Registers reg)
 		case 4: return syscall_04( reg->rbx, reg->rcx, reg->rdx ); 
 
 		case 7: return syscall_07();
-
-		case 8: return syscall_08( reg->rbx );
-
+		
 		case 9: return syscall_09( reg->rbx );
 	
 		case 10: return syscall_10();
