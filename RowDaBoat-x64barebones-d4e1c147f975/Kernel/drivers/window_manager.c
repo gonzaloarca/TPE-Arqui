@@ -141,11 +141,11 @@ static void deleteChar(){
 			// No existen caracteres por borrar
 			return;
 
-		deleteIdleSymbol();	// para que no quede basura, lo tengo que hacer antes del cambio de linea
+		blockIdleSymbol();	// para que no quede basura, lo tengo que hacer antes del cambio de linea
 		currentWindow->lineCount--;
 		currentWindow->currentLineSize = MAX_LINE_CHARS;
 	}else
-		deleteIdleSymbol();	// para que no quede basura
+		blockIdleSymbol();	// para que no quede basura
 	
 	currentWindow->currentLineSize--;	// lo borro del buffer
 
@@ -158,6 +158,7 @@ static void deleteChar(){
 
 // Funcion interna que inicia una nueva linea
 static void setNewLine(){
+	blockIdleSymbol();	// para que no quede basura
 	if(windows[activeWindow].lineCount == (SCREEN_LINES -1)) {
 		// Se llego alfinal de las lineas en pantalla, se debe subir una linea para que la ultima quede libre
 		updateBuffer();
