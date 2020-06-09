@@ -30,8 +30,8 @@ int getInput( char *inputBuffer, unsigned long int buffer_size, char *promptSymb
 				
 				case '\t':
 					for( int k = 0; k < 4 && size + k < buffer_size -1; k++ ){	// tab = 4 espacios, se agregan solo si hay espacio en el buffer
-						putchar(' ');
 						inputBuffer[size++] = ' '	;
+						putchar(' ');
 					}
 					break;
 
