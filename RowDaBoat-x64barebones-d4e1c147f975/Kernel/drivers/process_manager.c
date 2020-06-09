@@ -3,6 +3,15 @@
 #include <screenInfo.h>
 
 #define MB	0x100000
+#define PROGRAM_MEMORY (MB/10)
+
+//	Estructura que representa a los modulos (programas) "activos" 
+typedef struct 
+{
+	void (*program)();					//puntero al inicio del programa
+	unsigned int pid;					//process ID del programa
+	RegistersType backup;				//Backup de los registros
+} Module;
 
 static void newStackFrame(Module *module);
 static void restartModule();
@@ -14,7 +23,7 @@ static unsigned int activeModule = 0;
 static unsigned int numberOfModules = 0;
 
 //	Reservo espacio para los stack frames
-static char reserve[N][MB];
+static char reserve[N][PROGRAM_MEMORY];
 
 int sys_initModule(void (*program)())
 {

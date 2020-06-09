@@ -4,14 +4,6 @@
 #include <stdint.h>
 #include <registers.h>
 
-//	Estructura que representa a los modulos (programas) "activos" 
-typedef struct 
-{
-	void (*program)();					//puntero al inicio del programa
-	unsigned int pid;					//process ID del programa
-	RegistersType backup;				//Backup de los registros
-} Module;
-
 //	Se guarda un backup de los registros pusheados por interrupcion
 void getBackupINT(RegistersType *reg);
 
