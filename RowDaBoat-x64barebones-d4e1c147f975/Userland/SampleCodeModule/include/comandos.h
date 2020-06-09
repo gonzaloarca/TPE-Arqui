@@ -55,6 +55,22 @@ void printInforeg();
 // Retorna estructura con los valores correspondientes a los 32 bytes siguientes a address
 void getMemoryASM(memType* answer, uint64_t address);
 
+//	Indica el fabricante del CPU
+char *cpuVendor(char buffer[13]);
+
+//	Indica la marca del CPU
+char *cpuBrand(char buffer[48]);
+
+//	Indica el modelo y la familia del CPU
+void cpuModel(int buffer[2]);
+
+typedef struct{
+	char vendor[13];
+	char brand[48];
+	int family;
+	int model;
+} CpuInfo;
+
 //  Funcion que retorna una estructura con los valores de los registros de la ultima vez que se presiono la tecla especial F1
 RegistersType* getRegisters();
 

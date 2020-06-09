@@ -3,7 +3,6 @@
 #include <video_driver.h>
 #include <window_manager.h>
 #include <libasm64.h>
-#include <cpuinfo.h>
 #include <registers.h>
 #include <rtc_driver.h>
 #include <process_manager.h>
@@ -74,12 +73,6 @@ uint64_t syscall_14()
 	return (uint64_t) sys_getRegisters();
 }
 
-//	La syscall 20 devuelve informacion del CPU
-uint64_t syscall_20( uint64_t rbx )
-{
-	return sys_cpuinfo((CpuInfo *) rbx);
-}
-
 //	La syscall 21 recibe un puntero a funcion de un proceso y lo inicializa
 uint64_t syscall_21( uint64_t rbx ){
 	return sys_initModule((void (*)()) rbx);
@@ -116,8 +109,6 @@ uint64_t sysCallDispatcher(uint64_t scNumber, Registers reg)
 		case 13: return syscall_13();
 
 		case 14: return syscall_14();
-
-		case 20: return syscall_20( reg->rbx );
 
 		case 21: return syscall_21( reg->rbx );
 

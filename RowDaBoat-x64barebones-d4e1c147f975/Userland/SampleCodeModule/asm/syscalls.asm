@@ -6,7 +6,6 @@ GLOBAL emptyBuffer
 GLOBAL _hlt
 GLOBAL getTime
 GLOBAL getCPUTemp
-GLOBAL getCPUInfo
 GLOBAL getRegisters
 GLOBAL clrScreen
 GLOBAL initProcess
@@ -137,18 +136,6 @@ getCPUTemp:				; int getCPUTemp()
 _hlt:
 	sti
 	hlt
-	ret
-
-getCPUInfo:
-	push rbp
-	mov rbp, rsp
-
-	mov rax, 20
-	mov rbx, rdi
-	int 80h
-
-	mov rsp, rbp
-	pop rbp
 	ret
 	
 getRegisters:

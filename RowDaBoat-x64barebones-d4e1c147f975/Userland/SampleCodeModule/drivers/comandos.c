@@ -110,7 +110,10 @@ void printTime(){       //se podria modularizar en una funcion para obtener el t
 void printCPUInfo()
 {
 	CpuInfo info;
-	getCPUInfo(&info);
+
+	cpuVendor(info.vendor);
+	cpuBrand(info.brand);
+	cpuModel(&(info.family));
 
 	printf("Vendor: %s\n", info.vendor);
 	printf("FamilyID: %d\n", info.family);

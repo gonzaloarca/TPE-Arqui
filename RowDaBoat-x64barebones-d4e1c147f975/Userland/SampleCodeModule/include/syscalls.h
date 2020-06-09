@@ -38,15 +38,4 @@ typedef struct{
 //	Syscall para obtener la hora actual
 void getTime(TimeFormat *time); //llama a syscall que llena la estructura de TimeFormat
 
-typedef struct{
-	char vendor[13];
-	char brand[48];
-	int family;
-	int model;
-} CpuInfo;
-
-//	Efectua la syscall para obtener informacion del CPU
-void getCPUInfo(CpuInfo* info);
-
-
 #endif

@@ -4,15 +4,6 @@
 
 #include <stdint.h>
 
-//	Indica el fabricante del CPU
-char *cpuVendor(char buffer[13]);
-
-//	Indica la marca del CPU
-char *cpuBrand(char buffer[48]);
-
-//	Indica el modelo y la familia del CPU
-void cpuModel(int buffer[2]);
-
 //	Indica si se puede leer el teclado (puerto 64h)
 unsigned int canReadKey();
 
