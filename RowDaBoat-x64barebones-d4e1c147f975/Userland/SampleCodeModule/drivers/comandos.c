@@ -16,7 +16,7 @@
 #define CAMBIO			"\tEjecuta el cambio de proceso."
 
 void help(){
-	puts("---------Informacion sobre comandos disponibles----------------");
+	puts("---------Informacion sobre comandos disponibles----------------\n");
 	changeWindowColor(0xffd300);
 	printf("%s\t", "clear");
 	changeWindowColor(0xffffff);
@@ -59,7 +59,7 @@ void help(){
 
 	putchar('\n');
 
-	printf("---------Informacion sobre teclas especiales disponibles-------");
+	printf("---------Informacion sobre teclas especiales disponibles-------\n");
 	changeWindowColor(0x4ad5f2);
 	printf("%s", "F1\t");
 	changeWindowColor(0xffffff);
