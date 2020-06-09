@@ -34,10 +34,8 @@ void keyboard_handler();
 //  Vacía el buffer
 void sys_emptyBuffer();
 
-//	La syscall read() lee el buffer de teclado actual
-//	Si hay teclas en el buffer de teclado, las guarda en out_buffer
-//	y devuelve la cantidad de letras guardada
-//	Si el buffer de teclado está vacío, no guarda nada y devuelve 0
-uint64_t sys_read(char* out_buffer, unsigned long int count);
+//	La syscall read() pide entrada del teclado hasta que se llegue "count" caracters o al caracter "delim"
+//  La entrada se almacena en el buffer pasado por parametro
+uint64_t sys_read(char* out_buffer, unsigned long int count, char delim);
 
 #endif

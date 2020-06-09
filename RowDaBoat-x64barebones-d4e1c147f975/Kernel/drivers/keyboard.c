@@ -1,4 +1,6 @@
 #include <keyboard.h>
+#include <interrupts.h>
+#include <window_manager.h>
 
 //	Tengo que guardarme si el shift se encuentra presionado
 static int lshift = 0;
@@ -97,19 +99,57 @@ char scanCodetoChar (unsigned int scan_code, unsigned int shift){
 	return asccode[scan_code][shift];
 }
 
-uint64_t sys_read(char* out_buffer, unsigned long int count)
+uint64_t sys_read(char* out_buffer, unsigned long int count, char delim)
 {
-	int code, i = 0;
-	char c;
+	sys_emptyBuffer();
+	int i = 0;
+	char c = 0;
+	char bspace = '\b', space = ' ';
+	while( c != delim && i < count ){
+		while( (c = asciiMap(readBuffer())) == 0 ){
+			_hlt();
+		} //levanto una tecla valida del buffer del teclado
 
-	code = readBuffer();
-	while (code != 0 && i < count)
-	{	
-		c = asciiMap(code);
-		if ( c != 0 )
-			out_buffer[i++] = c;
-		code = readBuffer();
+		switch( c ){
+			case '\b':
+				if( i == 0 ){
+					break;
+				}
+				i--;
+				sys_write(1, &c, 1);
+				break;
+				
+			case 19:		//codigo ASCII asginado al make code de la tecla F2
+				// Borro la linea actual
+				
+				while(i > 0){
+					sys_write(1, &bspace, 1);
+					i--;
+				}
+				break;
+			
+			case '\t':
+				for( int j = 0; j < 4 && (i + j < count - 1); j++ ){
+					sys_write(1, &space, 1);	//que tipee 4 espacios al entrar a un tab
+					out_buffer[i++] = ' ';
+				}
+				break;
+
+			case '\n':
+				if (delim != '\n')
+					break;	// para que no haga saltos de linea en un programa donde el delimitador que se usa no es el enter
+				// si no es entra en el siguiente caso
+
+			default:
+				if (c == delim || i < count - 1)
+				{
+					out_buffer[i++] = c;
+					sys_write(1, &c, 1);
+					if (c == delim) {
+						return i;
+					}
+				}	
+		}		
 	}
-
 	return i;
 }

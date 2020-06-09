@@ -1,7 +1,6 @@
 #ifndef _EVALUATOR_H
 #define _EVALUATOR_H
 
-#include <console.h>
 #include <std_io.h>
 
 #define ANSWER 'A'

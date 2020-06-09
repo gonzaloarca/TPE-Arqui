@@ -16,9 +16,9 @@ typedef struct{
 }*Registers;
 
 // La syscall 3 es read
-uint64_t syscall_03(uint64_t rbx, uint64_t rcx)
+uint64_t syscall_03(uint64_t rbx, uint64_t rcx, uint64_t rdx)
 {
-	return sys_read( (char*) rbx, (unsigned long int) rcx );
+	return sys_read( (char*) rbx, (unsigned long int) rcx, (char) rdx );
 
 }
 
@@ -33,12 +33,6 @@ uint64_t syscall_07()
 {
 	sys_clrScreen();
 	return 1;
-}
-
-// La syscall 8 permite el intercambio de ventana actual
-uint64_t syscall_08(uint64_t rbx)
-{
-	return sys_changeWindow((unsigned int) rbx);
 }
 
 // La syscall 9 permite el cambio de color de los caracteres a escribir en la ventana actual
@@ -92,13 +86,11 @@ uint64_t sysCallDispatcher(uint64_t scNumber, Registers reg)
 
 	switch(scNumber)
 	{
-		case 3: return syscall_03( reg->rbx, reg->rcx ); 
+		case 3: return syscall_03( reg->rbx, reg->rcx, reg->rdx ); 
 
 		case 4: return syscall_04( reg->rbx, reg->rcx, reg->rdx ); 
 
 		case 7: return syscall_07();
-
-		case 8: return syscall_08( reg->rbx );
 
 		case 9: return syscall_09( reg->rbx );
 	
@@ -116,5 +108,5 @@ uint64_t sysCallDispatcher(uint64_t scNumber, Registers reg)
 
 	}
 
-	return 0;
+	return 1;
 }

@@ -1,9 +1,7 @@
 GLOBAL write
 GLOBAL read
-GLOBAL changeWindow
 GLOBAL changeWindowColor
 GLOBAL emptyBuffer
-GLOBAL _hlt
 GLOBAL getTime
 GLOBAL getCPUTemp
 GLOBAL getRegisters
@@ -33,7 +31,7 @@ write:					; int write( unsigned int fd, char *buffer, unsigned long count )
 	pop rbp
 	ret
 
-read:					; int read( unsigned int fd, char *buffer, unsigned long count )
+read:					; int read( char *buffer, unsigned long count, char delim )
 	push rbp
 	mov rbp, rsp
 	push rbx
@@ -43,6 +41,7 @@ read:					; int read( unsigned int fd, char *buffer, unsigned long count )
 	mov rax, 3			; numero de syscall sys_read
 	mov rbx, rdi		; 1er parametro 
 	mov rcx, rsi		; 2do parametro
+	;en rdx ya esta cargado el 3er parametro
 	int 80h
 
 	pop rdx
@@ -61,21 +60,6 @@ clrScreen:				;void clrScreen()
 	int 80h
 
 	pop rax
-	mov rsp, rbp
-	pop rbp
-	ret
-
-changeWindow:			; int changeWindow(unsigned int window)
-						; retorna 1 en exito, 0 caso contrario
-	push rbp
-	mov rbp, rsp
-	push rbx
-
-	mov rax, 8			
-	mov rbx, rdi		; 1er parametro
-	int 80h
-
-	pop rbx
 	mov rsp, rbp
 	pop rbp
 	ret
@@ -133,11 +117,6 @@ getCPUTemp:				; int getCPUTemp()
 	pop rbp
 	ret
 
-_hlt:
-	sti
-	hlt
-	ret
-	
 getRegisters:
 	push rbp
 	mov rbp, rsp

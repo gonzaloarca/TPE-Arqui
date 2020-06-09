@@ -4,11 +4,8 @@
 // Funcion que permite escribir count caracteres de un string en el file descriptor fd
 int write(unsigned int fd, char *buffer, unsigned long count);
 
-//	Syscall para leer un file descriptor
-int read( char *buffer, unsigned long int count );
-
-//	Espera activa a interrupcion del teclado
-void _hlt();
+//	Syscall para leer de entrada estandar en un buffer hasta que se llegue a "count" caracteres o se llegue al caracter "delim"
+int read( char *buffer, unsigned long int count, char delim );
 
 //	Vaciar el buffer del teclado
 void emptyBuffer();
