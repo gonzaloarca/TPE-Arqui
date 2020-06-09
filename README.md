@@ -6,7 +6,9 @@ Se adjunta en este archivo la resolución al enunciado denotado por la cátedra 
 
 1- Antes que nada, es necesario instalar los siguientes paquetes:
 
+```
 nasm qemu gcc make
+```
 
 2- Tambien se recomienda instalar Docker y utilizar la imagen mencionada en el instructivo de Docker incluido con el proyecto. De esta manera se garantiza que usted compilará el proyecto con las mismas distribuciones de GCC y de Make que el grupo y la cátedra utilizan. Si no sabe como utilizar Docker, el instructivo sera de ayuda.
 

@@ -18,6 +18,6 @@ $(MODULE): $(SOURCES) $(OBJECTS_ASM) $(SOURCES_MODULES) $(SOURCES_DRIVERS) $(SOU
 	$(ASM) $(ASMFLAGS) $< -o $@
 
 clean:
-	rm -rf *.o
+	rm -rf asm/*.o *.o
 
 .PHONY: all clean print
