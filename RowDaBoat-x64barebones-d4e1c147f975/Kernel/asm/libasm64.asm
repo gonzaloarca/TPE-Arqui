@@ -3,7 +3,6 @@ GLOBAL canReadKey
 GLOBAL getScanCode
 GLOBAL sys_getCPUTemp
 GLOBAL saveRegistersASM
-
 GLOBAL saveRegistersASMexcp
 
 section .text
@@ -101,61 +100,15 @@ getScanCode:
 	in al, 60h
 	ret
 
-
 ;-------------------------------------------------------
 ;	Devuelve la temperatura absoluta en ºC del CPU 
 ;
-;	NOTA: Esta version de la funcion utiliza la instruccion rdmsr para leer los registros MSR
-;		  del CPU. Puesto que QEMU los tiene deshabilitados, no la utilizamos.
-;
-;-------------------------------------------------------
-; Llamada en C:
-;	int sys_getCPUTemp(); 
-;-------------------------------------------------------
-; sys_getCPUTemp:			
-; 	push rbp
-; 	mov rbp, rsp
-
-; 	push rcx
-; 	push rdx
-; 	push rbx
-
-; 	mov rbx, 0					
-; 	mov rax, 0			;vacio rax y rbx para tener los 32 bits mas significativos en 0
-; 	mov ecx, 412	
-; 	rdmsr				;Obtengo el registro IA32_THERM_STATUS en edx:eax
-
-; 	and eax, 0x7F0000	;en eax me quedan los bits 22:16 ()
-; 	shr eax, 16			;ahora queda en eax el valor de la temperatura indicada por el monitor
-; 	mov ebx, eax		;almaceno el valor en ebx
-
-; 	mov rax, 0
-; 	mov ecx, 418		
-; 	rdmsr				;Obtengo el registro MSR_TEMPERATURE_TARGET en edx:eax
-
-; 	mov edx, eax		;Copio los 32 bits menos significativos del registro en edx
-; 	and eax, 0xFF0000	;en eax me quedan los bits 23:16 (Temperature Target)
-; 	shr eax, 16
-; 	and edx, 0x3F000000	;en edx me quedan los bits 29:24 (Target Offset)
-; 	shr edx, 24
-			
-; 	add eax, edx		;Obtengo la temperatura efectiva de alerta
-; 	sub eax, ebx		;Obtengo la temperatura efectiva del procesador haciendo T(alerta) - T(monitor) en eax
-
-; 	pop rbx
-; 	pop rdx
-; 	pop rcx
-
-; 	mov rsp, rbp
-; 	pop rbp
-; 	ret
-
-;-------------------------------------------------------
-;	Devuelve la temperatura absoluta en ºC del CPU 
-;
-;	NOTA: Esta version de la funcion utiliza estaticamente valores reales de registros MSR obtenidos de un CPU 
+;	NOTA: Esta funcion utiliza estaticamente valores reales de registros MSR obtenidos de un CPU 
 ;		  Intel i7 de 7ma generacion. Utilizamos estos valores ya que QEMU siempre devuelve
 ;		  0 grados al intentar acceder a los registros MSR del procesador.
+;		  Si se desea correr en un ambiente con los privilegios requeridos para llamar a rdmsr
+;		  y para acceder a los MSR del CPU, comentar los dos mov a continuacion de los rdmsr,
+;		  y descomentar los rdmsr
 ;
 ;-------------------------------------------------------
 ; Llamada en C:
@@ -172,6 +125,8 @@ sys_getCPUTemp:
 	mov rbx, 0					
 	mov rax, 0			;vacio rax y rbx para tener los 32 bits mas significativos en 0
 	mov ecx, 412	
+	;rdmsr
+	mov edx, 0
 	mov eax, 0x88470800	;Obtengo el registro IA32_THERM_STATUS en edx:eax
 
 	and eax, 0x7F0000	;en eax me quedan los bits 22:16 ()
@@ -179,8 +134,11 @@ sys_getCPUTemp:
 	mov ebx, eax		;almaceno el valor en ebx
 
 	mov rax, 0
-	mov ecx, 418		
+	mov ecx, 418
+	;rdmsr
+	mov edx, 0		
 	mov eax, 0x2640000	;Obtengo el registro MSR_TEMPERATURE_TARGET en edx:eax
+	
 
 	mov edx, eax		;Copio los 32 bits menos significativos del registro en edx
 	and eax, 0xFF0000	;en eax me quedan los bits 23:16 (Temperature Target)
