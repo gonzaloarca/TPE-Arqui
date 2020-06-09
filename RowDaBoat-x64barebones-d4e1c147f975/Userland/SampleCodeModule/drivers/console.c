@@ -28,6 +28,13 @@ int getInput( char *inputBuffer, unsigned long int buffer_size, char *promptSymb
 					putchar(c);
 					break;
 				
+				case '\t':
+					for( int k = 0; k < 4 && size + k < buffer_size -1; k++ ){	// tab = 4 espacios, se agregan solo si hay espacio en el buffer
+						inputBuffer[size++] = ' '	;
+						putchar(' ');
+					}
+					break;
+
 				case 19:		//codigo ASCII asginado al make code de la tecla F2
 					// Borro la linea actual
 					while(size>0){
