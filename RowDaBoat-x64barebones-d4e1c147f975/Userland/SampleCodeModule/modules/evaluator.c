@@ -9,7 +9,7 @@ static double recursive_evaluation(char *expression, int length);
 static int validChar(char c);
 static void printHelp();
 
-static PromptData prData = { "Exp: ", '=' };
+static char *symbol = "Exp: ";
 
 static double last_result = 0;
 static int error = 0;
@@ -22,7 +22,8 @@ void calculator()
 	printf("\nIngrese help= para una explicacion del programa\n");
 
 	while(1){
-		if ( (length = getInput(buffer, BUFFER_SIZE+1, prData.symbol, prData.delimiter)) != 0 )
+		puts(symbol);
+		if ( (length = read(buffer, BUFFER_SIZE+1, '=')) != 0 )
 		{
 			if (length > 1)
 			{

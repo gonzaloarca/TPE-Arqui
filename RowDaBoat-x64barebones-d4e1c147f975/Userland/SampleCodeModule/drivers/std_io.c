@@ -7,7 +7,7 @@ static int stdinLastPos = 0;
 int getchar(){ 
     if( stdinLastPos == stdinFirstPos ){ //hay que ver que pasa si stdinLastPos > STDIN_BUFFERSIZE
         stdinFirstPos = 0;
-        stdinLastPos = getInput( stdinBuffer, STDIN_MAXBUFFER, "", '\n' );
+        stdinLastPos = read( stdinBuffer, STDIN_MAXBUFFER, '\n' );
     }
 
     return stdinBuffer[stdinFirstPos++];

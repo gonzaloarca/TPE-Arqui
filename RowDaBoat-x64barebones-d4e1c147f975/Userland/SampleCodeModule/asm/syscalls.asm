@@ -1,9 +1,7 @@
 GLOBAL write
 GLOBAL read
-GLOBAL changeWindow
 GLOBAL changeWindowColor
 GLOBAL emptyBuffer
-GLOBAL _hlt
 GLOBAL getTime
 GLOBAL getCPUTemp
 GLOBAL getRegisters
@@ -43,14 +41,7 @@ write:
 	pop rbp
 	ret
 
-;-------------------------------------------------------
-;	SYSCALL WRITE: RAX = 3
-;			Lee de entrada estandar(la unica posible) el input del teclado hasta count caracteres
-;-------------------------------------------------------
-; Llamada en C:
-;	int read( char *buffer, unsigned long count )
-;-------------------------------------------------------
-read:					; int read( char *buffer, unsigned long count )
+read:					; int read( char *buffer, unsigned long count, char delim )
 	push rbp
 	mov rbp, rsp
 	push rbx
@@ -60,6 +51,7 @@ read:					; int read( char *buffer, unsigned long count )
 	mov rax, 3			; numero de syscall sys_read
 	mov rbx, rdi		; 1er parametro 
 	mov rcx, rsi		; 2do parametro
+	;en rdx ya esta cargado el 3er parametro
 	int 80h
 
 	pop rdx
@@ -168,11 +160,6 @@ getCPUTemp:				; int getCPUTemp()
 
 	mov rsp, rbp
 	pop rbp
-	ret
-
-_hlt:
-	sti
-	hlt
 	ret
 
 ;-------------------------------------------------------

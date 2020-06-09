@@ -6,7 +6,6 @@
 #include <std_num.h>
 #include <c_type.h>
 #include <stdarg.h>   //para tener cantidad variable de parámetros en funciones como printf y scanf
-#include <console.h>  //para llamar a getInput desde getchar hace falta
 
 #define STDIN_MAXBUFFER 4096
 #define NULL 0

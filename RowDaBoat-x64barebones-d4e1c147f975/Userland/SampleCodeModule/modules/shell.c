@@ -1,4 +1,3 @@
-#include <console.h>
 #include <std_io.h>
 #include <comandos.h>
 #include <syscalls.h>
@@ -8,14 +7,14 @@
 char inputBuffer[INPUT_BUFFER_SIZE];
 int indexBuffer;
 static void parse();
-static PromptData prData = { "$> ", '\n' };
+static char *symbol = "$> ";
 
 
 void runShell(){
-    
     printf("\nIngrese help y presione enter para una explicacion del programa\n");
     while(1){
-        indexBuffer = getInput( inputBuffer, INPUT_BUFFER_SIZE, prData.symbol, prData.delimiter );
+        puts(symbol);
+        indexBuffer = read( inputBuffer, INPUT_BUFFER_SIZE, '\n' );
         parse();
     }
 }

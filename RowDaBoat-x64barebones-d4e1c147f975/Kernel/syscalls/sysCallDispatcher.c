@@ -16,9 +16,9 @@ typedef struct{
 }*Registers;
 
 // La syscall 3 es read
-uint64_t syscall_03(uint64_t rbx, uint64_t rcx)
+uint64_t syscall_03(uint64_t rbx, uint64_t rcx, uint64_t rdx)
 {
-	return sys_read( (char*) rbx, (unsigned long int) rcx );
+	return sys_read( (char*) rbx, (unsigned long int) rcx, (char) rdx );
 
 }
 
@@ -86,12 +86,12 @@ uint64_t sysCallDispatcher(uint64_t scNumber, Registers reg)
 
 	switch(scNumber)
 	{
-		case 3: return syscall_03( reg->rbx, reg->rcx ); 
+		case 3: return syscall_03( reg->rbx, reg->rcx, reg->rdx ); 
 
 		case 4: return syscall_04( reg->rbx, reg->rcx, reg->rdx ); 
 
 		case 7: return syscall_07();
-		
+
 		case 9: return syscall_09( reg->rbx );
 	
 		case 10: return syscall_10();
@@ -108,5 +108,5 @@ uint64_t sysCallDispatcher(uint64_t scNumber, Registers reg)
 
 	}
 
-	return 0;
+	return 1;
 }

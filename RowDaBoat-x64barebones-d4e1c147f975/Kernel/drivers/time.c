@@ -1,4 +1,5 @@
 #include <time.h>
+#include <screenInfo.h>
 
 static unsigned long ticks = 0;
 

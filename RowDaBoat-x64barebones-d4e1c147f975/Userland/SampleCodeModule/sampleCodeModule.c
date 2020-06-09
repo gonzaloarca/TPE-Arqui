@@ -1,4 +1,3 @@
-#include <console.h>
 #include <std_io.h>
 #include <syscalls.h>
 #include <shell.h>
@@ -13,8 +12,12 @@ int main()
 	puts("1 - Shell\n");
 	puts("2 - Calculadora\n");
 
-	while ((c = waitInput()) != '1' && c != '2' )
+	read(&c, 2, '\n');
+
+	while( c != '1' && c != '2' ){
 		fprintf(2, "NUMERO DE MODULO INCORRECTO\n");
+		read(&c, 2, '\n');
+	}
 
 	clrScreen();
 
