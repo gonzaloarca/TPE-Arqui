@@ -41,7 +41,14 @@ write:
 	pop rbp
 	ret
 
-read:					; int read( char *buffer, unsigned long count, char delim )
+;-------------------------------------------------------
+;	SYSCALL READ: RAX = 3
+;			Lee de entrada estandar en un buffer hasta que se llegue a "count" caracteres o se llegue al caracter "delim"
+;-------------------------------------------------------
+; Llamada en C:
+;	int read( char *buffer, unsigned long count, char delim )
+;-------------------------------------------------------
+read:
 	push rbp
 	mov rbp, rsp
 	push rbx
