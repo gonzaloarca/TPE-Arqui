@@ -58,4 +58,15 @@ void getTime(TimeFormat *time); //llama a syscall que llena la estructura de Tim
 //  Funcion que retorna una estructura con los valores de los registros de la ultima vez que se presiono la tecla especial F1
 RegistersType* getRegisters();
 
+// Estructura utilizada para imprimir los valores de 32 bytes de memoria
+typedef struct memType {
+	uint64_t mem1;
+	uint64_t mem2;
+	uint64_t mem3;
+	uint64_t mem4;
+} memType;
+
+// Syscall para volcar en la estructura recibida los 32 bytes de informacion encontrados a partir de la direccion recibida
+void getMemory(memType* answer, char * address);
+
 #endif

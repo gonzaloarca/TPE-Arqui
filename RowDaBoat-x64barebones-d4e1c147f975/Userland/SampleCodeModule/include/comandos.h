@@ -5,14 +5,6 @@
 #include <std_io.h>
 #include <syscalls.h>
 
-// Estructura utilizada para imprimir los valores de 32 bytes de memoria
-typedef struct memType {
-	uint64_t mem1;
-	uint64_t mem2;
-	uint64_t mem3;
-	uint64_t mem4;
-} memType;
-
 //	Programa que imprime la hora actual
 void printTime();
 
@@ -30,9 +22,6 @@ void help();
 
 // Programa que imprime los valores de los registros que se tenian la ultima vez que se presiono f1
 void printInforeg();
-
-// Retorna estructura con los valores correspondientes a los 32 bytes siguientes a address
-void getMemoryASM(memType* answer, uint64_t address);
 
 //	Indica el fabricante del CPU
 char *cpuVendor(char buffer[13]);

@@ -78,6 +78,12 @@ uint64_t syscall_23(){
 	return 0;
 }
 
+//	La syscall 25 rellena en la estructura indicada por parametro los 32 bytes de informacion que se obtienen a partir de address
+uint64_t syscall_25(uint64_t rbx, uint64_t rcx){
+	sys_getMemory((memType *) rbx, (char *) rcx);
+	return 0;
+}
+
 //	scNumber indica a cual syscall se llamo
 //	parameters es una estructura con los parametros para la syscall
 //	Cada syscall se encarga de interpretar a la estructura
@@ -106,6 +112,7 @@ uint64_t sysCallDispatcher(uint64_t scNumber, Registers reg)
 
 		case 23: return syscall_23();
 
+		case 25: return syscall_25( reg->rbx, reg->rcx);
 	}
 
 	return 1;

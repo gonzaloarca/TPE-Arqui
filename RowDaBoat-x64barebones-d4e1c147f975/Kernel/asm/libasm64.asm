@@ -4,6 +4,7 @@ GLOBAL getScanCode
 GLOBAL sys_getCPUTemp
 GLOBAL saveRegistersASM
 GLOBAL saveRegistersASMexcp
+GLOBAL sys_getMemory
 
 section .text
 	
@@ -253,3 +254,35 @@ fillRegisters:
 	pop rbp
 	ret
 	
+
+;-------------------------------------------------------
+;	Funcion que se encarga de volcar en la estructura recibida en rbx los 32 bytes de informacion encontrados a partir de la direccion recibida en rdx
+;-------------------------------------------------------
+; Llamada en C:
+;	void sys_getMemory(memType* answer, char* address)
+;-------------------------------------------------------
+
+sys_getMemory:
+
+	push rbp
+	mov rbp, rsp
+
+	push rbx; lo uso como auxiliar
+	
+	; en rdi se encuentra la estructura a retornar y en rsi la direccion
+	; necesito imprimir 32 bytes
+
+	mov rax, [rsi]
+	mov QWORD[rdi], rax
+	mov rax, [rsi + 8]		; avanzo 8 bytes
+	mov QWORD[rdi + 8], rax
+	mov rax, [rsi + 16]
+	mov QWORD[rdi + 16], rax
+	mov rax, [rsi + 24]
+	mov QWORD[rdi + 24], rax
+
+	pop rbx
+
+	mov rsp, rbp
+	pop rbp
+	ret

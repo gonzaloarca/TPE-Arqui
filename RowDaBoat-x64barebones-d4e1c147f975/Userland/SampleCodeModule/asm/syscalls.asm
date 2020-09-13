@@ -8,6 +8,7 @@ GLOBAL getRegisters
 GLOBAL clrScreen
 GLOBAL initProcess
 GLOBAL runFirstProcess
+GLOBAL getMemory
 
 section .text
 
@@ -204,6 +205,36 @@ runFirstProcess:
 	int 80h
 
 	pop rax
+	mov rsp, rbp
+	pop rbp
+	ret
+
+;-------------------------------------------------------
+;	SYSCALL getMemory: RAX = 25
+;			Funcion que se encarga de llamar a la syscall que escribe en la estructura indicada los 32 bytes de informacion de la memoria a partir de address
+;-------------------------------------------------------
+; Llamada en C:
+;	void getMemory(memType* answer, char* address)
+;-------------------------------------------------------
+
+getMemory:
+	push rbp
+	mov rbp, rsp
+
+	push rbx
+	push rcx
+
+	; en rdi se encuentra la estructura a retornar y en rsi la direccion
+	; necesito imprimir 32 bytes
+
+	mov rax, 25
+	mov rbx, rdi
+	mov rcx, rsi
+	int 80h
+
+	pop rbx
+	pop rcx
+
 	mov rsp, rbp
 	pop rbp
 	ret

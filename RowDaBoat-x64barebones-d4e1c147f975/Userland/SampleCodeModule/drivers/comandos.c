@@ -129,47 +129,6 @@ static int pow(int potencia, int base){
 	return ans;
 }
 
-static int getMemory(memType* answer, char* address){
-	// Se encarga de validar que la direccion este escrita en hexa, retorna 1 en exito 0 sino
-	uint64_t decimalAddress = 0;
-	int length = strlen(address);
-	int flag = 1;		// asumo en un principio que esta correctamente escrito
-
-	for(int i = length ; i > 0 && flag ; i--){
-		switch(address[i-1]){
-			case '0': case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9':
-				decimalAddress += (address[i-1] - '0') * pow(length-i, 16);
-				break;
-			case 'a': case 'A':
-				decimalAddress += 10 * pow(length-i, 16);
-				break;
-			case 'b': case 'B':
-				decimalAddress += 11 * pow(length-i, 16);
-				break;
-			case 'c': case 'C':
-				decimalAddress += 12 * pow(length-i, 16);
-				break;
-			case 'd': case 'D':
-				decimalAddress += 13 * pow(length-i, 16);
-				break;
-			case 'e': case 'E':
-				decimalAddress += 14 * pow(length-i, 16);
-				break;
-			case 'f': case 'F':
-				decimalAddress += 15 * pow(length-i, 16);
-				break;
-
-			default:
-			// Encontre un caracter que no cumple con la escritura hexadecimal de un numero positivo
-				flag = 0;
-		}
-	}
-	if(flag)
-		getMemoryASM(answer, decimalAddress);
-
-	return flag;
-}
-
 void printmem(char* address){
 	memType memory;
 
@@ -177,6 +136,7 @@ void printmem(char* address){
 	int length = strlen(address);
 	int flag = 1;		// asumo en un principio que esta correctamente escrito
 
+	// reviso el address este escrito correctamente
 	for(int i = length ; i > 0 && flag; i--){
 		switch(address[i-1]){
 			case '0': case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9':
@@ -206,8 +166,9 @@ void printmem(char* address){
 				flag = 0;
 		}
 	}
+
 	if(flag){
-		getMemory(&memory, address);
+		getMemory(&memory, decimalAddress);
 
 		changeWindowColor(0xa4de02);
 		printf("%p", decimalAddress);
